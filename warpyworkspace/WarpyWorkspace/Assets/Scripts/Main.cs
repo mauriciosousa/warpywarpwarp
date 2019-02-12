@@ -37,6 +37,8 @@ public class Main : MonoBehaviour {
     public Transform localOrigin;
     public Transform remoteOrigin;
 
+    public Workspace workspace;
+
 	void Awake () {
 
         Application.runInBackground = true;
@@ -85,7 +87,12 @@ public class Main : MonoBehaviour {
             _configWorkspaces();
             _everythingIsConfigured = true;
         }
-	}
+
+
+
+        _debugWorkspaces(_localSurface, Color.red);
+        _debugWorkspaces(_remoteSurface, Color.green);
+    }
 
     internal void setLocalSurface(SurfaceRectangle s)
     {
@@ -103,8 +110,8 @@ public class Main : MonoBehaviour {
     {
         Debug.Log("NOW I CAN DO ALL THE STUFFS!!");
 
-        ShowSomeCubes(localOrigin.gameObject, _localSurface);
-        ShowSomeCubes(remoteOrigin.gameObject, _remoteSurface);
+        //ShowSomeCubes(localOrigin.gameObject, _localSurface);
+        //ShowSomeCubes(remoteOrigin.gameObject, _remoteSurface);
 
         _deploySensors(_localSurface.sensors, localOrigin);
         _deploySensors(_remoteSurface.sensors, remoteOrigin);
@@ -122,6 +129,8 @@ public class Main : MonoBehaviour {
             remoteWorkspaceCenter.transform.forward = -localWorkspaceCenter.transform.forward;
         }
 
+        workspace.transform.position = localWorkspaceCenter.transform.position;
+        workspace.transform.rotation = localWorkspaceCenter.transform.rotation;
 
         
         //Debug.Log("[" + this.ToString() + "] Workspaces configured");
@@ -174,5 +183,16 @@ public class Main : MonoBehaviour {
         cube.transform.rotation = Quaternion.identity;
         cube.name = name;
         return cube;
+    }
+
+    private void _debugWorkspaces(SurfaceRectangle surface, Color color)
+    {
+        if (surface != null)
+        {
+            Debug.DrawLine(surface.SurfaceBottomLeft, surface.SurfaceBottomRight, color);
+            Debug.DrawLine(surface.SurfaceBottomRight, surface.SurfaceTopRight, color);
+            Debug.DrawLine(surface.SurfaceTopRight, surface.SurfaceTopLeft, color);
+            Debug.DrawLine(surface.SurfaceTopLeft, surface.SurfaceBottomLeft, color);
+        }
     }
 }

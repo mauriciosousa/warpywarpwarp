@@ -1,13 +1,11 @@
-last.run=2019-02-12-14:05:25
-setup.type=LEFT
+last.run=2019-02-13-17:36:50
+setup.type=RIGHT
 start.formation=FACE_TO_FACE
 
 rpc.port=5000
 
-
-
 __SETUP ON THE LEFT__
-left.setup.address=127.0.0.1
+left.setup.address=192.168.0.103
 left.tracker.listen.port=5001
 left.tracker.broadcast.port=5002
 left.tracker.surface.request.port=5001
@@ -17,7 +15,7 @@ left.tracker.surface.listener.port=5010
 
 
 __SETUP ON THE RIGHT__
-right.setup.address=127.0.0.1
+right.setup.address=192.168.0.103
 right.tracker.listen.port=5101
 right.tracker.broadcast.port=5102
 right.tracker.surface.request.port=5101

@@ -20,7 +20,7 @@ public class UdpBodiesListener : MonoBehaviour
 
     public void startListening(int port)
     {
-        print("[UdpBodiesListener] - listening to " + port);
+        print("[" + gameObject.name + ".UdpBodiesListener] - listening to " + port);
         _port = port;
         udpRestart();
         _canDoStuff = true;

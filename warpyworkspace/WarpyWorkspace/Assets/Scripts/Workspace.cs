@@ -8,8 +8,13 @@ public class Workspace : MonoBehaviour {
 
 
     public void __init__ () {
-
         __initialized__ = true;
+
+
+
+
+
+        Debug.Log("[" + this.ToString() + "] READY TO DO STUFF");
 	}
 	
 	void Update () {

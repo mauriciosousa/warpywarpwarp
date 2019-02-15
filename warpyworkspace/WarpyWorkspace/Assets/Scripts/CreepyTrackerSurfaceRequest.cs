@@ -38,15 +38,15 @@ public class SurfaceRectangle
         }
     }
 
-    public Quaternion Perpendicular
+    public Quaternion rotation
     {
         get
         {
-            Vector3 up = _tl - _bl;
-            Vector3 right = _br - _bl;
-            Vector3 forward = Vector3.Cross(up, right);
+            Vector3 f = _tl - _bl;
+            Vector3 r = _br - _bl;
+            Vector3 u = Vector3.Cross(f, r);
 
-            return Quaternion.LookRotation(forward, up);
+            return Quaternion.LookRotation(f, u);
         }
     }
 

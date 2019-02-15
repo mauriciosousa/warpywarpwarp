@@ -30,6 +30,9 @@ public class Main : MonoBehaviour {
     public BodiesManager remoteBodiesManager;
     public UdpBodiesListener remoteUdpListener;
 
+    public Table LocalTable;
+    public Table RemoteTable;
+
     private SurfaceRectangle _localSurface;
     private SurfaceRectangle _remoteSurface;
     private bool _everythingIsConfigured = false;
@@ -37,9 +40,21 @@ public class Main : MonoBehaviour {
     public Transform localOrigin;
     public Transform remoteOrigin;
 
+    public GameObject localWorkspaceCenter;
+    public GameObject remoteWorkspaceCenter;
+
     public Workspace workspace;
 
-	void Awake () {
+
+    private string localTrackerAddress;
+    private string remoteTrackerAddress;
+    private int localTrackerSurfaceRequestPort;
+    private int remoteTrackerSurfaceRequestPort;
+    private int localTrackerSurfaceListenerPort;
+    private int remoteTrackerSurfaceListenerPort;
+
+
+    void Awake () {
 
         Application.runInBackground = true;
 
@@ -58,29 +73,40 @@ public class Main : MonoBehaviour {
 
         formation = (Formation)Enum.Parse(enumType: typeof(Formation), value: ConfigProperties.load(ConfigFile, "start.formation"));
 
-        string localTrackerAddress = ConfigProperties.load(ConfigFile, _localPrefix + ".setup.address");
+        localTrackerAddress = ConfigProperties.load(ConfigFile, _localPrefix + ".setup.address");
         int localTrackerBroadcastPort = int.Parse(ConfigProperties.load(ConfigFile, _localPrefix + ".tracker.broadcast.port")); 
-        int localTrackerSurfaceRequestPort = int.Parse(ConfigProperties.load(ConfigFile, _localPrefix + ".tracker.surface.request.port"));
-        int localTrackerSurfaceListenerPort = int.Parse(ConfigProperties.load(ConfigFile, _localPrefix + ".tracker.surface.listener.port"));
+        localTrackerSurfaceRequestPort = int.Parse(ConfigProperties.load(ConfigFile, _localPrefix + ".tracker.surface.request.port"));
+        localTrackerSurfaceListenerPort = int.Parse(ConfigProperties.load(ConfigFile, _localPrefix + ".tracker.surface.listener.port"));
 
-        string remoteTrackerAddress = ConfigProperties.load(ConfigFile, _remotePrefix + ".setup.address");
+        remoteTrackerAddress = ConfigProperties.load(ConfigFile, _remotePrefix + ".setup.address");
         int remoteTrackerBroadcastPort = int.Parse(ConfigProperties.load(ConfigFile, _remotePrefix + ".tracker.broadcast.port"));
-        int remoteTrackerSurfaceRequestPort = int.Parse(ConfigProperties.load(ConfigFile, _remotePrefix + ".tracker.surface.request.port"));
-        int remoteTrackerSurfaceListenerPort = int.Parse(ConfigProperties.load(ConfigFile, _remotePrefix + ".tracker.surface.listener.port"));
+        remoteTrackerSurfaceRequestPort = int.Parse(ConfigProperties.load(ConfigFile, _remotePrefix + ".tracker.surface.request.port"));
+        remoteTrackerSurfaceListenerPort = int.Parse(ConfigProperties.load(ConfigFile, _remotePrefix + ".tracker.surface.listener.port"));
 
 
         localUdpListener.startListening(localTrackerBroadcastPort);
         remoteUdpListener.startListening(remoteTrackerBroadcastPort);
         GetComponent<CreepyTrackerSurfaceRequestListener>().StartReceive(localTrackerSurfaceListenerPort, remoteTrackerSurfaceListenerPort);
-        GetComponent<CreepyTrackerSurfaceRequest>().Request(localTrackerAddress, localTrackerSurfaceRequestPort, localTrackerSurfaceListenerPort, 
-                                                            remoteTrackerAddress, remoteTrackerSurfaceRequestPort, remoteTrackerSurfaceListenerPort);
-
-        
-
+        _surfaceRequest();
 
     }
-	
-	void Update () {
+
+    private void _surfaceRequest()
+    {
+        if (_localSurface == null || _remoteSurface == null)
+        {
+            Debug.Log("[" + this.ToString() + "] Surface Request Sent...");
+            GetComponent<CreepyTrackerSurfaceRequest>().Request(localTrackerAddress, localTrackerSurfaceRequestPort, localTrackerSurfaceListenerPort,
+                                                                        remoteTrackerAddress, remoteTrackerSurfaceRequestPort, remoteTrackerSurfaceListenerPort);
+        }
+        else
+        {
+            Debug.Log("[" + this.ToString() + "] WE ALREADY HAVE ALL SURFACES");
+
+        }
+    }
+
+    void Update () {
 
         if (!_everythingIsConfigured && _localSurface != null && _remoteSurface != null)
         {
@@ -89,9 +115,23 @@ public class Main : MonoBehaviour {
         }
 
 
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            _surfaceRequest();
+        }
 
-        _debugWorkspaces(_localSurface, Color.red);
-        _debugWorkspaces(_remoteSurface, Color.green);
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            try
+            {
+                Camera.main.transform.position = localBodiesManager.human.body.Joints[BodyJointType.head];
+                Camera.main.transform.LookAt(localWorkspaceCenter.transform.position);
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e.Message);
+            }
+        }
     }
 
     internal void setLocalSurface(SurfaceRectangle s)
@@ -110,52 +150,39 @@ public class Main : MonoBehaviour {
     {
         Debug.Log("NOW I CAN DO ALL THE STUFFS!!");
 
-        //ShowSomeCubes(localOrigin.gameObject, _localSurface);
-        //ShowSomeCubes(remoteOrigin.gameObject, _remoteSurface);
+        LocalTable.set(_localSurface);
+        RemoteTable.set(_remoteSurface);
 
         _deploySensors(_localSurface.sensors, localOrigin);
         _deploySensors(_remoteSurface.sensors, remoteOrigin);
 
-        GameObject localWorkspaceCenter = _calculateCenter(localOrigin, _localSurface);
+        localWorkspaceCenter = new GameObject();
         localWorkspaceCenter.name = "localWorkspaceCenter";
-        GameObject remoteWorkspaceCenter = _calculateCenter(remoteOrigin, _remoteSurface);
-        remoteWorkspaceCenter.name = "remoteWorkspaceCenter";
+        localWorkspaceCenter.transform.position = LocalTable.transform.position;
+        localWorkspaceCenter.transform.rotation = LocalTable.transform.rotation;
+        localOrigin.parent = localWorkspaceCenter.transform;
 
+
+        remoteWorkspaceCenter = new GameObject();
+        remoteWorkspaceCenter.name = "remoteWorkspaceCenter";
+        remoteWorkspaceCenter.transform.position = RemoteTable.transform.position;
+        remoteWorkspaceCenter.transform.rotation = RemoteTable.transform.rotation;
+        remoteOrigin.parent = remoteWorkspaceCenter.transform;
 
         remoteWorkspaceCenter.transform.position = localWorkspaceCenter.transform.position;
         remoteWorkspaceCenter.transform.rotation = localWorkspaceCenter.transform.rotation;
+
         if (formation == Formation.FACE_TO_FACE)
         {
-            remoteWorkspaceCenter.transform.forward = -localWorkspaceCenter.transform.forward;
+
+            remoteWorkspaceCenter.transform.rotation = Quaternion.LookRotation(-localWorkspaceCenter.transform.forward, localWorkspaceCenter.transform.up);
         }
 
+        workspace.gameObject.SetActive(true);
         workspace.transform.position = localWorkspaceCenter.transform.position;
         workspace.transform.rotation = localWorkspaceCenter.transform.rotation;
+        workspace.__init__();
 
-        
-        //Debug.Log("[" + this.ToString() + "] Workspaces configured");
-    }
-
-    private GameObject _calculateCenter(Transform worldCenter, SurfaceRectangle surface)
-    {
-        GameObject workspaceCenter = new GameObject();
-        workspaceCenter.transform.position = (surface.SurfaceBottomLeft + surface.SurfaceTopRight) / 2;
-
-        worldCenter.parent = workspaceCenter.transform;
-        return workspaceCenter;
-    }
-
-    private void ShowSomeCubes(GameObject centerGO, SurfaceRectangle surface)
-    {
-        GameObject center = LittleCube(centerGO.transform, centerGO.name);
-        GameObject BL = LittleCube(localOrigin, "BL");
-        BL.transform.localPosition = surface.SurfaceBottomLeft;
-        GameObject BR = LittleCube(localOrigin, "BR");
-        BR.transform.localPosition = surface.SurfaceBottomRight;
-        GameObject TL = LittleCube(localOrigin, "TL");
-        TL.transform.localPosition = surface.SurfaceTopLeft;
-        GameObject TR = LittleCube(localOrigin, "TR");
-        TR.transform.localPosition = surface.SurfaceTopRight;
     }
 
     private void _deploySensors(Sensor[] sensors, Transform parent)
@@ -183,16 +210,5 @@ public class Main : MonoBehaviour {
         cube.transform.rotation = Quaternion.identity;
         cube.name = name;
         return cube;
-    }
-
-    private void _debugWorkspaces(SurfaceRectangle surface, Color color)
-    {
-        if (surface != null)
-        {
-            Debug.DrawLine(surface.SurfaceBottomLeft, surface.SurfaceBottomRight, color);
-            Debug.DrawLine(surface.SurfaceBottomRight, surface.SurfaceTopRight, color);
-            Debug.DrawLine(surface.SurfaceTopRight, surface.SurfaceTopLeft, color);
-            Debug.DrawLine(surface.SurfaceTopLeft, surface.SurfaceBottomLeft, color);
-        }
     }
 }

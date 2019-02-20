@@ -70,10 +70,10 @@ public class Body
     {
         _start();
 
-        List<string> bodyAttributes = new List<string>(pdu.Split(MessageSeparators.L2));
+        List<string> bodyAttributes = new List<string>(pdu.Split(CreepyTrackerMessageSeparators.L2));
         foreach (string attr in bodyAttributes)
         {
-            string[] statement = attr.Split(MessageSeparators.SET);
+            string[] statement = attr.Split(CreepyTrackerMessageSeparators.SET);
             if (statement.Length == 2)
             {
                 if (Enum.IsDefined(typeof(BodyPropertiesType), statement[0]))
@@ -92,7 +92,7 @@ public class Body
 
     private static Vector3 _convertBodyJointStringToVector3(string strJoint)
     {
-        string[] p = strJoint.Split(MessageSeparators.L3);
+        string[] p = strJoint.Split(CreepyTrackerMessageSeparators.L3);
         return new Vector3(float.Parse(p[0].Replace(',', '.')), float.Parse(p[1].Replace(',', '.')), float.Parse(p[2].Replace(',', '.')));
     }
 }

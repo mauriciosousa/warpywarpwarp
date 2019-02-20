@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class MessageSeparators
+public static class CreepyTrackerMessageSeparators
 {
     public const char L0 = '$'; // header separator
     public const char L1 = '#'; // top level separator -> bodies

@@ -1,4 +1,4 @@
-last.run=2019-02-15-19:11:11
+last.run=2019-02-20-18:36:49
 setup.type=LEFT
 start.formation=FACE_TO_FACE
 
@@ -10,7 +10,8 @@ left.tracker.listen.port=5001
 left.tracker.broadcast.port=5002
 left.tracker.surface.request.port=5001
 left.tracker.surface.listener.port=5010
-
+left.client.avatar.listen.port=5011
+left.sensor.listen.port=5007
 
 
 
@@ -20,3 +21,5 @@ right.tracker.listen.port=5101
 right.tracker.broadcast.port=5102
 right.tracker.surface.request.port=5101
 right.tracker.surface.listener.port=5110
+right.client.avatar.listen.port=5111
+right.sensor.listen.port=5107

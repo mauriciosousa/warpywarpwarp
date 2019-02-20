@@ -48,36 +48,53 @@ public class CreepyTrackerSurfaceRequestListener : MonoBehaviour
         string result = System.Text.Encoding.UTF8.GetString(receiveBytes);
         string[] trackermessage = result.Split(MessageSeparators.L0);
         result = trackermessage[0] + MessageSeparators.L0 + trackermessage[1];
+
         Sensor[] sensors = _retrieveSensors(trackermessage[2]);
+        foreach (Sensor s in sensors)
+        {
+            Debug.Log("_LOCAL_SENSOR______________________________________ " + s.id);
+        }
+
+
         if (SurfaceMessage.isMessage(result))
         {
             SurfaceRectangle s = new SurfaceRectangle(result);
+            Debug.Log("SURFACE_________________________________________ " + s.ToString());
             s.sensors = sensors;
             _main.setLocalSurface(s);
             _udpClient_LocalSurface.Close();
         }
         else
+        {
             _udpClient_LocalSurface.BeginReceive(new AsyncCallback(this.ReceiveCallback_LocalSurface), null);
+        }
     }
 
     public void ReceiveCallback_RemoteSurface(IAsyncResult ar)
     {
         Byte[] receiveBytes = _udpClient_RemoteSurface.EndReceive(ar, ref _anyIP_RemoteSurface);
         string result = System.Text.Encoding.UTF8.GetString(receiveBytes);
-
-
         string[] trackermessage = result.Split(MessageSeparators.L0);
         result = trackermessage[0] + MessageSeparators.L0 + trackermessage[1];
         Sensor[] sensors = _retrieveSensors(trackermessage[2]);
+        foreach (Sensor s in sensors)
+        {
+            Debug.Log("_REMOTE_SENSOR______________________________________ " + s.id);
+        }
+
+
         if (SurfaceMessage.isMessage(result))
         {
             SurfaceRectangle s = new SurfaceRectangle(result);
+            Debug.Log("SURFACE_________________________________________ " + s.ToString());
             s.sensors = sensors;
             _main.setRemoteSurface(s);
             _udpClient_RemoteSurface.Close();
         }
         else
+        {
             _udpClient_RemoteSurface.BeginReceive(new AsyncCallback(this.ReceiveCallback_RemoteSurface), null);
+        }
     }
 
     private Sensor[] _retrieveSensors(string v)
@@ -94,6 +111,7 @@ public class CreepyTrackerSurfaceRequestListener : MonoBehaviour
                 sensor.id = values[0];
                 sensor.position = new Vector3(float.Parse(values[1]), float.Parse(values[2]), float.Parse(values[3]));
                 sensor.rotation = new Quaternion(float.Parse(values[4]), float.Parse(values[5]), float.Parse(values[6]), float.Parse(values[7]));
+
                 sensors.Add(sensor);
             }
         }

@@ -62,7 +62,8 @@ public class SurfaceRectangle
 
     public SurfaceRectangle(string value)
     {
-        string[] values = value.Split(MessageSeparators.L0)[1].Split(MessageSeparators.L1);
+        string[] values = value.Split(MessageSeparators.L0)[1].Split(MessageSeparators.L1)[0].Split(MessageSeparators.L2);
+
         string name = values[0];
         sensors = new Sensor[0];
 
@@ -105,10 +106,10 @@ public class CreepyTrackerSurfaceRequest : MonoBehaviour
     private DateTime lastTry;
     public int requestInterval = 100;
 
-    public void Request(string localCreepyTrackerAddress, int localSurfaceRequestPort, int localSurfaceListenPort, string remoteCreepyTrackerAddress, int remoteSurfaceRequestPort, int remoteSurfaceListenPort)
+    public void Request(int localSurfaceRequestPort, int localSurfaceListenPort, int remoteSurfaceRequestPort, int remoteSurfaceListenPort)
     {
-        Debug.Log("[" + this.ToString() + "] Requesting local surface to " + localCreepyTrackerAddress + ":" + localSurfaceRequestPort + " to receive in " + localSurfaceListenPort);
-        Debug.Log("[" + this.ToString() + "] Requesting remote surface to " + remoteCreepyTrackerAddress + ":" + remoteSurfaceRequestPort + " to receive in " + remoteSurfaceListenPort);
+        Debug.Log("[" + this.ToString() + "] Requesting local surface to " + localSurfaceRequestPort + " to receive in " + localSurfaceListenPort);
+        Debug.Log("[" + this.ToString() + "] Requesting remote surface to " + remoteSurfaceRequestPort + " to receive in " + remoteSurfaceListenPort);
 
         _request(localSurfaceRequestPort, localSurfaceListenPort);
         _request(remoteSurfaceRequestPort, remoteSurfaceListenPort);

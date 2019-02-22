@@ -58,6 +58,8 @@ public class Main : MonoBehaviour {
     private int localTrackerSurfaceListenerPort;
     private int remoteTrackerSurfaceListenerPort;
 
+    public Transform ARCameraRig;
+    public Transform LocalHumanHead;
 
     void Awake () {
 
@@ -103,6 +105,10 @@ public class Main : MonoBehaviour {
         _sensors = new Dictionary<string, GameObject>();
         _surfaceRequest();
 
+        //ARCameraRig.parent = LocalHumanHead;
+        //ARCameraRig.localPosition = Vector3.zero;
+        //ARCameraRig.localRotation = Quaternion.identity;
+        //ARCameraRig.localScale = Vector3.one;
     }
 
     internal void setupSensors(GameObject[] sensors)
@@ -149,23 +155,9 @@ public class Main : MonoBehaviour {
             _everythingIsConfigured = true;
         }
 
-
-        if (Input.GetKeyDown(KeyCode.R))
+        //if (Input.GetKey(KeyCode.Space))
         {
-            _surfaceRequest();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            try
-            {
-                Camera.main.transform.position = localBodiesManager.human.body.Joints[BodyJointType.head];
-                Camera.main.transform.LookAt(localWorkspaceCenter.transform.position);
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e.Message);
-            }
+            ARCameraRig.position = LocalHumanHead.position;
         }
 
     }

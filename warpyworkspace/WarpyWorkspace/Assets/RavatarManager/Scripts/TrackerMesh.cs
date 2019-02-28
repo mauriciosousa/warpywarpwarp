@@ -45,12 +45,14 @@ public class TrackerMesh : MonoBehaviour
 
     private bool _isInit = false;
 
+    private Transform _parent;
 
 
-    public void Init (int trackerPort, int listenPort )
+    public void Init (int trackerPort, int listenPort, Transform parent)
     {
         _listenPort = listenPort;
         _trackerPort = trackerPort;
+        _parent = parent;
 
         Debug.Log("Hello Tracker");
 	    _clouds = new Dictionary<string, PointCloudMesh> ();
@@ -98,7 +100,7 @@ public class TrackerMesh : MonoBehaviour
     {
         initNetwork(_listenPort,_cloudGameObjects.Count);
         Debug.Log("Started TCP Layer with " + _cloudGameObjects.Count);
-        GameObject.Find("main").GetComponent<Main>().setupSensors(Sensors);
+        GameObject.Find("main").GetComponent<NewMain>().setupSensors(Sensors);
     }
 
     public void processCalibrationMatrix(string calibration)
@@ -156,6 +158,8 @@ public class TrackerMesh : MonoBehaviour
             _clouds.Add(id, cloud);
             _cloudGameObjects.Add(id, cloudobj);
 
+
+            cloudobj.transform.parent = _parent;
         }
       
     }

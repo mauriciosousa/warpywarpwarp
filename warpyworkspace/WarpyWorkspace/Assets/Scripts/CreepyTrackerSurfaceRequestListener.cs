@@ -10,7 +10,7 @@ using System.Text;
 
 public class CreepyTrackerSurfaceRequestListener : MonoBehaviour
 {
-    private Main _main;
+    private NewMain _main;
 
     private int _portForLocal = 0;
     private int _portForRemote = 0;
@@ -25,7 +25,7 @@ public class CreepyTrackerSurfaceRequestListener : MonoBehaviour
     public void StartReceive(int localSurfaceListenPort, int remoteSurfaceListenPort)
     {
 
-        _main = GetComponent<Main>();
+        _main = GetComponent<NewMain>();
 
         _portForLocal = localSurfaceListenPort;
         _portForRemote = remoteSurfaceListenPort;

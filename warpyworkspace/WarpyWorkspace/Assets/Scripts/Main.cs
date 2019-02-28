@@ -4,20 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum SetupLocation
-{
-    LEFT,
-    RIGHT
-}
 
-public enum Formation
-{
-    SIDE_TO_SIDE,
-    FACE_TO_FACE
-}
-
-
-public class Main : MonoBehaviour {
+public class MainBACKUP : MonoBehaviour {
 
     public string ConfigFile;
     public SetupLocation setupLocation;
@@ -32,20 +20,8 @@ public class Main : MonoBehaviour {
 
     public TrackerMesh ravatarManagerTracker;
 
-    public Table LocalTable;
-    public Table RemoteTable;
-
-    private SurfaceRectangle _localSurface;
-    private SurfaceRectangle _remoteSurface;
-    private bool _everythingIsConfigured = false;
-
     public Transform localOrigin;
     public Transform remoteOrigin;
-
-    public GameObject localWorkspaceCenter;
-    public GameObject remoteWorkspaceCenter;
-
-    public Workspace workspace;
 
     public Dictionary<string, GameObject> _sensors;
 
@@ -60,6 +36,8 @@ public class Main : MonoBehaviour {
 
     public Transform ARCameraRig;
     public Transform LocalHumanHead;
+
+    private bool _everythingIsConfigured = false;
 
     void Awake () {
 
@@ -84,8 +62,6 @@ public class Main : MonoBehaviour {
         localTrackerListenPort = int.Parse(ConfigProperties.load(ConfigFile, _localPrefix + ".tracker.listen.port"));
         remoteTrackerListenPort = int.Parse(ConfigProperties.load(ConfigFile, _remotePrefix + ".tracker.listen.port"));
 
-
-
         localTrackerAddress = ConfigProperties.load(ConfigFile, _localPrefix + ".setup.address");
         int localTrackerBroadcastPort = int.Parse(ConfigProperties.load(ConfigFile, _localPrefix + ".tracker.broadcast.port")); 
         localTrackerSurfaceRequestPort = int.Parse(ConfigProperties.load(ConfigFile, _localPrefix + ".tracker.surface.request.port"));
@@ -98,17 +74,21 @@ public class Main : MonoBehaviour {
         remoteTrackerSurfaceListenerPort = int.Parse(ConfigProperties.load(ConfigFile, _remotePrefix + ".tracker.surface.listener.port"));
         int remoteAvatarListenPort = int.Parse(ConfigProperties.load(ConfigFile, _remotePrefix + ".client.avatar.listen.port"));
 
+
         GetComponent<CreepyTrackerSurfaceRequestListener>().StartReceive(localTrackerSurfaceListenerPort, remoteTrackerSurfaceListenerPort);
         localUdpListener.startListening(localTrackerBroadcastPort);
         remoteUdpListener.startListening(remoteTrackerBroadcastPort);
 
-        _sensors = new Dictionary<string, GameObject>();
-        _surfaceRequest();
+    }
 
-        //ARCameraRig.parent = LocalHumanHead;
-        //ARCameraRig.localPosition = Vector3.zero;
-        //ARCameraRig.localRotation = Quaternion.identity;
-        //ARCameraRig.localScale = Vector3.one;
+    internal void setRemoteSurface(SurfaceRectangle s)
+    {
+        
+    }
+
+    internal void setLocalSurface(SurfaceRectangle s)
+    {
+        
     }
 
     internal void setupSensors(GameObject[] sensors)
@@ -128,53 +108,28 @@ public class Main : MonoBehaviour {
         }
     }
 
-    private void _surfaceRequest()
-    {
-        if (_localSurface == null || _remoteSurface == null)
-        {
-            Debug.Log("[" + this.ToString() + "] Surface Request Sent...");
-            GetComponent<CreepyTrackerSurfaceRequest>().Request(localTrackerListenPort, localTrackerSurfaceListenerPort, remoteTrackerListenPort, remoteTrackerSurfaceListenerPort);
-        }
-        else
-        {
-            Debug.Log("[" + this.ToString() + "] WE ALREADY HAVE ALL SURFACES");
-
-        }
-    }
 
     void Update () {
 
-        if (!_everythingIsConfigured && _localSurface != null && _remoteSurface != null)
+        if (!_everythingIsConfigured)
         {
             ravatarManagerTracker.Init(
             remoteTrackerListenPort,
-            int.Parse(ConfigProperties.load(ConfigFile, _localPrefix + ".client.avatar.listen.port"))
+            int.Parse(ConfigProperties.load(ConfigFile, _localPrefix + ".client.avatar.listen.port")),
+            remoteOrigin
             );
 
-            _configWorkspaces();
             _everythingIsConfigured = true;
         }
 
         //if (Input.GetKey(KeyCode.Space))
-        {
-            ARCameraRig.position = LocalHumanHead.position;
-        }
+       // {
+           // ARCameraRig.position = LocalHumanHead.position;
+        //}
 
     }
 
-    internal void setLocalSurface(SurfaceRectangle s)
-    {
-        Debug.Log("] LOCAL SURFACE " + s.ToString());
-        _localSurface = s;
-    }
-
-    internal void setRemoteSurface(SurfaceRectangle s)
-    {
-        Debug.Log("] REMOTE SURFACE " + s.ToString());
-        _remoteSurface = s;
-    }
-
-    private void _configWorkspaces()
+    /*private void _configWorkspaces()
     {
         Debug.Log("NOW I CAN DO ALL THE STUFFS!!");
 
@@ -213,23 +168,7 @@ public class Main : MonoBehaviour {
         workspace.__init__();
 
     }
-
-    private void _deploySensors(Sensor[] sensors, Transform parent)
-    {
-        foreach (Sensor s in sensors)
-        {
-            GameObject sensor = new GameObject
-            {
-                name = s.id
-            };
-            sensor.transform.parent = parent;
-            sensor.transform.localPosition = s.position;
-            sensor.transform.localRotation = s.rotation;
-            GameObject cube = LittleCube(sensor.transform, sensor.name + "cube");
-            _sensors[s.id] = sensor;
-        }
-
-    }
+    */
 
     public GameObject LittleCube(Transform parent, string name)
     {

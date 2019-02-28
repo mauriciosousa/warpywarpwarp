@@ -12,6 +12,7 @@ public class ConfigProperties
 
 	public static void save(string filename, string property, string value)
 	{
+        Debug.Log("[ConfigProperties] Saving property: " + property);
 		if (File.Exists(filename))
 		{
 			List<string> lines = new List<string>(File.ReadAllLines(filename));

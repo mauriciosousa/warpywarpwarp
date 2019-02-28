@@ -101,7 +101,7 @@ public class CreepyTrackerSurfaceRequest : MonoBehaviour
     public SurfaceRectangle localSurface = null;
     public SurfaceRectangle remoteSurface = null;
     
-    private Main _main;
+    private NewMain _main;
 
     private DateTime lastTry;
     public int requestInterval = 100;

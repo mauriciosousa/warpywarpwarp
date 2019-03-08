@@ -248,8 +248,7 @@ public class NewMain : MonoBehaviour {
                 string r = _gameObjectRotationToString(pivot.transform.rotation);
                 ConfigProperties.save(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.position", p);
                 ConfigProperties.save(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.rotation", r);
-
-            
+                Debug.Log("Eyes Saved");
             }
             else
             {

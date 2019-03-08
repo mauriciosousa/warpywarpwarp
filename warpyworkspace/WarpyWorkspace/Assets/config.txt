@@ -1,5 +1,5 @@
-last.run=2019-03-08-15:15:35
-setup.type=LEFT
+last.run=2019-03-08-15:18:40
+setup.type=RIGHT
 start.formation=FACE_TO_FACE
 
 rpc.port=5000
@@ -34,5 +34,5 @@ right.workspaceCenter.transform.position=-0.2785507:0.9048653:0.7760009
 right.trackedKinect.name=FRANK-SALES
 right.rigidBodyCalibration.transform.position=0.3667089:1.390567:-0.2515455
 right.rigidBodyCalibration.transform.rotation=0.1133844:-0.2135139:0.03565858:0.9696826
-right.remoteCreepyTrackerDelta.rotation=0:0:0:0
-right.remoteCreepyTrackerDelta.position=0:0:0
+right.remoteCreepyTrackerDelta.rotation=0:0:-0.0486039:0.9988182
+right.remoteCreepyTrackerDelta.position=-0.16:0.03:0

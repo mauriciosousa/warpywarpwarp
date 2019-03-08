@@ -58,6 +58,8 @@ public class NewMain : MonoBehaviour {
 
     public Transform workspaceTransform;
 
+    public GameObject leapMotionHandModels;
+
     void Start()
     {
 
@@ -168,7 +170,7 @@ public class NewMain : MonoBehaviour {
         localCreepyTrackerOrigin.parent = _sensors[locKinectName].transform;
         _sensors[locKinectName].transform.position = locpos;
         _sensors[locKinectName].transform.rotation = locrot;
-        _sensors[locKinectName].transform.forward = -_sensors[locKinectName].transform.forward;
+       // _sensors[locKinectName].transform.forward = -_sensors[locKinectName].transform.forward;
         localCreepyTrackerOrigin.parent = null;
         _sensors[locKinectName].transform.parent = localCreepyTrackerOrigin.transform;
 
@@ -181,7 +183,7 @@ public class NewMain : MonoBehaviour {
         remoteCreepyTrackerOrigin.parent = _sensors[remKinectName].transform;
         _sensors[remKinectName].transform.position = rempos;
         _sensors[remKinectName].transform.rotation = remrot;
-        _sensors[remKinectName].transform.forward = -_sensors[remKinectName].transform.forward;
+     //   _sensors[remKinectName].transform.forward = -_sensors[remKinectName].transform.forward;
         remoteCreepyTrackerOrigin.parent = null;
         _sensors[remKinectName].transform.parent = remoteCreepyTrackerOrigin.transform;
     }
@@ -226,11 +228,16 @@ public class NewMain : MonoBehaviour {
             ConfigProperties.save(ConfigFile, "right.rigidBodyCalibration.transform.position", p);
             ConfigProperties.save(ConfigFile, "right.rigidBodyCalibration.transform.rotation", r);
         }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            leapMotionHandModels.SetActive(!leapMotionHandModels.activeSelf);
+        }
     }
 
     private void _configureWorkspace()
     {
-
+        return;
         remoteCreepyTrackerOrigin.transform.parent = remoteWorkspaceOrigin.transform;
 
         remoteWorkspaceOrigin.transform.position = localWorkspaceOrigin.transform.position;

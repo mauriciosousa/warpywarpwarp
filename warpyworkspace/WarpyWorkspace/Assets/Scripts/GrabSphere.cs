@@ -19,11 +19,13 @@ public class GrabSphere : MonoBehaviour {
     public bool rightPinching = false;
     public bool rightGrabbing = false;
 
+    public GameObject glow;
+
     void Start () {
 		
 	}
 	
-	void FixedUpdate () {
+	void Update () {
 
         Vector3 lp1 = leftHand_IndexTip.transform.position;
         Vector3 lp2 = leftHand_ThumbTip.transform.position;
@@ -38,6 +40,8 @@ public class GrabSphere : MonoBehaviour {
 
         rightPinching = Vector3.Distance(rp1, rp2) <= pinchThreashold;
         rightGrabbing = GetComponent<Collider>().bounds.Contains(rightInteractionPosition);
+
+        glow.SetActive(rightGrabbing || leftGrabbing);  
 
         if (rightGrabbing && rightPinching)
         {

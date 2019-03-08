@@ -43,6 +43,7 @@ public class NewMain : MonoBehaviour {
 
     public Transform localCreepyTrackerOrigin;
     public Transform remoteCreepyTrackerOrigin;
+    public Transform remoteCreepyTrackerOriginDelta;
 
     public Dictionary<string, GameObject> _sensors;
     private SurfaceRectangle _localSurface;
@@ -59,7 +60,6 @@ public class NewMain : MonoBehaviour {
     public Transform workspaceTransform;
 
     public GameObject leapMotionHandModels;
-
     void Start()
     {
 
@@ -186,14 +186,14 @@ public class NewMain : MonoBehaviour {
         _sensors[remKinectName].transform.rotation = remrot;
      //   _sensors[remKinectName].transform.forward = -_sensors[remKinectName].transform.forward;
         remoteCreepyTrackerOrigin.parent = null;
-        _sensors[remKinectName].transform.parent = remoteCreepyTrackerOrigin.transform;
+        _sensors[remKinectName].transform.parent = remoteCreepyTrackerOrigin;
 
         Vector3 deltapos = _getPositionFromConfig(ConfigProperties.load(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.position"));
         Quaternion deltarot = _getRotationFromConfig(ConfigProperties.load(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.rotation"));
-        GameObject delta = new GameObject("RemoteCreepyTrackerOriginPivot");
-        remoteCreepyTrackerOrigin.transform.parent = delta.transform;
-        delta.transform.position = deltapos;
-        delta.transform.rotation = deltarot;
+        remoteCreepyTrackerOriginDelta = new GameObject("RemoteCreepyTrackerOriginPivot").transform;
+        remoteCreepyTrackerOrigin.parent = remoteCreepyTrackerOriginDelta;
+        remoteCreepyTrackerOriginDelta.position = deltapos;
+        remoteCreepyTrackerOriginDelta.rotation = deltarot;
 
 
     }
@@ -265,7 +265,7 @@ public class NewMain : MonoBehaviour {
     private void _configureWorkspace()
     {
         return;
-        remoteCreepyTrackerOrigin.transform.parent = remoteWorkspaceOrigin.transform;
+        remoteCreepyTrackerOriginDelta.transform.parent = remoteWorkspaceOrigin.transform;
 
         remoteWorkspaceOrigin.transform.position = localWorkspaceOrigin.transform.position;
         remoteWorkspaceOrigin.transform.rotation = localWorkspaceOrigin.transform.rotation;

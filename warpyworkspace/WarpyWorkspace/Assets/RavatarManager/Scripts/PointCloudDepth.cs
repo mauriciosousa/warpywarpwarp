@@ -22,7 +22,7 @@ public class PointCloudDepth : MonoBehaviour
     public int medianFilterSize = 2;
     public bool calculateNormals = true;
 
-    void Start()
+    public void Init()
     {
         _width = 512;
         _height = 424;

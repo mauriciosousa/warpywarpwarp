@@ -1,4 +1,4 @@
-last.run=2019-03-08-11:55:10
+last.run=2019-03-08-15:15:35
 setup.type=LEFT
 start.formation=FACE_TO_FACE
 
@@ -17,7 +17,8 @@ left.workspaceCenter.transform.rotation=-0.003861481:0.03233589:-0.006906857:0.9
 left.trackedKinect.name=XUXUBELEZA
 left.rigidBodyCalibration.transform.position=0.5075188:1.367918:-0.7997437
 left.rigidBodyCalibration.transform.rotation=0.01751071:-0.9441455:0.1141249:0.3086393
-
+left.remoteCreepyTrackerDelta.rotation=-0.0001708499:0.01239038:-0.01378654:0.9998282
+left.remoteCreepyTrackerDelta.position=0:0.17:0
 
 __SETUP ON THE RIGHT__
 right.setup.address=192.168.0.103
@@ -33,4 +34,5 @@ right.workspaceCenter.transform.position=-0.2785507:0.9048653:0.7760009
 right.trackedKinect.name=FRANK-SALES
 right.rigidBodyCalibration.transform.position=0.3667089:1.390567:-0.2515455
 right.rigidBodyCalibration.transform.rotation=0.1133844:-0.2135139:0.03565858:0.9696826
-
+right.remoteCreepyTrackerDelta.rotation=0:0:0:0
+right.remoteCreepyTrackerDelta.position=0:0:0

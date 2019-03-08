@@ -177,6 +177,7 @@ public class NewMain : MonoBehaviour {
         _deploySensors(_remoteSurface.sensors, remoteCreepyTrackerOrigin);
         Vector3 rempos = _getPositionFromConfig(ConfigProperties.load(ConfigFile, _remotePrefix + ".rigidBodyCalibration.transform.position"));
         Quaternion remrot = _getRotationFromConfig(ConfigProperties.load(ConfigFile, _remotePrefix + ".rigidBodyCalibration.transform.rotation"));
+       
         string remKinectName = ConfigProperties.load(ConfigFile, _remotePrefix + ".trackedKinect.name");
 
         _sensors[remKinectName].transform.parent = null;
@@ -186,6 +187,15 @@ public class NewMain : MonoBehaviour {
      //   _sensors[remKinectName].transform.forward = -_sensors[remKinectName].transform.forward;
         remoteCreepyTrackerOrigin.parent = null;
         _sensors[remKinectName].transform.parent = remoteCreepyTrackerOrigin.transform;
+
+        Vector3 deltapos = _getPositionFromConfig(ConfigProperties.load(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.position"));
+        Quaternion deltarot = _getRotationFromConfig(ConfigProperties.load(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.rotation"));
+        GameObject delta = new GameObject("RemoteCreepyTrackerOriginPivot");
+        remoteCreepyTrackerOrigin.transform.parent = delta.transform;
+        delta.transform.position = deltapos;
+        delta.transform.rotation = deltarot;
+
+
     }
 
     private void Update()
@@ -227,6 +237,24 @@ public class NewMain : MonoBehaviour {
             r = _gameObjectRotationToString(rightRigidBody.transform.rotation);
             ConfigProperties.save(ConfigFile, "right.rigidBodyCalibration.transform.position", p);
             ConfigProperties.save(ConfigFile, "right.rigidBodyCalibration.transform.rotation", r);
+        }
+    
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            GameObject pivot = GameObject.Find("RemoteCreepyTrackerOriginPivot");
+            if(pivot != null)
+            {
+                string p = _gameObjectPositionToString(pivot.transform.position);
+                string r = _gameObjectRotationToString(pivot.transform.rotation);
+                ConfigProperties.save(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.position", p);
+                ConfigProperties.save(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.rotation", r);
+
+            
+            }
+            else
+            {
+                Debug.LogError("NO PIVOT FOUND");
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Space))

@@ -1,8 +1,10 @@
-last.run=2019-03-11-17:44:03
-setup.type=LEFT
+last.run=2019-03-11-19:28:53
+setup.type=RIGHT
 start.formation=FACE_TO_FACE
 
 rpc.port=5000
+
+optitrack.server.address=192.168.0.101
 
 __SETUP ON THE LEFT__
 left.setup.address=192.168.0.103

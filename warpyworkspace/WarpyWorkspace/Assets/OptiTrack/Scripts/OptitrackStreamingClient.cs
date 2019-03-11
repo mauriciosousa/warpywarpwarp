@@ -10,7 +10,7 @@ using System.Threading;
 using UnityEngine;
 using NaturalPoint;
 using NaturalPoint.NatNetLib;
-
+using System.Net.Sockets;
 
 /// <summary>Skeleton naming conventions supported by OptiTrack Motive.</summary>
 public enum OptitrackBoneNameConvention
@@ -142,6 +142,7 @@ public class OptitrackStreamingClient : MonoBehaviour
         Unicast
     }
 
+    public string ConfigFile;
 
     public ClientConnectionType ConnectionType;
     public string LocalAddress = "127.0.0.1";
@@ -180,6 +181,28 @@ public class OptitrackStreamingClient : MonoBehaviour
     private object m_frameDataUpdateLock = new object();
     #endregion Private fields
 
+
+    public void Awake()
+    {
+        ConfigFile = Application.dataPath + "/config.txt";
+        LocalAddress = GetLocalIPAddress();
+        ServerAddress = ConfigProperties.load(ConfigFile, "optitrack.server.address");
+    }
+
+
+    public static string GetLocalIPAddress()
+    {
+        var host = Dns.GetHostEntry(Dns.GetHostName());
+        foreach (var ip in host.AddressList)
+        {
+            Debug.Log(ip);
+            if (ip.AddressFamily == AddressFamily.InterNetwork)
+            {
+                return ip.ToString();
+            }
+        }
+        throw new Exception("No network adapters with an IPv4 address in the system!");
+    }    
 
     private void Update()
     {

@@ -54,6 +54,8 @@ public class NewMain : MonoBehaviour {
     public Transform localWorkspaceOrigin;
     public Transform remoteWorkspaceOrigin;
 
+    public Transform leftARCameraRig_RigidBody;
+    public Transform rightARCameraRig_RigidBody;
     public Transform leftRigidBody;
     public Transform rightRigidBody;
 
@@ -200,6 +202,12 @@ public class NewMain : MonoBehaviour {
 
     private void Update()
     {
+        Transform t = setupLocation == SetupLocation.LEFT ? leftARCameraRig_RigidBody : rightARCameraRig_RigidBody;
+        ARCameraRig.transform.position = t.position;
+        ARCameraRig.transform.rotation = t.rotation;
+
+
+
         if (!_everythingIsConfigured && _localSurface != null && _remoteSurface != null)
         {
             calibrateOptiTrackAndCreepyTracker();

@@ -13,6 +13,8 @@ public class OptitrackRigidBody : MonoBehaviour
 
     public MyDoubleExponentialFilter trans;
 
+    public bool Filtering = false;
+
     [Range(0f, 1f)]
     public float fSmoothing = 0.25f;            // [0..1], lower values closer to raw data
     [Range(0f, 1f)]
@@ -78,8 +80,9 @@ public class OptitrackRigidBody : MonoBehaviour
         if ( rbState != null )
         {
             trans.UpdateValue(rbState.Pose.Position, rbState.Pose.Orientation);
-            this.transform.localPosition = trans.GetFilteredTransform().Position;
-            this.transform.localRotation = trans.GetFilteredTransform().Rotation;
+
+            this.transform.localPosition = Filtering ? trans.GetFilteredTransform().Position : rbState.Pose.Position;
+            this.transform.localRotation = Filtering ? trans.GetFilteredTransform().Rotation : rbState.Pose.Orientation;
         }
     }
 }

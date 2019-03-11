@@ -1,5 +1,5 @@
-last.run=2019-03-08-15:18:40
-setup.type=RIGHT
+last.run=2019-03-11-17:44:03
+setup.type=LEFT
 start.formation=FACE_TO_FACE
 
 rpc.port=5000

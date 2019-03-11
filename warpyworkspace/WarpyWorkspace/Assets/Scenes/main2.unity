@@ -448,6 +448,7 @@ GameObject:
   - component: {fileID: 44025216}
   - component: {fileID: 44025218}
   - component: {fileID: 44025215}
+  - component: {fileID: 44025219}
   m_Layer: 0
   m_Name: main
   m_TagString: Untagged
@@ -474,7 +475,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 44025213}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c168a65ac9892440a81d9df734ee2a3, type: 3}
   m_Name: 
@@ -532,12 +533,31 @@ MonoBehaviour:
   ARCameraRig: {fileID: 90299763}
   localCreepyTrackerOrigin: {fileID: 1634680194}
   remoteCreepyTrackerOrigin: {fileID: 1287507101}
+  remoteCreepyTrackerOriginDelta: {fileID: 0}
   localWorkspaceOrigin: {fileID: 79709717}
   remoteWorkspaceOrigin: {fileID: 1946220525}
   leftRigidBody: {fileID: 1329983194}
   rightRigidBody: {fileID: 0}
   workspaceTransform: {fileID: 268697322}
   leapMotionHandModels: {fileID: 1151665611}
+--- !u!114 &44025219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 44025213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a331805347588fe4a8161c8875d24396, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ConnectionType: 0
+  LocalAddress: 192.168.0.102
+  ServerAddress: 192.168.0.101
+  ServerCommandPort: 1510
+  ServerDataPort: 1511
+  DrawMarkers: 0
+  BoneNamingConvention: 0
 --- !u!1 &72897677
 GameObject:
   m_ObjectHideFlags: 0
@@ -716,6 +736,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 90299763}
+  - component: {fileID: 90299764}
   m_Layer: 0
   m_Name: ARCameraRig
   m_TagString: Untagged
@@ -737,6 +758,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &90299764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 90299762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f77bc200897df4f4483b478b598b0c51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StreamingClient: {fileID: 44025219}
+  RigidBodyId: 1
+  fSmoothing: 0.04
+  fCorrection: 0.05
+  fPrediction: 0.4
+  fJitterRadius: 0.03
+  fMaxDeviationRadius: 0.01
 --- !u!1 &99554129
 GameObject:
   m_ObjectHideFlags: 0
@@ -4443,6 +4482,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1034722259}
+  - component: {fileID: 1034722260}
   m_Layer: 0
   m_Name: RigidBodyIndex4
   m_TagString: Untagged
@@ -4466,6 +4506,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1034722260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1034722258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f77bc200897df4f4483b478b598b0c51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StreamingClient: {fileID: 44025219}
+  RigidBodyId: 3
+  fSmoothing: 0.04
+  fCorrection: 0.05
+  fPrediction: 0.4
+  fJitterRadius: 0.03
+  fMaxDeviationRadius: 0.01
 --- !u!1 &1035451610
 GameObject:
   m_ObjectHideFlags: 0
@@ -5788,6 +5846,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1329983194}
+  - component: {fileID: 1329983195}
   m_Layer: 0
   m_Name: RigidBodyIndex3
   m_TagString: Untagged
@@ -5811,6 +5870,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1329983195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1329983193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f77bc200897df4f4483b478b598b0c51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StreamingClient: {fileID: 44025219}
+  RigidBodyId: 2
+  fSmoothing: 0.04
+  fCorrection: 0.05
+  fPrediction: 0.4
+  fJitterRadius: 0.03
+  fMaxDeviationRadius: 0.01
 --- !u!1001 &1367671022
 Prefab:
   m_ObjectHideFlags: 0

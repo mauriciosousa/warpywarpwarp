@@ -1,5 +1,5 @@
-last.run=2019-03-14-14:10:18
-setup.type=RIGHT
+last.run=2019-03-14-18:25:04
+setup.type=LEFT
 start.formation=FACE_TO_FACE
 
 rpc.port=5000
@@ -15,14 +15,14 @@ left.tracker.surface.request.port=5001
 left.tracker.surface.listener.port=5010
 left.client.avatar.listen.port=5011
 left.sensor.listen.port=5007
-left.workspaceCenter.transform.position=-0.2547953:0.8967322:-1.870555
-left.workspaceCenter.transform.rotation=-0.003861481:0.03233589:-0.006906857:0.9994457
+left.workspaceCenter.transform.position=-0.2482531:0.9004937:-1.846825
+left.workspaceCenter.transform.rotation=0.04289375:0.03610588:0.002479511:-0.9984239
 left.trackedKinect.name=XUXUBELEZA
 left.rigidBodyCalibration.transform.position=0.5075188:1.367918:-0.7997437
 left.rigidBodyCalibration.transform.rotation=0.01751071:-0.9441455:0.1141249:0.3086393
-left.remoteCreepyTrackerDelta.rotation=-0.01282774:-0.003752056:-4.813468E-05:0.9999107
-left.remoteCreepyTrackerDelta.position=0.01:0.01:0.06
-left.eyes.localPosition=-0.005665749:-0.1354534:-0.001975128
+left.remoteCreepyTrackerDelta.rotation=-0.01282771:-0.004188504:-5.373382E-05:0.999909
+left.remoteCreepyTrackerDelta.position=0.02:0.01:0.12
+left.eyes.localPosition=-0.01668159:-0.1180009:-0.04386427
 left.eyes.localRotation=-0.06005644:0.01441897:0.02178455:0.9978531
 
 __SETUP ON THE RIGHT__
@@ -34,12 +34,12 @@ right.tracker.surface.listener.port=5110
 right.client.avatar.listen.port=5111
 right.sensor.listen.port=5107
 right.workspaceCenter.transform.position:0:0:0
-right.workspaceCenter.transform.rotation=0.001210168:-0.9994411:0.01071058:0.0316446
-right.workspaceCenter.transform.position=-0.2785507:0.9048653:0.7760009
+right.workspaceCenter.transform.rotation=0.007487354:0.9994903:0.03077113:-0.004022693
+right.workspaceCenter.transform.position=-0.269306:0.9047585:0.7937854
 right.trackedKinect.name=FRANK-SALES
 right.rigidBodyCalibration.transform.position=0.3667089:1.390567:-0.2515455
 right.rigidBodyCalibration.transform.rotation=0.1133844:-0.2135139:0.03565858:0.9696826
-right.remoteCreepyTrackerDelta.rotation=0.03031196:-0.03021624:0.007978599:0.9990518
-right.remoteCreepyTrackerDelta.position=-0.16:0:0
-right.eyes.localPosition=0.01329516:-0.1438786:-0.03308549
-right.eyes.localRotation=-0.05363305:0.02134446:-0.007022861:0.9983079
+right.remoteCreepyTrackerDelta.rotation=0.03023542:-0.03963048:0.00826392:0.9987227
+right.remoteCreepyTrackerDelta.position=-0.28:-0.04:-0.09
+right.eyes.localPosition=0.0318788:-0.09582595:-0.04975224
+right.eyes.localRotation=0:0:0.006370415:0.9999797

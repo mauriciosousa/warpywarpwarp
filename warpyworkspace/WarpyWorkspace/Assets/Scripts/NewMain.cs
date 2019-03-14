@@ -111,6 +111,11 @@ public class NewMain : MonoBehaviour {
         //remoteCreepyTrackerOrigin.transform.position = _getPositionFromConfig(ConfigProperties.load(ConfigFile, _localPrefix + ".CreepyTrackerOrigin.transform.position"));
         //remoteCreepyTrackerOrigin.transform.rotation = _getRotationFromConfig(ConfigProperties.load(ConfigFile, _localPrefix + ".CreepyTrackerOrigin.transform.rotation"));
 
+
+        GameObject eyes = GameObject.Find("Eyes");
+        eyes.transform.position = _getPositionFromConfig(ConfigProperties.load(ConfigFile, _localPrefix + ".eyes.localPosition"));
+        eyes.transform.rotation = _getRotationFromConfig(ConfigProperties.load(ConfigFile, _localPrefix + ".eyes.localRotation"));
+
         _sensors = new Dictionary<string, GameObject>();
         _surfaceRequest();
 

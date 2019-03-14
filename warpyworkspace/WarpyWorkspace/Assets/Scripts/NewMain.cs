@@ -281,7 +281,7 @@ public class NewMain : MonoBehaviour {
         if (formation == Formation.FACE_TO_FACE)
         {
             remoteWorkspaceOrigin.transform.rotation = Quaternion.LookRotation(-localWorkspaceOrigin.transform.forward, localWorkspaceOrigin.transform.up);
-            remoteWorkspaceOrigin.transform.position += new Vector3(0, 0, 0.2f);
+            remoteWorkspaceOrigin.transform.position += 0.2f * localWorkspaceOrigin.transform.forward;
         }
 
 

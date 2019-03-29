@@ -214,6 +214,9 @@ public class PointCloudMesh : MonoBehaviour
         }
         _colorTex.Apply();
         _depthTex.Apply();
+
+        IKWarpInfo wi = GameObject.Find("BodiesManager").GetComponent<BodiesManager>().armsWarpInfo;
+
         MeshRenderer[] renderers = GetComponentsInChildren<MeshRenderer>();
         for (int i = 0; i < renderers.Length; i++)
         {
@@ -226,6 +229,18 @@ public class PointCloudMesh : MonoBehaviour
             mr.material.SetInt("_SizeFilter", medianFilterSize);
             mr.material.SetInt("_calculateNormals", calculateNormals? 1:0);
 
+            mr.material.SetInt("_Warping", wi.warping ? 1 : 0);
+            mr.material.SetFloat("_Distance", 0.5f);
+
+            mr.material.SetVector("_LEFT_OriginalShoulder", wi.LEFT_OriginalShoulder);
+            mr.material.SetVector("_LEFT_OriginalElbow", wi.LEFT_OriginalElbow);
+            mr.material.SetVector("_LEFT_OriginalWrist", wi.LEFT_OriginalWrist);
+            mr.material.SetVector("_LEFT_OriginalHandTip", wi.LEFT_OriginalHandTip);
+
+            mr.material.SetVector("_RIGHT_OriginalShoulder", wi.RIGHT_OriginalShoulder);
+            mr.material.SetVector("_RIGHT_OriginalElbow", wi.RIGHT_OriginalElbow);
+            mr.material.SetVector("_RIGHT_OriginalWrist", wi.RIGHT_OriginalWrist);
+            mr.material.SetVector("_RIGHT_OriginalHandTip", wi.RIGHT_OriginalHandTip);
         }
 
     }
@@ -238,6 +253,9 @@ public class PointCloudMesh : MonoBehaviour
 
         _colorTex.Apply();
         _depthTex.Apply();
+
+        IKWarpInfo wi = GameObject.Find("BodiesManager").GetComponent<BodiesManager>().armsWarpInfo;
+
         MeshRenderer[] renderers = GetComponentsInChildren<MeshRenderer>();
         for (int i = 0; i < renderers.Length; i++)
         {
@@ -249,6 +267,31 @@ public class PointCloudMesh : MonoBehaviour
             mr.material.SetFloat("_sigmaS", sigmaS);
             mr.material.SetInt("_SizeFilter", medianFilterSize);
             mr.material.SetInt("_calculateNormals", calculateNormals ? 1 : 0);
+
+            mr.material.SetInt("_Warping", wi.warping ? 1 : 0);
+            mr.material.SetFloat("_UpperArmDistance", wi.UpperArmDistance);
+            mr.material.SetFloat("_ForearmDistance", wi.ForearmDistance);
+            mr.material.SetFloat("_HandDistance", wi.HandDistance);
+
+            mr.material.SetInt("_Debug", wi.debug ? 1 : 0);
+
+            mr.material.SetVector("_LEFT_OriginalShoulder", wi.LEFT_OriginalShoulder);
+            mr.material.SetVector("_LEFT_OriginalElbow", wi.LEFT_OriginalElbow);
+            mr.material.SetVector("_LEFT_OriginalWrist", wi.LEFT_OriginalWrist);
+            mr.material.SetVector("_LEFT_OriginalHandTip", wi.LEFT_OriginalHandTip);
+
+            mr.material.SetVector("_RIGHT_OriginalShoulder", wi.RIGHT_OriginalShoulder);
+            mr.material.SetVector("_RIGHT_OriginalElbow", wi.RIGHT_OriginalElbow);
+            mr.material.SetVector("_RIGHT_OriginalWrist", wi.RIGHT_OriginalWrist);
+            mr.material.SetVector("_RIGHT_OriginalHandTip", wi.RIGHT_OriginalHandTip);
+
+            mr.material.SetMatrix("_LEFT_UpperArmMatrix", wi.LEFT_UpperArmMatrix);
+            mr.material.SetMatrix("_LEFT_ForearmMatrix", wi.LEFT_ForearmMatrix);
+            mr.material.SetMatrix("_LEFT_HandMatrix", wi.LEFT_HandMatrix);
+
+            mr.material.SetMatrix("_RIGHT_UpperArmMatrix", wi.RIGHT_UpperArmMatrix);
+            mr.material.SetMatrix("_RIGHT_ForearmMatrix", wi.RIGHT_ForearmMatrix);
+            mr.material.SetMatrix("_RIGHT_HandMatrix", wi.RIGHT_HandMatrix);
         }
 
     }

@@ -3,7 +3,7 @@
 // Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
 // Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
 
-Shader "Custom/Simple Mesh"
+Shader "Custom/MeshSimple"
 {
 	Properties 
 	{
@@ -58,6 +58,32 @@ Shader "Custom/Simple Mesh"
 				float _sigmaS;
 				float _ShaderDistance;
 
+				// VARS PARA DISTORCER OS BRACITOS
+
+
+				int _Warping;
+				float _UpperArmDistance;
+				float _ForearmDistance;
+				float _HandDistance;
+				int _Debug;
+
+				float3 _LEFT_OriginalShoulder;
+				float3 _LEFT_OriginalElbow;
+				float3 _LEFT_OriginalWrist;
+				float3 _LEFT_OriginalHandTip;
+
+				float3 _RIGHT_OriginalShoulder;
+				float3 _RIGHT_OriginalElbow;
+				float3 _RIGHT_OriginalWrist;
+				float3 _RIGHT_OriginalHandTip;
+
+				float4x4 _LEFT_UpperArmMatrix;
+				float4x4 _LEFT_ForearmMatrix;
+				float4x4 _LEFT_HandMatrix;
+
+				float4x4 _RIGHT_UpperArmMatrix;
+				float4x4 _RIGHT_ForearmMatrix;
+				float4x4 _RIGHT_HandMatrix;
 
 
 				// **************************************************************
@@ -203,6 +229,141 @@ Shader "Custom/Simple Mesh"
 					pos.y =  pos.z*(verty-  211.5)/351.001462;
 					pos.w = 1;	
 					
+					// WARPS
+
+					float4 worldPos = mul(unity_ObjectToWorld, pos);
+
+					float4 A;
+					float4 B;
+					int i;
+					float4 p;
+					float inc = 0.05f;
+
+					bool warped = false;
+					//if (_Warping == 1)
+					{
+						// LEFT
+						A = float4(_LEFT_OriginalShoulder, 1.0);
+						B = float4(_LEFT_OriginalElbow, 1.0);
+						for (i = 0; i <= (distance(A, B) / inc) && !warped; i++)
+						{
+							p = A + normalize(B - A) * i * inc;
+							if (distance(worldPos, p) < _UpperArmDistance)
+							{
+								if (_Warping == 1)
+								{
+									pos = mul(unity_WorldToObject, mul(_LEFT_UpperArmMatrix, worldPos));
+									warped = true;
+								}
+								if (_Debug == 1) 
+								{ 
+									c.r = 1; c.g = 0; c.b = 0; 
+								}
+								break;
+							}
+						}
+						A = float4(_LEFT_OriginalElbow, 1.0);
+						B = float4(_LEFT_OriginalWrist, 1.0);
+						for (i = 0; i <= (distance(A, B) / inc) && !warped; i++)
+						{
+							p = A + normalize(B - A) * i * inc;
+							if (distance(worldPos, p) < _ForearmDistance)
+							{
+								if (_Warping == 1)
+								{
+									//pos = worldPos;
+									pos =  mul(_LEFT_UpperArmMatrix, worldPos);
+									pos = mul(unity_WorldToObject, mul(_LEFT_ForearmMatrix, pos));
+									warped = true;
+								}								
+								if (_Debug == 1)
+								{
+									c.r = 0; c.g = 1; c.b = 0;
+								}
+								break;
+							}
+						}
+						A = float4(_LEFT_OriginalWrist, 1.0);
+						B = float4(_LEFT_OriginalHandTip, 1.0);
+						for (i = 0; i <= (distance(A, B) / inc) && !warped; i++)
+						{
+							p = A + normalize(B - A) * i * inc;
+							if (distance(worldPos, p) < _HandDistance)
+							{
+								if (_Warping == 1)
+								{
+									pos = mul(_LEFT_UpperArmMatrix, worldPos);
+									pos = mul(_LEFT_ForearmMatrix, pos);
+									pos = mul(unity_WorldToObject, mul(_LEFT_HandMatrix, pos));
+									warped = true;
+								}	
+								if (_Debug == 1)
+								{
+									c.r = 1; c.g = 0; c.b = 1;
+								}
+								break;
+							}
+						}
+
+						// RIGHT arm
+						A = float4(_RIGHT_OriginalShoulder, 1.0);
+						B = float4(_RIGHT_OriginalElbow, 1.0);
+						for (i = 0; i <= (distance(A, B) / inc); i++)
+						{
+							p = A + normalize(B - A) * i * inc;
+							if (distance(worldPos, p) < _UpperArmDistance)
+							{
+								if (_Warping == 1)
+								{
+									pos = mul(unity_WorldToObject, mul(_RIGHT_UpperArmMatrix, worldPos));
+								}	
+								if (_Debug == 1)
+								{
+									c.r = 1; c.g = 0; c.b = 0;
+								}
+								break;
+							}
+						}
+						A = float4(_RIGHT_OriginalElbow, 1.0);
+						B = float4(_RIGHT_OriginalWrist, 1.0);
+						for (i = 0; i <= (distance(A, B) / inc); i++)
+						{
+							p = A + normalize(B - A) * i * inc;
+							if (distance(worldPos, p) < _ForearmDistance)
+							{
+								if (_Warping == 1)
+								{
+									pos = mul(unity_WorldToObject, mul(_RIGHT_ForearmMatrix, worldPos));
+								}	
+								if (_Debug == 1)
+								{
+									c.r = 0; c.g = 1; c.b = 0;
+								}
+								break;
+							}
+						}
+						A = float4(_RIGHT_OriginalWrist, 1.0);
+						B = float4(_RIGHT_OriginalHandTip, 1.0);
+						for (i = 0; i <= (distance(A, B) / inc); i++)
+						{
+							p = A + normalize(B - A) * i * inc;
+							if (distance(worldPos, p) < _HandDistance)
+							{
+								if (_Warping == 1)
+								{
+									pos = mul(unity_WorldToObject, mul(_RIGHT_HandMatrix, worldPos));
+								}
+								if (_Debug == 1)
+								{
+									c.r = 1; c.g = 0; c.b = 1;
+								}
+								break;
+							}
+						}
+
+					}
+					// END WARPS
+
 					output.pos =  pos;
 					output.color = c;
 					//int intpart;

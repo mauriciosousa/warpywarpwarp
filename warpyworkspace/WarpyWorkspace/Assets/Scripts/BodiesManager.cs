@@ -13,10 +13,38 @@ public class BodiesManager : MonoBehaviour
     public Transform CenterObject;
 
     public Transform humanGO;
+    public CreepyTrackerIKSolver ikLeftArm;
+    public CreepyTrackerIKSolver ikRightArm;
 
     private List<Transform> _listOfChildren;
     private Dictionary<BodyJointType, Transform> _bodyTrans;
 
+
+    [Space(20)]
+    public Transform LeftShoulder;
+    public Transform LeftElbow;
+    public Transform LeftWrist;
+    public Transform LeftHandTip;
+    [Space(10)]
+    public Transform RightShoulder;
+    public Transform RightElbow;
+    public Transform RightWrist;
+    public Transform RightHandTip;
+
+    [Space(10)]
+    [Range(0.01f, 0.5f)]
+    public float UpperArmDistance = 0.1f;
+    [Range(0.01f, 0.5f)]
+    public float ForearmDistance = 0.1f;
+    [Range(0.01f, 0.5f)]
+    public float HandDistance = 0.1f;
+
+    [Space(20)]
+    public bool doArmWarping;
+    public bool DebugBonesPC = false;
+
+
+    public IKWarpInfo armsWarpInfo;
 
     void Start()
     {
@@ -24,6 +52,10 @@ public class BodiesManager : MonoBehaviour
         _listOfChildren = new List<Transform>();
         _bodyTrans = new Dictionary<BodyJointType, Transform>();
         _populateBodyTrans(humanGO);
+        _disassembleHierarchy(humanGO);
+        ikLeftArm.IsActive = doArmWarping;
+        ikRightArm.IsActive = doArmWarping;
+        armsWarpInfo = new IKWarpInfo();
     }
 
     void Update()
@@ -65,12 +97,24 @@ public class BodiesManager : MonoBehaviour
                 human = newHuman;
             }
 
+
             _disassembleHierarchy(humanGO);
             foreach (BodyJointType joint in (BodyJointType[])Enum.GetValues(typeof(BodyJointType)))
             {
                 humanGO.Find(joint.ToString()).localPosition = human.body.Joints[joint];
             }
             _assembleHumanHierarchy(humanGO);
+
+            armsWarpInfo.warping = doArmWarping;
+            armsWarpInfo.UpperArmDistance = UpperArmDistance;
+            armsWarpInfo.ForearmDistance = ForearmDistance;
+            armsWarpInfo.HandDistance = HandDistance;
+            armsWarpInfo.debug = DebugBonesPC;
+            _saveJointInfo(true);
+            ikLeftArm.Solve(doArmWarping);
+            ikRightArm.Solve(doArmWarping);
+            _saveJointInfo(false);
+            armsWarpInfo.Solve();
         }
         _cleanDeadHumans();
     }
@@ -203,5 +247,33 @@ public class BodiesManager : MonoBehaviour
             }
         }
         return ret;
+    }
+
+    private void _saveJointInfo(bool isBeforeIK)
+    {
+        if (isBeforeIK)
+        {
+            armsWarpInfo.LEFT_OriginalShoulder = LeftShoulder.position;
+            armsWarpInfo.LEFT_OriginalElbow = LeftElbow.position;
+            armsWarpInfo.LEFT_OriginalWrist = LeftWrist.position;
+            armsWarpInfo.LEFT_OriginalHandTip = LeftHandTip.position;
+
+            armsWarpInfo.RIGHT_OriginalShoulder = RightShoulder.position;
+            armsWarpInfo.RIGHT_OriginalElbow = RightElbow.position;
+            armsWarpInfo.RIGHT_OriginalWrist = RightWrist.position;
+            armsWarpInfo.RIGHT_OriginalHandTip = RightHandTip.position;
+        }
+        else
+        {
+            armsWarpInfo.LEFT_IKShoulder = LeftShoulder.position;
+            armsWarpInfo.LEFT_IKElbow = LeftElbow.position;
+            armsWarpInfo.LEFT_IKWrist = LeftWrist.position;
+            armsWarpInfo.LEFT_IKHandTip = LeftHandTip.position;
+
+            armsWarpInfo.RIGHT_IKShoulder = RightShoulder.position;
+            armsWarpInfo.RIGHT_IKElbow = RightElbow.position;
+            armsWarpInfo.RIGHT_IKWrist = RightWrist.position;
+            armsWarpInfo.RIGHT_IKHandTip = RightHandTip.position;
+        }
     }
 }

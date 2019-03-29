@@ -149,7 +149,10 @@ public class PointCloudDepth : MonoBehaviour
         }
         _colorTex.Apply();
         _depthTex.Apply();
+
         MeshRenderer[] renderers = GetComponentsInChildren<MeshRenderer>();
+
+
         for (int i = 0; i < renderers.Length; i++)
         {
             MeshRenderer mr = renderers[i];
@@ -160,7 +163,6 @@ public class PointCloudDepth : MonoBehaviour
             mr.material.SetFloat("_sigmaS", sigmaS);
             mr.material.SetInt("_SizeFilter", medianFilterSize);
             mr.material.SetInt("_calculateNormals", calculateNormals? 1:0);
-
         }
 
     }

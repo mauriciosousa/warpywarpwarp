@@ -86,6 +86,33 @@ Shader "Custom/MeshSimple"
 				float4x4 _RIGHT_HandMatrix;
 
 
+				float3 head;
+				float3 neck;
+				float3 spineShoulder;
+				float3 spineMid;
+				float3 spineBase;
+				float3 leftShoulder;
+				float3 leftElbow;
+				float3 leftWrist;
+				float3 leftHand;
+				float3 leftThumb;
+				float3 leftHandTip;
+				float3 leftHip;
+				float3 leftKnee;
+				float3 leftAnkle;
+				float3 leftFoot;
+				float3 rightShoulder;
+				float3 rightElbow;
+				float3 rightWrist;
+				float3 rightHand;
+				float3 rightThumb;
+				float3 rightHandTip;
+				float3 rightHip;
+				float3 rightKnee;
+				float3 rightAnkle;
+				float3 rightFoot;
+
+
 				// **************************************************************
 				// Shader Programs												*
 				// **************************************************************
@@ -198,6 +225,49 @@ Shader "Custom/MeshSimple"
 					return n;
 				}
 
+				float distToBone(float3 p, float3 start, float3 end)
+				{
+					float3 v = end - start;
+					float3 w = p - start;
+
+					double c1 = dot(w, v);
+					if (c1 <= 0)
+					{
+						return distance(p, start);
+					}
+
+					double c2 = dot(v, v);
+					if (c2 <= c1)
+					{
+						return distance(p, end);
+					}
+
+					double b = c1 / c2;
+					float3 Pb = start + b * v;
+
+					return distance(p, Pb);
+				}
+
+				/*
+				float   dist_Point_to_Segment(Point P, Segment S)
+				{
+					Vector v = S.P1 - S.P0;
+					Vector w = P - S.P0;
+
+					double c1 = dot(w, v);
+					if (c1 <= 0)
+						return d(P, S.P0);
+
+					double c2 = dot(v, v);
+					if (c2 <= c1)
+						return d(P, S.P1);
+
+					double b = c1 / c2;
+					Point Pb = S.P0 + b * v;
+					return d(P, Pb);
+				}
+				*/
+
 				// Vertex Shader ------------------------------------------------
 				v2f VS_Main(appdata_full v)
 				{
@@ -237,132 +307,412 @@ Shader "Custom/MeshSimple"
 					float4 B;
 					int i;
 					float4 p;
-					float inc = 0.05f;
+					float inc = 0.1f;
 
-					bool warped = false;
-					//if (_Warping == 1)
+					bool leftWarped = false;
+					bool rightWarped = false;
+
+					/*
+
+                    // LEFT
+                    A = float4(_LEFT_OriginalShoulder, 1.0);
+                    B = float4(_LEFT_OriginalElbow, 1.0);
+                    for (i = 0; i <= (distance(A, B) / inc) && !leftWarped; i++)
+                    {
+                        p = A + normalize(B - A) * i * inc;
+                        if (distance(worldPos, p) < _UpperArmDistance)
+                        {
+                            if (_Warping == 1)
+                            {
+                                pos = mul(unity_WorldToObject, mul(_LEFT_UpperArmMatrix, worldPos));
+                                leftWarped = true;
+                            }
+                            if (_Debug == 1) 
+                            { 
+                                c.r = 1; c.g = 0; c.b = 0; 
+                            }
+                            break;
+                        }
+                    }
+                    A = float4(_LEFT_OriginalElbow, 1.0);
+                    B = float4(_LEFT_OriginalWrist, 1.0);
+                    for (i = 1; i <= (distance(A, B) / inc) && !leftWarped; i++)
+                    {
+                        p = A + normalize(B - A) * i * inc;
+                        if (distance(worldPos, p) < _ForearmDistance)
+                        {
+                            if (_Warping == 1)
+                            {
+                                //pos = worldPos;
+                                pos =  mul(_LEFT_UpperArmMatrix, worldPos);
+                                pos = mul(unity_WorldToObject, mul(_LEFT_ForearmMatrix, pos));
+                                leftWarped = true;
+                            }								
+                            if (_Debug == 1)
+                            {
+                                c.r = 0; c.g = 1; c.b = 0;
+                            }
+                            break;
+                        }
+                    }
+                    A = float4(_LEFT_OriginalWrist, 1.0);
+                    B = float4(_LEFT_OriginalHandTip, 1.0);
+                    for (i = 1; i <= (distance(A, B) / inc) && !leftWarped; i++)
+                    {
+                        p = A + normalize(B - A) * i * inc;
+                        if (distance(worldPos, p) < _HandDistance)
+                        {
+                            if (_Warping == 1)
+                            {
+                                pos = mul(_LEFT_UpperArmMatrix, worldPos);
+                                pos = mul(_LEFT_ForearmMatrix, pos);
+                                pos = mul(unity_WorldToObject, mul(_LEFT_HandMatrix, pos));
+                                leftWarped = true;
+                            }	
+                            if (_Debug == 1)
+                            {
+                                c.r = 1; c.g = 0; c.b = 1;
+                            }
+                            break;
+                        }
+                    }
+
+                    // RIGHT arm
+					A = float4(_RIGHT_OriginalShoulder, 1.0);
+					B = float4(_RIGHT_OriginalElbow, 1.0);
+					for (i = 0; i <= (distance(A, B) / inc) && !rightWarped; i++)
 					{
-						// LEFT
-						A = float4(_LEFT_OriginalShoulder, 1.0);
-						B = float4(_LEFT_OriginalElbow, 1.0);
-						for (i = 0; i <= (distance(A, B) / inc) && !warped; i++)
+						p = A + normalize(B - A) * i * inc;
+						if (distance(worldPos, p) < _UpperArmDistance)
 						{
-							p = A + normalize(B - A) * i * inc;
-							if (distance(worldPos, p) < _UpperArmDistance)
+							if (_Warping == 1)
 							{
-								if (_Warping == 1)
-								{
-									pos = mul(unity_WorldToObject, mul(_LEFT_UpperArmMatrix, worldPos));
-									warped = true;
-								}
-								if (_Debug == 1) 
-								{ 
-									c.r = 1; c.g = 0; c.b = 0; 
-								}
-								break;
+								pos = mul(unity_WorldToObject, mul(_RIGHT_UpperArmMatrix, worldPos));
+								rightWarped = true;
 							}
+							if (_Debug == 1)
+							{
+								c.r = 1; c.g = 0; c.b = 0;
+							}
+							break;
 						}
-						A = float4(_LEFT_OriginalElbow, 1.0);
-						B = float4(_LEFT_OriginalWrist, 1.0);
-						for (i = 0; i <= (distance(A, B) / inc) && !warped; i++)
+					}
+					A = float4(_RIGHT_OriginalElbow, 1.0);
+					B = float4(_RIGHT_OriginalWrist, 1.0);
+					for (i = 1; i <= (distance(A, B) / inc) && !rightWarped; i++)
+					{
+						p = A + normalize(B - A) * i * inc;
+						if (distance(worldPos, p) < _ForearmDistance)
 						{
-							p = A + normalize(B - A) * i * inc;
-							if (distance(worldPos, p) < _ForearmDistance)
+							if (_Warping == 1)
 							{
-								if (_Warping == 1)
-								{
-									//pos = worldPos;
-									pos =  mul(_LEFT_UpperArmMatrix, worldPos);
-									pos = mul(unity_WorldToObject, mul(_LEFT_ForearmMatrix, pos));
-									warped = true;
-								}								
-								if (_Debug == 1)
-								{
-									c.r = 0; c.g = 1; c.b = 0;
-								}
-								break;
+								//pos = worldPos;
+								pos = mul(_RIGHT_UpperArmMatrix, worldPos);
+								pos = mul(unity_WorldToObject, mul(_RIGHT_ForearmMatrix, pos));
+								rightWarped = true;
 							}
+							if (_Debug == 1)
+							{
+								c.r = 0; c.g = 1; c.b = 0;
+							}
+							break;
 						}
-						A = float4(_LEFT_OriginalWrist, 1.0);
-						B = float4(_LEFT_OriginalHandTip, 1.0);
-						for (i = 0; i <= (distance(A, B) / inc) && !warped; i++)
+					}
+					A = float4(_RIGHT_OriginalWrist, 1.0);
+					B = float4(_RIGHT_OriginalHandTip, 1.0);
+					for (i = 1; i <= (distance(A, B) / inc) && !rightWarped; i++)
+					{
+						p = A + normalize(B - A) * i * inc;
+						if (distance(worldPos, p) < _HandDistance)
 						{
-							p = A + normalize(B - A) * i * inc;
-							if (distance(worldPos, p) < _HandDistance)
+							if (_Warping == 1)
 							{
-								if (_Warping == 1)
-								{
-									pos = mul(_LEFT_UpperArmMatrix, worldPos);
-									pos = mul(_LEFT_ForearmMatrix, pos);
-									pos = mul(unity_WorldToObject, mul(_LEFT_HandMatrix, pos));
-									warped = true;
-								}	
-								if (_Debug == 1)
-								{
-									c.r = 1; c.g = 0; c.b = 1;
-								}
-								break;
+								pos = mul(_RIGHT_UpperArmMatrix, worldPos);
+								pos = mul(_RIGHT_ForearmMatrix, pos);
+								pos = mul(unity_WorldToObject, mul(_RIGHT_HandMatrix, pos));
+								rightWarped = true;
 							}
-						}
-
-						// RIGHT arm
-						A = float4(_RIGHT_OriginalShoulder, 1.0);
-						B = float4(_RIGHT_OriginalElbow, 1.0);
-						for (i = 0; i <= (distance(A, B) / inc); i++)
-						{
-							p = A + normalize(B - A) * i * inc;
-							if (distance(worldPos, p) < _UpperArmDistance)
+							if (_Debug == 1)
 							{
-								if (_Warping == 1)
-								{
-									pos = mul(unity_WorldToObject, mul(_RIGHT_UpperArmMatrix, worldPos));
-								}	
-								if (_Debug == 1)
-								{
-									c.r = 1; c.g = 0; c.b = 0;
-								}
-								break;
+								c.r = 1; c.g = 0; c.b = 1;
 							}
+							break;
 						}
-						A = float4(_RIGHT_OriginalElbow, 1.0);
-						B = float4(_RIGHT_OriginalWrist, 1.0);
-						for (i = 0; i <= (distance(A, B) / inc); i++)
-						{
-							p = A + normalize(B - A) * i * inc;
-							if (distance(worldPos, p) < _ForearmDistance)
-							{
-								if (_Warping == 1)
-								{
-									pos = mul(unity_WorldToObject, mul(_RIGHT_ForearmMatrix, worldPos));
-								}	
-								if (_Debug == 1)
-								{
-									c.r = 0; c.g = 1; c.b = 0;
-								}
-								break;
-							}
-						}
-						A = float4(_RIGHT_OriginalWrist, 1.0);
-						B = float4(_RIGHT_OriginalHandTip, 1.0);
-						for (i = 0; i <= (distance(A, B) / inc); i++)
-						{
-							p = A + normalize(B - A) * i * inc;
-							if (distance(worldPos, p) < _HandDistance)
-							{
-								if (_Warping == 1)
-								{
-									pos = mul(unity_WorldToObject, mul(_RIGHT_HandMatrix, worldPos));
-								}
-								if (_Debug == 1)
-								{
-									c.r = 1; c.g = 0; c.b = 1;
-								}
-								break;
-							}
-						}
-
 					}
 					// END WARPS
+					*/
+
+
+					// FIND NEAREST BONE
+
+
+
+					double d = 100000;
+					int bone = -1;
+
+					float dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), head, neck);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 0;
+					}
+
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), neck, spineShoulder);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 0;
+					}
+
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), spineShoulder, spineMid);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 0;
+					}
+
+
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), spineShoulder, leftShoulder);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 0;
+					}
+
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), spineShoulder, rightShoulder);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 0;
+					}
+
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), spineMid, spineBase);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 0;
+					}
+
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), neck, leftShoulder);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 0;
+					}
+
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), neck, rightShoulder);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 0;
+					}
+
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), spineBase, leftHip);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 0;
+					}
+
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), spineBase, rightHip);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 0;
+					}
+
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), rightHip, rightKnee);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 0;
+					}
+
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), rightKnee, rightAnkle);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 0;
+					}
+
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), rightAnkle, rightFoot);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 0;
+					}
+
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), leftHip, leftKnee);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 0;
+					}
+
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), leftHip, leftKnee);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 0;
+					}
+
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), leftKnee, leftAnkle);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 0;
+					}
+
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), leftAnkle, leftFoot);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 0;
+					}
+
+
+					// right upperarm
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), rightShoulder, rightElbow);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 1;
+					}
+
+					// right forearm
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), rightElbow, rightWrist);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 2;
+					}
+
+					// right hand
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), rightWrist, rightHandTip);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 3;
+					}
+
+					// left upperarm
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), leftShoulder, leftElbow);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 4;
+					}
+
+					// left forearm
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), leftElbow, leftWrist);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 5;
+					}
+
+					// left hand
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), leftWrist, leftHandTip);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 6;
+					}
+
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), rightShoulder, rightHip);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 0;
+					}
+
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), leftShoulder, leftHip);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 0;
+					}
+
+					//right upper arm
+					if (bone == 1)
+					{
+						if (_Debug == 1)
+						{
+							c.r = 1; c.g = 0; c.b = 1;
+						}
+						if (_Warping == 1)
+						{
+							pos = mul(unity_WorldToObject, mul(_RIGHT_UpperArmMatrix, worldPos));
+						}
+					}
+					//right forearm
+					else if (bone == 2)
+					{
+						if (_Debug == 1)
+						{
+							c.r = 1; c.g = 1; c.b = 0;
+						}
+						if (_Warping == 1)
+						{
+							pos = mul(_RIGHT_UpperArmMatrix, worldPos);
+							pos = mul(unity_WorldToObject, mul(_RIGHT_ForearmMatrix, pos));
+						}
+					}
+					//right hand
+					else if (bone == 3)
+					{
+						if (_Debug == 1)
+						{
+							c.r = 0; c.g = 1; c.b = 1;
+						}
+						if (_Warping == 1)
+						{
+							pos = mul(_RIGHT_UpperArmMatrix, worldPos);
+							pos = mul(_RIGHT_ForearmMatrix, pos);
+							pos = mul(unity_WorldToObject, mul(_RIGHT_HandMatrix, pos));
+						}
+					}
+					//left upper arm
+					else if (bone == 4)
+					{
+						if (_Debug == 1)
+						{
+							c.r = 1; c.g = 0; c.b = 1;
+						}
+						if (_Warping == 1)
+						{
+							pos = mul(unity_WorldToObject, mul(_LEFT_UpperArmMatrix, worldPos));
+						}
+					}
+					//left forearm
+					else if (bone == 5)
+					{
+						if (_Debug == 1)
+						{
+							c.r = 1; c.g = 1; c.b = 0;
+						}
+						if (_Warping == 1)
+						{
+							pos = mul(_LEFT_UpperArmMatrix, worldPos);
+							pos = mul(unity_WorldToObject, mul(_LEFT_ForearmMatrix, pos));
+						}
+					}
+					//left hand
+					else if (bone == 6)
+					{
+						if (_Debug == 1)
+						{
+							c.r = 0; c.g = 1; c.b = 1;
+						}
+						if (_Warping == 1)
+						{
+							pos = mul(_LEFT_UpperArmMatrix, worldPos);
+							pos = mul(_LEFT_ForearmMatrix, pos);
+							pos = mul(unity_WorldToObject, mul(_LEFT_HandMatrix, pos));
+						}
+					}
+				
+					// END NEAREST BONE
 
 					output.pos =  pos;
 					output.color = c;
@@ -381,7 +731,6 @@ Shader "Custom/MeshSimple"
 					
 					return output;
 				}
-
 
 			
 				// Geometry Shader -----------------------------------------------------

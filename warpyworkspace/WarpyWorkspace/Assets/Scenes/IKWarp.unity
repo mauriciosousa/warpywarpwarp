@@ -464,7 +464,7 @@ MonoBehaviour:
   ForearmDistance: 0.15
   HandDistance: 0.15
   doArmWarping: 1
-  DebugBonesPC: 0
+  DebugBonesPC: 1
 --- !u!4 &87961181
 Transform:
   m_ObjectHideFlags: 0
@@ -745,8 +745,8 @@ Camera:
   m_GameObject: {fileID: 315132711}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 1, g: 1, b: 1, a: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -780,7 +780,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 315132711}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1556,6 +1556,7 @@ GameObject:
   m_Component:
   - component: {fileID: 666839362}
   - component: {fileID: 666839361}
+  - component: {fileID: 666839363}
   m_Layer: 0
   m_Name: IKLeftArm
   m_TagString: Untagged
@@ -1637,6 +1638,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &666839363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 666839360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5afb867cf8577bf42ad89bb998ecc02b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &678115234
 GameObject:
   m_ObjectHideFlags: 0
@@ -1997,7 +2009,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 903368902}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.787, y: 0.773, z: 0.676}
+  m_LocalPosition: {x: 0.331, y: 0.773, z: 1.7}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 666839362}
@@ -2759,7 +2771,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1390130148}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.86, y: 0.773, z: 0.676}
+  m_LocalPosition: {x: -0.287, y: 0.773, z: 1.7}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 1091259004}

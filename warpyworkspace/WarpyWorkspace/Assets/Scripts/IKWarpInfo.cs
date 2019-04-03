@@ -77,8 +77,6 @@ public class IKWarpInfo {
         // Shoulder -> Elbow
         LEFT_UpperArmMatrix = _calcM(shoulder, oldVector_upper, newVector_upper);
 
-
-
         elbow = LEFT_UpperArmMatrix.MultiplyPoint(elbow);
         wrist = LEFT_UpperArmMatrix.MultiplyPoint(wrist);
         Vector3 oldVector_forearm = wrist - elbow;
@@ -86,7 +84,6 @@ public class IKWarpInfo {
         // Elbow -> Wrist
 
         LEFT_ForearmMatrix = _calcM(elbow, oldVector_forearm, newVector_forearm);
-
 
         wrist = LEFT_ForearmMatrix.MultiplyPoint(wrist);
         handTip = LEFT_UpperArmMatrix.MultiplyPoint(handTip);
@@ -100,27 +97,33 @@ public class IKWarpInfo {
 
 
 
-
-
-        // RIGHT ARM
+        //  ARM
         shoulder = RIGHT_OriginalShoulder;
         elbow = RIGHT_OriginalElbow;
         wrist = RIGHT_OriginalWrist;
         handTip = RIGHT_OriginalHandTip;
 
         oldVector_upper = RIGHT_OriginalElbow - RIGHT_OriginalShoulder;
-        oldVector_forearm = RIGHT_OriginalWrist - RIGHT_OriginalElbow;
-        oldVector_hand = RIGHT_OriginalHandTip - RIGHT_OriginalWrist;
-
         newVector_upper = RIGHT_IKElbow - RIGHT_IKShoulder;
+        // Shoulder -> Elbow
+        RIGHT_UpperArmMatrix = _calcM(shoulder, oldVector_upper, newVector_upper);
+
+        elbow = RIGHT_UpperArmMatrix.MultiplyPoint(elbow);
+        wrist = RIGHT_UpperArmMatrix.MultiplyPoint(wrist);
+        oldVector_forearm = wrist - elbow;
         newVector_forearm = RIGHT_IKWrist - RIGHT_IKElbow;
+        // Elbow -> Wrist
+
+        RIGHT_ForearmMatrix = _calcM(elbow, oldVector_forearm, newVector_forearm);
+
+        wrist = RIGHT_ForearmMatrix.MultiplyPoint(wrist);
+        handTip = RIGHT_UpperArmMatrix.MultiplyPoint(handTip);
+        handTip = RIGHT_ForearmMatrix.MultiplyPoint(handTip);
+
+        oldVector_hand = handTip - wrist;
         newVector_hand = RIGHT_IKHandTip - RIGHT_IKWrist;
-
-
-
-        RIGHT_UpperArmMatrix = Matrix4x4.identity; //_calcM(RIGHT_OriginalShoulder, RIGHT_OriginalElbow, RIGHT_IKShoulder, RIGHT_IKElbow);
-        RIGHT_ForearmMatrix = Matrix4x4.identity; // _calcM(RIGHT_OriginalElbow, RIGHT_OriginalWrist, RIGHT_IKElbow, RIGHT_IKWrist);
-        RIGHT_HandMatrix = Matrix4x4.identity; //_calcM(RIGHT_OriginalWrist, RIGHT_OriginalHandTip, RIGHT_IKWrist, RIGHT_IKHandTip);
+        // Wrist -> HandTip
+        RIGHT_HandMatrix = _calcM(wrist, oldVector_hand, newVector_hand);
     }
 
     private Matrix4x4 _calcM(Vector3 pivot, Vector3 oldVector, Vector3 newVector)
@@ -133,12 +136,13 @@ public class IKWarpInfo {
 
     private void _reset()
     {
-        LEFT_UpperArmMatrix = Matrix4x4.identity;
-        LEFT_ForearmMatrix = Matrix4x4.identity;
-        LEFT_HandMatrix = Matrix4x4.identity;
-
-        RIGHT_UpperArmMatrix = Matrix4x4.identity;
-        RIGHT_ForearmMatrix = Matrix4x4.identity;
-        RIGHT_HandMatrix = Matrix4x4.identity;
+       LEFT_UpperArmMatrix = Matrix4x4.identity;
+       LEFT_ForearmMatrix = Matrix4x4.identity;
+       LEFT_HandMatrix = Matrix4x4.identity;
+       
+       RIGHT_UpperArmMatrix = Matrix4x4.identity;
+       RIGHT_ForearmMatrix = Matrix4x4.identity;
+       RIGHT_HandMatrix = Matrix4x4.identity;
     }
+
 }

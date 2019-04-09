@@ -35,7 +35,7 @@ public class CreepyTrackerIKSolver : MonoBehaviour
 	}
  
 	public bool IsActive = true;
-	public Transform Target;
+	//public Transform Target;
 	public JointEntity[] JointEntities;
 	
 	public bool IsDamping = false;
@@ -43,8 +43,8 @@ public class CreepyTrackerIKSolver : MonoBehaviour
 	
 	void Start ()
 	{
-		if (Target == null)
-			Target = transform;
+		//if (Target == null)
+		//	Target = transform;
 
 		foreach(JointEntity jointEntity in JointEntities) {
 			jointEntity._initialRotation = jointEntity.Joint.localRotation;
@@ -68,8 +68,16 @@ public class CreepyTrackerIKSolver : MonoBehaviour
 
     }
 
-    public void Solve (bool isActive)
+    private Vector3 _lastPosition;
+    public void Solve (bool isActive, Vector3 target, float lerpTime)
 	{
+        if (_lastPosition != null)
+        {
+            target = Vector3.Lerp(_lastPosition, target, lerpTime);
+        }
+        
+        _lastPosition = target;
+
         IsActive = isActive;
         if (!IsActive) return;
 
@@ -97,7 +105,7 @@ public class CreepyTrackerIKSolver : MonoBehaviour
 			// CREATE THE VECTOR TO THE CURRENT EFFECTOR POS
 			currentVector = curEnd - rootPos;
 			// CREATE THE DESIRED EFFECTOR POSITION VECTOR
-			targetVector = Target.position - rootPos;
+			targetVector = target - rootPos;
  
 			// NORMALIZE THE VECTORS
 			currentVector.Normalize ();
@@ -126,7 +134,7 @@ public class CreepyTrackerIKSolver : MonoBehaviour
                 CheckAngleRestrictions (JointEntities[link]);
             }
 			link--;
-		} while (tries++ < MAX_IK_TRIES && (curEnd - Target.position).sqrMagnitude > IK_POS_THRESH);
+		} while (tries++ < MAX_IK_TRIES && (curEnd - target).sqrMagnitude > IK_POS_THRESH);
     }
  
 	/// <summary>

@@ -31,20 +31,26 @@ public class BodiesManager : MonoBehaviour
     public Transform RightWrist;
     public Transform RightHandTip;
 
-    [Space(10)]
-    [Range(0.01f, 0.5f)]
-    public float UpperArmDistance = 0.1f;
-    [Range(0.01f, 0.5f)]
-    public float ForearmDistance = 0.1f;
-    [Range(0.01f, 0.5f)]
-    public float HandDistance = 0.1f;
+    //[Space(10)]
+    //[Range(0.01f, 0.5f)]
+    private float UpperArmDistance = 0.1f;
+    //[Range(0.01f, 0.5f)]
+    private float ForearmDistance = 0.1f;
+    //[Range(0.01f, 0.5f)]
+    private float HandDistance = 0.1f;
 
     [Space(20)]
+    [Header("Body Warping Settings:")]
     public bool doArmWarping;
     public bool DebugBonesPC = false;
+    [Range(0, 1)]
+    public float lerpTime = 0.2f;
 
 
     public IKWarpInfo armsWarpInfo;
+
+    public Transform leftTarget;
+    public Transform rightTarget;
 
     void Start()
     {
@@ -111,8 +117,8 @@ public class BodiesManager : MonoBehaviour
             armsWarpInfo.HandDistance = HandDistance;
             armsWarpInfo.debug = DebugBonesPC;
             _saveJointInfo(true);
-            ikLeftArm.Solve(doArmWarping);
-            ikRightArm.Solve(doArmWarping);
+            ikLeftArm.Solve(doArmWarping, leftTarget.position, lerpTime);
+            ikRightArm.Solve(doArmWarping, rightTarget.position, lerpTime);
             _saveJointInfo(false);
             armsWarpInfo.Solve();
         }
@@ -121,6 +127,7 @@ public class BodiesManager : MonoBehaviour
 
     public void setNewFrame(Body[] bodies)
     {
+        print("new frame");
         foreach (Body b in bodies)
         {
             try

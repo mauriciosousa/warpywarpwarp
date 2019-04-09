@@ -328,7 +328,7 @@ public class PointCloudMesh : MonoBehaviour
         }
         catch
         {
-            // no body?
+            print("no body");
         }
     }
 

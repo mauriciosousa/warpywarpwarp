@@ -123,6 +123,8 @@ public class Workspace : MonoBehaviour {
     private ResultsFile _resultsFile;
     private string _resultsFolder = "Results";
 
+    private WarpyNetwork _network;
+
     void Awake()
     {
         _resultsFolder = Application.dataPath + "/" + _resultsFolder;
@@ -132,6 +134,8 @@ public class Workspace : MonoBehaviour {
             Debug.Log("Results Folder created!");
         }
 
+
+        _network = GetComponent<WarpyNetwork>();
          
     }
 
@@ -163,10 +167,14 @@ public class Workspace : MonoBehaviour {
         }
         else Debug.LogError("There is no Ballz!");
 
-        _participant = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.ASSEMBLER;        
+        _participant = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.ASSEMBLER;
+
+        _network = GetComponent<WarpyNetwork>();
+        _network.__init__();
+
     }
-	
-	void Update ()
+
+    void Update ()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {

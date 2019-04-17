@@ -130,7 +130,7 @@ public class Workspace : MonoBehaviour {
     private string ConfigFile;
 
 
-    private float buttonTimer = 2.0f;
+    private float buttonTimer = 1.0f;
     private float _lastButtonPress = 0.0f;
 
     void Awake()

@@ -130,6 +130,9 @@ public class Workspace : MonoBehaviour {
     private string ConfigFile;
 
 
+    private float buttonTimer = 2.0f;
+    private float _lastButtonPress = 0.0f;
+
     void Awake()
     {
         TASK = 0;
@@ -188,7 +191,18 @@ public class Workspace : MonoBehaviour {
     void Update ()
     {
         bool button = Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W);
-        if (button && _network.Connected)
+
+        float ellapsed = Time.time - _lastButtonPress;
+        if (button)
+        {
+            if (ellapsed < buttonTimer)
+            {
+                button = false;
+            }
+            _lastButtonPress = Time.time;
+        }
+
+        if (button && _network.Connected && _participant == Role.ASSEMBLER)
         {
             _networkView.RPC("RPC_ButtonPressed", RPCMode.All);
         }

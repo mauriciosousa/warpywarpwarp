@@ -13,6 +13,8 @@ public class WarpyNetwork : MonoBehaviour {
     public NetworkPeerType networkPeerType;
     private NetworkView _networkView;
 
+    private Workspace workspace;
+
     public bool Connected
     {
         get
@@ -25,6 +27,7 @@ public class WarpyNetwork : MonoBehaviour {
     {
        ConfigFile = Application.dataPath + "/config.txt";
         _networkView = GetComponent<NetworkView>();
+        workspace = GetComponent<Workspace>();
     }
 
     internal void __init__()
@@ -58,4 +61,12 @@ public class WarpyNetwork : MonoBehaviour {
     {
         Debug.Log("Player Disconnected @ " + player.ipAddress);
     }
+
+    [RPC]
+    void RPC_ButtonPressed()
+    {
+        workspace.buttonPressed();
+    }
+
+
 }

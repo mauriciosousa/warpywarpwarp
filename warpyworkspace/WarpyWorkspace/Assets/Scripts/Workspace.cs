@@ -124,6 +124,8 @@ public class Workspace : MonoBehaviour {
     private string _resultsFolder = "Results";
 
     private WarpyNetwork _network;
+    private NetworkView _networkView;
+    
 
     private string ConfigFile;
 
@@ -141,6 +143,7 @@ public class Workspace : MonoBehaviour {
 
 
         _network = GetComponent<WarpyNetwork>();
+        _networkView = GetComponent<NetworkView>();
         _location = (SetupLocation)Enum.Parse(enumType: typeof(SetupLocation), value: ConfigProperties.load(ConfigFile, "setup.type"));
         _test = (Test)Enum.Parse(enumType: typeof(Test), value: ConfigProperties.load(ConfigFile, "test"));
         _condition = (Formation)Enum.Parse(enumType: typeof(Formation), value: ConfigProperties.load(ConfigFile, "start.formation"));
@@ -184,10 +187,10 @@ public class Workspace : MonoBehaviour {
 
     void Update ()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        bool button = Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W);
+        if (button && _network.Connected)
         {
-            _endPreviousTask();
-            _startNextTask();
+            _networkView.RPC("RPC_ButtonPressed", RPCMode.All);
         }
 
 
@@ -242,14 +245,6 @@ public class Workspace : MonoBehaviour {
             else
             {
                 Debug.LogError("no balls");
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            if (TASK < 1)
-            {
-                if (_test == Test.A) _test = Test.B; else _test = Test.A;
             }
         }
 
@@ -411,7 +406,8 @@ public class Workspace : MonoBehaviour {
 
     private void OnGUI()
     {
-        GUI.Label(new Rect(10, 10, 500, 50), _test.ToString(), InfoToModeratorStyle);
+        GUI.Label(new Rect(10, 10, 500, 50), "" + _network.Connected, InfoToModeratorStyle);
+
 
         if (TASK > numberOfTasks)
         {
@@ -439,5 +435,11 @@ public class Workspace : MonoBehaviour {
                 GUI.Label(new Rect(10, top, 500, 50), "TIME: " + Math.Round((Time.time - time), 1) + "s", InfoToModeratorStyle);
             }
         } 
+    }
+
+    internal void buttonPressed()
+    {
+        _endPreviousTask();
+        _startNextTask();
     }
 }

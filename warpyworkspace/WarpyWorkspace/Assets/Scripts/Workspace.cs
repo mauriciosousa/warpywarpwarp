@@ -156,7 +156,7 @@ public class Workspace : MonoBehaviour {
     void Start()
     {
         habituationTasks = new List<int>() { 1, 6, 12, 17};
-        leftIsInstructorTasks = new List<int>() { 1, 2, 3, 4, 5, 12, 13, 14, 15, 16};
+        leftIsInstructorTasks = new List<int>() { 1, 2, 3, 4, 5, 11, 12, 13, 14, 15, 16};
 
         instructors_balls_filenames = Application.dataPath + "/instructor_balls.txt";
         ballsParent = new GameObject("balls");

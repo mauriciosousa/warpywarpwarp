@@ -101,14 +101,14 @@ public class Workspace : MonoBehaviour {
     public Transform spawnBalls;
 
     private int numberOfTasks = 21;
-    private int _task = 0;
+    public int TASK = 0;
 
     private string instructors_balls_filenames;
 
-    private Role _participant = Role.INSTRUCTOR;
-    private SetupLocation _location = SetupLocation.LEFT;
-    private Test _test = Test.A;
-    public Formation _condition = Formation.FACE_TO_FACE;
+    public Role _participant = Role.INSTRUCTOR;
+    public SetupLocation _location;
+    public Test _test;
+    public Formation _condition;
 
     private GameObject[] balls;
 
@@ -125,18 +125,26 @@ public class Workspace : MonoBehaviour {
 
     private WarpyNetwork _network;
 
+    private string ConfigFile;
+
+
     void Awake()
     {
+        TASK = 0;
         _resultsFolder = Application.dataPath + "/" + _resultsFolder;
         if (!Directory.Exists(_resultsFolder))
         {
             Directory.CreateDirectory(_resultsFolder);
             Debug.Log("Results Folder created!");
         }
+        ConfigFile = Application.dataPath + "/config.txt";
 
 
         _network = GetComponent<WarpyNetwork>();
-         
+        _location = (SetupLocation)Enum.Parse(enumType: typeof(SetupLocation), value: ConfigProperties.load(ConfigFile, "setup.type"));
+        _test = (Test)Enum.Parse(enumType: typeof(Test), value: ConfigProperties.load(ConfigFile, "test"));
+        _condition = (Formation)Enum.Parse(enumType: typeof(Formation), value: ConfigProperties.load(ConfigFile, "start.formation"));
+
     }
 
     void Start()
@@ -239,7 +247,7 @@ public class Workspace : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            if (_task < 1)
+            if (TASK < 1)
             {
                 if (_test == Test.A) _test = Test.B; else _test = Test.A;
             }
@@ -249,33 +257,33 @@ public class Workspace : MonoBehaviour {
 
     private void _startNextTask()
     {
-        if (_task > numberOfTasks) return;
+        if (TASK > numberOfTasks) return;
 
-        _task += 1;
+        TASK += 1;
 
-        if (_task == intermissionTask)
+        if (TASK == intermissionTask)
         {
             Debug.Log("Welcome to intermission!!!!");
         }
         else
         {
             _setupTask();
-            Debug.Log("START Task " + _task);
+            Debug.Log("START Task " + TASK);
         }
     }
 
     private void _endPreviousTask()
     {
-        if (_task == 0) return;
+        if (TASK == 0) return;
 
-        if (_task > numberOfTasks)
+        if (TASK > numberOfTasks)
         {
             Debug.Log("ACABOU");
             return;
         }
         else
         {
-            if (_task != intermissionTask)
+            if (TASK != intermissionTask)
             {
                 /* do stuff here */
                 _cleanUpTask();
@@ -299,19 +307,19 @@ public class Workspace : MonoBehaviour {
 
     private void _setupTask()
     {
-        if (_task == intermissionTask)
+        if (TASK == intermissionTask)
         {
             // do intermission
         }
         else
         {
-            if (_task == 1) _resultsFile = new ResultsFile(_resultsFolder + "/" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt");
+            if (TASK == 1) _resultsFile = new ResultsFile(_resultsFolder + "/" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt");
 
             resetTrialParameters();
             time = Time.time;
             if (_participant == Role.INSTRUCTOR)
             {
-                _getInstructorBall(_test, _task).SetActive(true);
+                _getInstructorBall(_test, TASK).SetActive(true);
             }
             else
             {
@@ -324,9 +332,9 @@ public class Workspace : MonoBehaviour {
     {
         time = Time.time - time;
         Debug.Log("        > demorou " + time + "s");
-        _getInstructorBall(_test, _task).SetActive(false);
+        _getInstructorBall(_test, TASK).SetActive(false);
 
-        if (!habituationTasks.Contains(_task))
+        if (!habituationTasks.Contains(TASK))
         {
             BallQuadrant ballQuadrant = _getBallQuadrant();
 
@@ -343,19 +351,19 @@ public class Workspace : MonoBehaviour {
              */
 
             Debug.Log("writing results");
-            _resultsFile.writeDebugLine(_task, _test, _condition, ballQuadrant, time);
+            _resultsFile.writeDebugLine(TASK, _test, _condition, ballQuadrant, time);
         }
     }
 
     private BallQuadrant _getBallQuadrant()
     {
-        if (new List<int>() { 5, 7, 14, 20 }.Contains(_task))
+        if (new List<int>() { 5, 7, 14, 20 }.Contains(TASK))
             return BallQuadrant.I;
 
-        else if (new List<int>() {2, 8, 15, 21}.Contains(_task))
+        else if (new List<int>() {2, 8, 15, 21}.Contains(TASK))
             return BallQuadrant.II;
 
-        if (new List<int>() {3, 9, 16, 18}.Contains(_task))
+        if (new List<int>() {3, 9, 16, 18}.Contains(TASK))
             return BallQuadrant.III;
 
         else
@@ -365,7 +373,7 @@ public class Workspace : MonoBehaviour {
     public GameObject spawnAssemblerBall()
     {
         GameObject assemblerBall = Instantiate(assemblerSpherePrefab);
-        assemblerBall = new GameObject("Grab_" + _test + _task);
+        assemblerBall = new GameObject("Grab_" + _test + TASK);
         assemblerBall.transform.parent = this.transform;
         assemblerBall.transform.position = spawnBalls.position;
         return assemblerBall;
@@ -373,7 +381,7 @@ public class Workspace : MonoBehaviour {
 
     public void resetTrialParameters()
     {
-        if (leftIsInstructorTasks.Contains(_task))
+        if (leftIsInstructorTasks.Contains(TASK))
         {
             _participant = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.ASSEMBLER;
         }
@@ -385,7 +393,7 @@ public class Workspace : MonoBehaviour {
 
         if (_test == Test.A)
         {
-            if (_task >= 1 && _task <= 6)
+            if (TASK >= 1 && TASK <= 6)
                 _condition = Formation.FACE_TO_FACE;
             else
                 _condition = Formation.SIDE_TO_SIDE;
@@ -393,7 +401,7 @@ public class Workspace : MonoBehaviour {
         }
         else // B
         {
-            if (_task >= 1 && _task <= 6)
+            if (TASK >= 1 && TASK <= 6)
                 _condition = Formation.SIDE_TO_SIDE;
             else
                 _condition = Formation.FACE_TO_FACE;
@@ -405,21 +413,21 @@ public class Workspace : MonoBehaviour {
     {
         GUI.Label(new Rect(10, 10, 500, 50), _test.ToString(), InfoToModeratorStyle);
 
-        if (_task > numberOfTasks)
+        if (TASK > numberOfTasks)
         {
             GUI.Label(new Rect(10, 40, 500, 50), "ACABOU", InfoToModeratorStyle);
         }
-        else if(_task > 0 && _task <= numberOfTasks)
+        else if(TASK > 0 && TASK <= numberOfTasks)
         {
             int top = 40;
             int step = 35;
-            if (_task == intermissionTask)
+            if (TASK == intermissionTask)
             {
                 GUI.Label(new Rect(10, top, 500, 50), "INTERMISSION", InfoToModeratorStyle);
             }
             else
             {
-                if (habituationTasks.Contains(_task))
+                if (habituationTasks.Contains(TASK))
                 {
                     GUI.Label(new Rect(10, top, 500, 50), "[[[  HABITUATION TASK ]]]", InfoToModeratorStyle);
                     top += step; top += step;
@@ -427,7 +435,7 @@ public class Workspace : MonoBehaviour {
 
                 GUI.Label(new Rect(10, top, 500, 50), "CONDITION: " + _condition, InfoToModeratorStyle); top += step; top += step;
                 GUI.Label(new Rect(10, top, 500, 50), "ROLE: " + _participant, InfoToModeratorStyle); top += step; top += step;
-                GUI.Label(new Rect(10, top, 500, 50), "TASK: " + _task, InfoToModeratorStyle); top += step; top += step;
+                GUI.Label(new Rect(10, top, 500, 50), "TASK: " + TASK, InfoToModeratorStyle); top += step; top += step;
                 GUI.Label(new Rect(10, top, 500, 50), "TIME: " + Math.Round((Time.time - time), 1) + "s", InfoToModeratorStyle);
             }
         } 

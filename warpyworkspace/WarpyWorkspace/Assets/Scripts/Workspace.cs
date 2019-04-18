@@ -272,6 +272,7 @@ public class Workspace : MonoBehaviour {
 
         if (TASK == intermissionTask)
         {
+            resetTrialParameters();
             Debug.Log("Welcome to intermission!!!!");
         }
         else

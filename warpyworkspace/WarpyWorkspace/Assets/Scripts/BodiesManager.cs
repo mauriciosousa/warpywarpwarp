@@ -117,8 +117,8 @@ public class BodiesManager : MonoBehaviour
             armsWarpInfo.HandDistance = HandDistance;
             armsWarpInfo.debug = DebugBonesPC;
             _saveJointInfo(true);
-            ikLeftArm.Solve(doArmWarping, leftTarget.position, lerpTime);
-            ikRightArm.Solve(doArmWarping, rightTarget.position, lerpTime);
+            //ikLeftArm.Solve(doArmWarping, leftTarget.position, lerpTime);
+            //ikRightArm.Solve(doArmWarping, rightTarget.position, lerpTime);
             _saveJointInfo(false);
             armsWarpInfo.Solve();
         }
@@ -127,7 +127,6 @@ public class BodiesManager : MonoBehaviour
 
     public void setNewFrame(Body[] bodies)
     {
-        print("new frame");
         foreach (Body b in bodies)
         {
             try

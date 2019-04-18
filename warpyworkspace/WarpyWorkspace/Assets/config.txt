@@ -1,11 +1,11 @@
-last.run=2019-04-17-16:41:14
-setup.type=LEFT
+last.run=2019-04-18-17:02:11
+setup.type=RIGHT
 start.formation=FACE_TO_FACE
 test=A
 
 
 rpc.port=5000
-optitrack.server.address=192.168.0.101
+optitrack.server.address=192.168.0.105
 eyes.localPosition=-0.04087834:-0.1511804:-0.07863502
 eyes.localRotation=0:0:0:1
 

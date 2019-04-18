@@ -99,6 +99,7 @@ public class Workspace : MonoBehaviour {
     public GameObject assemblerSpherePrefab;
     private GameObject ballsParent;
     public Transform spawnBalls;
+    private GameObject _assemblerBall;
 
     private int numberOfTasks = 21;
     public int TASK = 0;
@@ -176,10 +177,13 @@ public class Workspace : MonoBehaviour {
                 ball.transform.parent = ballsParent.transform;
                 ball.transform.localPosition = new Vector3(float.Parse(data[1]), float.Parse(data[2]), float.Parse(data[3]));
                 b.Add(ball);
+                ball.SetActive(false);
             }
             balls = b.ToArray();
         }
         else Debug.LogError("There is no Ballz!");
+
+        spawnAssemblerBall();
 
         _participant = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.ASSEMBLER;
 
@@ -380,13 +384,14 @@ public class Workspace : MonoBehaviour {
             return BallQuadrant.IV;
     }
 
-    public GameObject spawnAssemblerBall()
+    public void spawnAssemblerBall()
     {
         GameObject assemblerBall = Instantiate(assemblerSpherePrefab);
         assemblerBall = new GameObject("Grab_" + _test + TASK);
         assemblerBall.transform.parent = this.transform;
         assemblerBall.transform.position = spawnBalls.position;
-        return assemblerBall;
+        assemblerBall.SetActive(false);
+        _assemblerBall = assemblerBall;
     }
 
     public void resetTrialParameters()

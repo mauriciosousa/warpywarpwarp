@@ -96,10 +96,9 @@ public class ResultsFile
 public class Workspace : MonoBehaviour {
 
     public GameObject instructorSpherePrefab;
-    public GameObject assemblerSpherePrefab;
     private GameObject ballsParent;
     public Transform spawnBalls;
-    private GameObject _assemblerBall;
+    public GameObject assemblerBall;
 
     private int numberOfTasks = 21;
     public int TASK = 0;
@@ -183,7 +182,8 @@ public class Workspace : MonoBehaviour {
         }
         else Debug.LogError("There is no Ballz!");
 
-        spawnAssemblerBall();
+
+        assemblerBall.SetActive(false);
 
         _participant = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.ASSEMBLER;
 
@@ -333,11 +333,12 @@ public class Workspace : MonoBehaviour {
             time = Time.time;
             if (_participant == Role.INSTRUCTOR)
             {
+                assemblerBall.transform.position = spawnBalls.position;
                 _getInstructorBall(_test, TASK).SetActive(true);
             }
             else
             {
-
+                assemblerBall.SetActive(true);
             }
         }
     }
@@ -347,6 +348,8 @@ public class Workspace : MonoBehaviour {
         time = Time.time - time;
         Debug.Log("        > demorou " + time + "s");
         _getInstructorBall(_test, TASK).SetActive(false);
+
+        assemblerBall.SetActive(false);
 
         if (!habituationTasks.Contains(TASK))
         {
@@ -382,16 +385,6 @@ public class Workspace : MonoBehaviour {
 
         else
             return BallQuadrant.IV;
-    }
-
-    public void spawnAssemblerBall()
-    {
-        GameObject assemblerBall = Instantiate(assemblerSpherePrefab);
-        assemblerBall = new GameObject("Grab_" + _test + TASK);
-        assemblerBall.transform.parent = this.transform;
-        assemblerBall.transform.position = spawnBalls.position;
-        assemblerBall.SetActive(false);
-        _assemblerBall = assemblerBall;
     }
 
     public void resetTrialParameters()

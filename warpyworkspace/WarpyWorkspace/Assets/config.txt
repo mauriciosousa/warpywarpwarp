@@ -1,4 +1,4 @@
-last.run=2019-04-18-14:14:50
+last.run=2019-04-18-17:02:11
 setup.type=RIGHT
 start.formation=FACE_TO_FACE
 test=A

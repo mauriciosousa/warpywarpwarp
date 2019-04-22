@@ -21,11 +21,12 @@ public class GrabSphere : MonoBehaviour {
 
     public GameObject glow;
 
-    void Start () {
-		
-	}
+    public Workspace workspace;
+    
 	
 	void Update () {
+
+        //if (workspace.participantRole == Role.INSTRUCTOR) return;
 
         Vector3 lp1 = leftHand_IndexTip.transform.position;
         Vector3 lp2 = leftHand_ThumbTip.transform.position;

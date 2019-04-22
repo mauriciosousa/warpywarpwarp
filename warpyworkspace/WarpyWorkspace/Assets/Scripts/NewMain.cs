@@ -277,7 +277,9 @@ public class NewMain : MonoBehaviour {
 
     private void _configureWorkspace()
     {
-        
+
+        Debug.Log("DOING A WORKSPACE");
+
         remoteCreepyTrackerOriginDelta.transform.parent = remoteWorkspaceOrigin.transform;
 
         remoteWorkspaceOrigin.transform.position = localWorkspaceOrigin.transform.position;

@@ -1600,7 +1600,7 @@ MonoBehaviour:
   spawnBalls: {fileID: 77770300}
   assemblerBall: {fileID: 1687139592}
   TASK: 0
-  _participant: 1
+  participantRole: 1
   _location: 0
   _test: 0
   _condition: 0
@@ -9718,6 +9718,41 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114541706955589964, guid: 12e53c70b21c48b4dbf4c55f02f6feb6,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114541706955589964, guid: 12e53c70b21c48b4dbf4c55f02f6feb6,
+        type: 2}
+      propertyPath: leftHand_IndexTip
+      value: 
+      objectReference: {fileID: 626202911}
+    - target: {fileID: 114541706955589964, guid: 12e53c70b21c48b4dbf4c55f02f6feb6,
+        type: 2}
+      propertyPath: leftHand_ThumbTip
+      value: 
+      objectReference: {fileID: 1693581103}
+    - target: {fileID: 114541706955589964, guid: 12e53c70b21c48b4dbf4c55f02f6feb6,
+        type: 2}
+      propertyPath: rightHand_ThumbTip
+      value: 
+      objectReference: {fileID: 1838624754}
+    - target: {fileID: 114541706955589964, guid: 12e53c70b21c48b4dbf4c55f02f6feb6,
+        type: 2}
+      propertyPath: rightHand_IndexTip
+      value: 
+      objectReference: {fileID: 2084044010}
+    - target: {fileID: 114541706955589964, guid: 12e53c70b21c48b4dbf4c55f02f6feb6,
+        type: 2}
+      propertyPath: leftGrabbing
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114541706955589964, guid: 12e53c70b21c48b4dbf4c55f02f6feb6,
+        type: 2}
+      propertyPath: workspace
+      value: 
+      objectReference: {fileID: 268697323}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 12e53c70b21c48b4dbf4c55f02f6feb6, type: 2}
   m_IsPrefabParent: 0

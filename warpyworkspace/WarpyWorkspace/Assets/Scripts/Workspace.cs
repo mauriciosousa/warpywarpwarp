@@ -77,20 +77,6 @@ public class ResultsFile
 
         _writeLine(line);
     }
-
-    internal void writeDebugLine(int task, Test test, Formation condition, BallQuadrant ballQuadrant, float time)
-    {
-        string line = "";
-
-        line += DateTime.Now.ToString("yyyyMMddHHmmss") + _sep;
-        line += task + _sep;
-        line += test.ToString() + _sep;
-        line += condition.ToString() + _sep;
-        line += ballQuadrant.ToString() + _sep;
-        line += time;
-
-        _writeLine(line);
-    }
 }
 
 public class Workspace : MonoBehaviour {
@@ -358,13 +344,14 @@ public class Workspace : MonoBehaviour {
             time = Time.time;
             if (_participant == Role.INSTRUCTOR)
             {
-                assemblerBall.transform.position = spawnBalls.position;
                 _getInstructorBall(_test, TASK).SetActive(true);
             }
             else
             {
                 assemblerBall.SetActive(true);
             }
+            assemblerBall.transform.position = spawnBalls.position;
+
         }
     }
 
@@ -372,9 +359,11 @@ public class Workspace : MonoBehaviour {
     {
         time = Time.time - time;
         Debug.Log("        > demorou " + time + "s");
-        _getInstructorBall(_test, TASK).SetActive(false);
+        GameObject ball = _getInstructorBall(_test, TASK);
 
-        assemblerBall.SetActive(false);
+        float errorDistance = Vector3.Distance(ball.transform.position, assemblerBall.transform.position);
+
+        
 
         if (!habituationTasks.Contains(TASK))
         {
@@ -395,8 +384,12 @@ public class Workspace : MonoBehaviour {
              */
 
             Debug.Log("writing results");
-            _resultsFile.writeDebugLine(TASK, _test, _condition, ballQuadrant, time);
+            //_resultsFile.writeDebugLine(TASK, _test, _condition, ballQuadrant, errorDistance, time);
+            _resultsFile.writeLine(TASK, _test, _condition, ballQuadrant, errorDistance, time, 0, ball.transform.position, assemblerBall.transform.position);
         }
+
+        ball.SetActive(false);
+        assemblerBall.SetActive(false);
     }
 
     private float _calcCollidingPercentage()

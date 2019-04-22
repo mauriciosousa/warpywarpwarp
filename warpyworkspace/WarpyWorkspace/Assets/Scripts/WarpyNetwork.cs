@@ -68,5 +68,11 @@ public class WarpyNetwork : MonoBehaviour {
         workspace.buttonPressed();
     }
 
+    [RPC]
+    void RPC_SyncAssemblersBall(Vector3 position)
+    {
+        workspace.syncAssemblersBall(position);
+    }
+
 
 }

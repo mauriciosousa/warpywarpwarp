@@ -384,8 +384,7 @@ public class Workspace : MonoBehaviour {
              */
 
             Debug.Log("writing results");
-            //_resultsFile.writeDebugLine(TASK, _test, _condition, ballQuadrant, errorDistance, time);
-            _resultsFile.writeLine(TASK, _test, _condition, ballQuadrant, errorDistance, time, 0, ball.transform.position, assemblerBall.transform.position);
+            _resultsFile.writeLine(TASK, _test, _condition, ballQuadrant, errorDistance, time, percentage, ball.transform.position, assemblerBall.transform.position);
         }
 
         ball.SetActive(false);

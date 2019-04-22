@@ -91,7 +91,7 @@ public class Workspace : MonoBehaviour {
 
     private string instructors_balls_filenames;
 
-    public Role _participant = Role.INSTRUCTOR;
+    public Role participantRole = Role.INSTRUCTOR;
     public SetupLocation _location;
     public Test _test;
     public Formation _condition;
@@ -179,7 +179,7 @@ public class Workspace : MonoBehaviour {
 
         assemblerBall.SetActive(false);
 
-        _participant = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.ASSEMBLER;
+        participantRole = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.ASSEMBLER;
 
         _network = GetComponent<WarpyNetwork>();
         _network.__init__();
@@ -200,7 +200,7 @@ public class Workspace : MonoBehaviour {
             _lastButtonPress = Time.time;
         }
 
-        if (button && _network.Connected && _participant == Role.ASSEMBLER)
+        if (button && _network.Connected && participantRole == Role.ASSEMBLER)
         {
             _networkView.RPC("RPC_ButtonPressed", RPCMode.All);
         }
@@ -267,7 +267,7 @@ public class Workspace : MonoBehaviour {
         {
             _listOfCollidingFrames.Add(_localCapsuleCollider.COLLIDING);
 
-            if (_participant == Role.ASSEMBLER)
+            if (participantRole == Role.ASSEMBLER && _network.Connected)
             {
                 _networkView.RPC("RPC_SyncAssemblersBall", RPCMode.Others, assemblerBall.transform.position);
             }
@@ -344,7 +344,7 @@ public class Workspace : MonoBehaviour {
 
             resetTrialParameters();
             time = Time.time;
-            if (_participant == Role.INSTRUCTOR)
+            if (participantRole == Role.INSTRUCTOR)
             {
                 _getInstructorBall(_test, TASK).SetActive(true);
             }
@@ -425,11 +425,11 @@ public class Workspace : MonoBehaviour {
     {
         if (leftIsInstructorTasks.Contains(TASK))
         {
-            _participant = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.ASSEMBLER;
+            participantRole = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.ASSEMBLER;
         }
         else
         {
-            _participant = _location == SetupLocation.LEFT ? Role.ASSEMBLER : Role.INSTRUCTOR;
+            participantRole = _location == SetupLocation.LEFT ? Role.ASSEMBLER : Role.INSTRUCTOR;
 
         }
 
@@ -477,7 +477,7 @@ public class Workspace : MonoBehaviour {
                 }
 
                 GUI.Label(new Rect(10, top, 500, 50), "CONDITION: " + _condition, InfoToModeratorStyle); top += step; top += step;
-                GUI.Label(new Rect(10, top, 500, 50), "ROLE: " + _participant, InfoToModeratorStyle); top += step; top += step;
+                GUI.Label(new Rect(10, top, 500, 50), "ROLE: " + participantRole, InfoToModeratorStyle); top += step; top += step;
                 GUI.Label(new Rect(10, top, 500, 50), "TASK: " + TASK, InfoToModeratorStyle); top += step; top += step;
                 GUI.Label(new Rect(10, top, 500, 50), "TIME: " + Math.Round((Time.time - time), 1) + "s", InfoToModeratorStyle);
             }
@@ -492,7 +492,7 @@ public class Workspace : MonoBehaviour {
 
     internal void syncAssemblersBall(Vector3 position)
     {
-        if (_participant == Role.INSTRUCTOR)
+        if (participantRole == Role.INSTRUCTOR)
         {
             assemblerBall.transform.position = position;
         }

@@ -269,7 +269,7 @@ public class Workspace : MonoBehaviour {
 
             if (_participant == Role.ASSEMBLER)
             {
-                _networkView.RPC("RPC_ButtonPressed", RPCMode.Others, assemblerBall.transform.position);
+                _networkView.RPC("RPC_SyncAssemblersBall", RPCMode.Others, assemblerBall.transform.position);
             }
 
         }

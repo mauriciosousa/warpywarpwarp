@@ -269,7 +269,7 @@ public class NewMain : MonoBehaviour {
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.M))
         {
             leapMotionHandModels.SetActive(!leapMotionHandModels.activeSelf);
         }

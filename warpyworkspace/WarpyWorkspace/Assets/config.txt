@@ -1,5 +1,5 @@
-last.run=2019-04-22-14:35:23
-setup.type=LEFT
+last.run=2019-04-22-18:18:32
+setup.type=RIGHT
 start.formation=FACE_TO_FACE
 test=A
 

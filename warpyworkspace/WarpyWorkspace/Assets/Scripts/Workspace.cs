@@ -332,6 +332,8 @@ public class Workspace : MonoBehaviour {
 
     private void _setupTask()
     {
+        if (TASK > numberOfTasks) return;
+
         if (TASK == intermissionTask)
         {
             // do intermission

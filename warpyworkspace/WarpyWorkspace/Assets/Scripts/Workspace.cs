@@ -267,7 +267,7 @@ public class Workspace : MonoBehaviour {
         {
             _listOfCollidingFrames.Add(_localCapsuleCollider.COLLIDING);
 
-            if (participantRole == Role.ASSEMBLER)
+            if (participantRole == Role.ASSEMBLER && _network.Connected)
             {
                 _networkView.RPC("RPC_SyncAssemblersBall", RPCMode.Others, assemblerBall.transform.position);
             }

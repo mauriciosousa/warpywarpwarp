@@ -133,7 +133,10 @@ public class Workspace : MonoBehaviour {
     private float buttonTimer = 1.0f;
     private float _lastButtonPress = 0.0f;
 
-    private bool _syncBallPosition = false;
+    private IsColliding _localCapsuleCollider;
+    private List<bool> _listOfCollidingFrames;
+
+    private bool _duringTask = false;
 
     void Awake()
     {
@@ -152,6 +155,9 @@ public class Workspace : MonoBehaviour {
         _location = (SetupLocation)Enum.Parse(enumType: typeof(SetupLocation), value: ConfigProperties.load(ConfigFile, "setup.type"));
         _test = (Test)Enum.Parse(enumType: typeof(Test), value: ConfigProperties.load(ConfigFile, "test"));
         _condition = (Formation)Enum.Parse(enumType: typeof(Formation), value: ConfigProperties.load(ConfigFile, "start.formation"));
+
+        _listOfCollidingFrames = new List<bool>();
+        _localCapsuleCollider = GameObject.Find("localCapsule").GetComponent<IsColliding>();
 
     }
 
@@ -270,9 +276,16 @@ public class Workspace : MonoBehaviour {
 
 
         // sync ball position
-        if (_participant == Role.ASSEMBLER && _syncBallPosition)
+
+        if (_duringTask)
         {
-            _networkView.RPC("RPC_ButtonPressed", RPCMode.Others, assemblerBall.transform.position);
+            _listOfCollidingFrames.Add(_localCapsuleCollider.COLLIDING);
+
+            if (_participant == Role.ASSEMBLER)
+            {
+                _networkView.RPC("RPC_ButtonPressed", RPCMode.Others, assemblerBall.transform.position);
+            }
+
         }
     }
 
@@ -280,7 +293,8 @@ public class Workspace : MonoBehaviour {
     {
         if (TASK > numberOfTasks) return;
 
-        _syncBallPosition = true;
+        _duringTask = true;
+        _listOfCollidingFrames.Clear();
         TASK += 1;
 
         if (TASK == intermissionTask)
@@ -299,7 +313,7 @@ public class Workspace : MonoBehaviour {
     {
         if (TASK == 0) return;
 
-        _syncBallPosition = false;
+        _duringTask = false;
 
         if (TASK > numberOfTasks)
         {
@@ -366,6 +380,8 @@ public class Workspace : MonoBehaviour {
         {
             BallQuadrant ballQuadrant = _getBallQuadrant();
 
+            float percentage = _calcCollidingPercentage();
+            _listOfCollidingFrames.Clear();
 
             /*  x task
              *  x test
@@ -381,6 +397,19 @@ public class Workspace : MonoBehaviour {
             Debug.Log("writing results");
             _resultsFile.writeDebugLine(TASK, _test, _condition, ballQuadrant, time);
         }
+    }
+
+    private float _calcCollidingPercentage()
+    {
+        int collidingFrames = 0;
+        foreach (bool b in _listOfCollidingFrames)
+        {
+            if (b) collidingFrames += 1;
+        }
+
+        if (collidingFrames == 0) return 0;
+        else
+            return collidingFrames / _listOfCollidingFrames.Count;
     }
 
     private BallQuadrant _getBallQuadrant()

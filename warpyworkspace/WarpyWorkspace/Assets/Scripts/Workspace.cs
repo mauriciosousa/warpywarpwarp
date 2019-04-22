@@ -133,6 +133,8 @@ public class Workspace : MonoBehaviour {
     private float buttonTimer = 1.0f;
     private float _lastButtonPress = 0.0f;
 
+    private bool _syncBallPosition = false;
+
     void Awake()
     {
         TASK = 0;
@@ -266,12 +268,19 @@ public class Workspace : MonoBehaviour {
             }
         }
 
+
+        // sync ball position
+        if (_participant == Role.ASSEMBLER && _syncBallPosition)
+        {
+            _networkView.RPC("RPC_ButtonPressed", RPCMode.Others, assemblerBall.transform.position);
+        }
     }
 
     private void _startNextTask()
     {
         if (TASK > numberOfTasks) return;
 
+        _syncBallPosition = true;
         TASK += 1;
 
         if (TASK == intermissionTask)
@@ -289,6 +298,8 @@ public class Workspace : MonoBehaviour {
     private void _endPreviousTask()
     {
         if (TASK == 0) return;
+
+        _syncBallPosition = false;
 
         if (TASK > numberOfTasks)
         {
@@ -454,5 +465,13 @@ public class Workspace : MonoBehaviour {
     {
         _endPreviousTask();
         _startNextTask();
+    }
+
+    internal void syncAssemblersBall(Vector3 position)
+    {
+        if (_participant == Role.INSTRUCTOR)
+        {
+            assemblerBall.transform.position = position;
+        }
     }
 }

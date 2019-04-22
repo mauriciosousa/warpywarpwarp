@@ -1357,7 +1357,7 @@ MonoBehaviour:
   instructorSpherePrefab: {fileID: 1484237207515368, guid: 99f7f59db0ae69343a0be13599db81eb,
     type: 2}
   spawnBalls: {fileID: 77770300}
-  assemblerBall: {fileID: 0}
+  assemblerBall: {fileID: 1687139592}
   TASK: 0
   _participant: 1
   _location: 0
@@ -10222,6 +10222,11 @@ Transform:
   m_PrefabParentObject: {fileID: 4139101302111182, guid: 80001c6c93c5068488198a82e151e3ff,
     type: 2}
   m_PrefabInternal: {fileID: 2133749482}
+--- !u!1 &1687139592 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1042431428851658, guid: 12e53c70b21c48b4dbf4c55f02f6feb6,
+    type: 2}
+  m_PrefabInternal: {fileID: 1549040529}
 --- !u!1 &1693581101
 GameObject:
   m_ObjectHideFlags: 0

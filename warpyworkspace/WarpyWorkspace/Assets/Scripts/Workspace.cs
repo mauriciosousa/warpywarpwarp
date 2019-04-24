@@ -269,7 +269,7 @@ public class Workspace : MonoBehaviour {
 
             if (participantRole == Role.ASSEMBLER && _network.Connected)
             {
-                _networkView.RPC("RPC_SyncAssemblersBall", RPCMode.Others, assemblerBall.transform.position);
+                _networkView.RPC("RPC_SyncAssemblersBall", RPCMode.Others, assemblerBall.transform.localPosition);
             }
 
         }
@@ -494,7 +494,7 @@ public class Workspace : MonoBehaviour {
     {
         if (participantRole == Role.INSTRUCTOR)
         {
-            assemblerBall.transform.position = position;
+            assemblerBall.transform.localPosition = position;
         }
     }
 }

@@ -1,5 +1,5 @@
-last.run=2019-04-24-17:01:49
-setup.type=RIGHT
+last.run=2019-06-18-15:44:49
+setup.type=LEFT
 start.formation=FACE_TO_FACE
 test=A
 
@@ -10,25 +10,25 @@ eyes.localPosition=-0.04087834:-0.1511804:-0.07863502
 eyes.localRotation=0:0:0:1
 
 __SETUP ON THE LEFT__
-left.setup.address=192.168.0.100
+left.setup.address=192.168.0.102
 left.tracker.listen.port=5001
 left.tracker.broadcast.port=5002
 left.tracker.surface.request.port=5001
 left.tracker.surface.listener.port=5010
 left.client.avatar.listen.port=5011
 left.sensor.listen.port=5007
-left.workspaceCenter.transform.position=-0.2482531:0.9004937:-1.846825
-left.workspaceCenter.transform.rotation=0.04289375:0.03610588:0.002479511:-0.9984239
-left.trackedKinect.name=XUXUBELEZA
-left.rigidBodyCalibration.transform.position=0.5075188:1.367918:-0.7997437
-left.rigidBodyCalibration.transform.rotation=0.01751071:-0.9441455:0.1141249:0.3086393
-left.remoteCreepyTrackerDelta.rotation=-0.01282771:-0.004188504:-5.373382E-05:0.999909
-left.remoteCreepyTrackerDelta.position=0.02:0.01:0.12
-left.eyes.localPosition=-0.01668159:-0.1180009:-0.04386427
-left.eyes.localRotation=-0.06005644:0.01441897:0.02178455:0.9978531
+left.workspaceCenter.transform.position=-0.1907391:0.8972665:-1.710138
+left.workspaceCenter.transform.rotation=0.02099346:0.002218694:0.009099917:-0.9997358
+left.trackedKinect.name=TAVARES
+left.rigidBodyCalibration.transform.position=0.505859:1.354532:-0.7815155
+left.rigidBodyCalibration.transform.rotation=-0.04279159:0.9591343:-0.1015315:-0.260618
+left.remoteCreepyTrackerDelta.rotation=-0.04917248:-0.01207153:-0.01763667:0.9985616
+left.remoteCreepyTrackerDelta.position=-0.008271694:-0.04945362:-2.244097
+left.eyes.localPosition=0:0:0
+left.eyes.localRotation=0:0:0:0
 
 __SETUP ON THE RIGHT__
-right.setup.address=192.168.0.107
+right.setup.address=192.168.0.110
 right.tracker.listen.port=5101
 right.tracker.broadcast.port=5102
 right.tracker.surface.request.port=5101
@@ -36,12 +36,12 @@ right.tracker.surface.listener.port=5110
 right.client.avatar.listen.port=5111
 right.sensor.listen.port=5107
 right.workspaceCenter.transform.position:0:0:0
-right.workspaceCenter.transform.rotation=0.007487354:0.9994903:0.03077113:-0.004022693
-right.workspaceCenter.transform.position=-0.269306:0.9047585:0.7937854
-right.trackedKinect.name=FRANK-SALES
-right.rigidBodyCalibration.transform.position=0.3667089:1.390567:-0.2515455
-right.rigidBodyCalibration.transform.rotation=0.1133844:-0.2135139:0.03565858:0.9696826
+right.workspaceCenter.transform.rotation=-0.00862543:0.9998292:0.01526556:-0.005852615
+right.workspaceCenter.transform.position=-0.1838665:0.9048074:0.7799209
+right.trackedKinect.name=VANESSA
+right.rigidBodyCalibration.transform.position=0.4684256:1.681414:-0.1075197
+right.rigidBodyCalibration.transform.rotation=-0.18324:0.1652256:-0.0233232:-0.9688032
 right.remoteCreepyTrackerDelta.rotation=0.03023542:-0.03963048:0.00826392:0.9987227
 right.remoteCreepyTrackerDelta.position=-0.28:-0.04:-0.09
-right.eyes.localPosition=0.0318788:-0.09582595:-0.04975224
-right.eyes.localRotation=0:0:0.006370415:0.9999797
+right.eyes.localPosition=0:0:0
+right.eyes.localRotation=0:0:0:0

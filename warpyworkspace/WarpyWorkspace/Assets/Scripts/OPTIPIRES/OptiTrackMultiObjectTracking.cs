@@ -7,7 +7,7 @@ using OptitrackManagement;
 /// </summary>
 public class OptiTrackMultiObjectTracking : MonoBehaviour
 {
-    public NewMain main;
+    public AlteredTelepresenceMain main;
 
     public bool useOrientation = true;
     public bool applyCorrection;

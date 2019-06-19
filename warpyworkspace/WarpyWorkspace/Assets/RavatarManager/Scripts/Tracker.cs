@@ -102,7 +102,7 @@ public class Tracker : MonoBehaviour
     {
         initNetwork(_listenPort, _cloudGameObjects.Count);
         Debug.Log("Started TCP Layer with " + _cloudGameObjects.Count);
-        GameObject.Find("main").GetComponent<NewMain>().setupSensors(Sensors);
+        GameObject.Find("main").GetComponent<AlteredTelepresenceMain>().setupSensors(Sensors);
     }
 
     public void processCalibrationMatrix(string calibration)

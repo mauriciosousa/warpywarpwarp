@@ -111,16 +111,16 @@ public class BodiesManager : MonoBehaviour
             }
             _assembleHumanHierarchy(humanGO);
 
-            armsWarpInfo.warping = doArmWarping;
-            armsWarpInfo.UpperArmDistance = UpperArmDistance;
-            armsWarpInfo.ForearmDistance = ForearmDistance;
-            armsWarpInfo.HandDistance = HandDistance;
-            armsWarpInfo.debug = DebugBonesPC;
+            //armsWarpInfo.warping = doArmWarping;
+            //armsWarpInfo.UpperArmDistance = UpperArmDistance;
+            //armsWarpInfo.ForearmDistance = ForearmDistance;
+            //armsWarpInfo.HandDistance = HandDistance;
+            //armsWarpInfo.debug = DebugBonesPC;
             _saveJointInfo(true);
-            //ikLeftArm.Solve(doArmWarping, leftTarget.position, lerpTime);
-            //ikRightArm.Solve(doArmWarping, rightTarget.position, lerpTime);
+            //----ikLeftArm.Solve(doArmWarping, leftTarget.position, lerpTime);
+            //----ikRightArm.Solve(doArmWarping, rightTarget.position, lerpTime);
             _saveJointInfo(false);
-            armsWarpInfo.Solve();
+            //armsWarpInfo.Solve();
         }
         _cleanDeadHumans();
     }

@@ -3,19 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum SetupLocation
-{
-    LEFT,
-    RIGHT
-}
 
-public enum Formation
-{
-    SIDE_TO_SIDE,
-    FACE_TO_FACE
-}
 
-public class NewMain : MonoBehaviour {
+public class NewMainDEPRECATED : MonoBehaviour {
 
     public string ConfigFile;
     public SetupLocation setupLocation;
@@ -257,8 +247,8 @@ public class NewMain : MonoBehaviour {
             GameObject pivot = GameObject.Find("RemoteCreepyTrackerOriginPivot");
             if(pivot != null)
             {
-                string p = _gameObjectPositionToString(pivot.transform.position);
-                string r = _gameObjectRotationToString(pivot.transform.rotation);
+                string p = _gameObjectPositionToString(pivot.transform.localPosition);
+                string r = _gameObjectRotationToString(pivot.transform.localRotation);
                 ConfigProperties.save(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.position", p);
                 ConfigProperties.save(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.rotation", r);
                 Debug.Log("Eyes Saved");
@@ -277,22 +267,17 @@ public class NewMain : MonoBehaviour {
 
     private void _configureWorkspace()
     {
-
         Debug.Log("DOING A WORKSPACE");
-
         remoteCreepyTrackerOriginDelta.transform.parent = remoteWorkspaceOrigin.transform;
 
-        remoteWorkspaceOrigin.transform.position = localWorkspaceOrigin.transform.position;
-        remoteWorkspaceOrigin.transform.rotation = localWorkspaceOrigin.transform.rotation;
+        remoteCreepyTrackerOriginDelta.transform.position = localWorkspaceOrigin.transform.position;
+        remoteCreepyTrackerOriginDelta.transform.rotation = localWorkspaceOrigin.transform.rotation;
 
         if (formation == Formation.FACE_TO_FACE)
         {
             remoteWorkspaceOrigin.transform.rotation = Quaternion.LookRotation(-localWorkspaceOrigin.transform.forward, localWorkspaceOrigin.transform.up);
-            remoteWorkspaceOrigin.transform.position += 0.1f * localWorkspaceOrigin.transform.forward;
+            remoteCreepyTrackerOriginDelta.transform.position += 0.1f * localWorkspaceOrigin.transform.forward;
         }
-
-
-
     }
 
     private void _deploySensors(Sensor[] sensors, Transform parent)

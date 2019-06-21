@@ -58,6 +58,10 @@ public class AlteredTelepresenceMain : MonoBehaviour
     private SurfaceRectangle _localSurface;
     private SurfaceRectangle _remoteSurface;
 
+    public Transform ARCameraRig;
+    public Transform leftARCameraRig_RigidBody;
+    public Transform rightARCameraRig_RigidBody;
+
     private bool _everythingIsConfigured = false;
 
     void Start()
@@ -117,6 +121,10 @@ public class AlteredTelepresenceMain : MonoBehaviour
     void Update()
     {
 
+        Transform t = setupLocation == SetupLocation.LEFT ? leftARCameraRig_RigidBody : rightARCameraRig_RigidBody;
+        ARCameraRig.transform.position = t.position;
+        ARCameraRig.transform.rotation = t.rotation;
+
         if (!_everythingIsConfigured && _localSurface != null && _remoteSurface != null)
         {
             print("local and remote surfaces");
@@ -170,19 +178,30 @@ public class AlteredTelepresenceMain : MonoBehaviour
         remoteCreepyTrackerOrigin.parent = null;
         _sensors[remKinectName].transform.parent = remoteCreepyTrackerOrigin;
 
-        Vector3 deltapos = _getPositionFromConfig(ConfigProperties.load(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.position"));
-        Quaternion deltarot = _getRotationFromConfig(ConfigProperties.load(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.rotation"));
+        
 
-        remoteCreepyTrackerOriginPivot = new GameObject("RemoteCreepyTrackerOriginPivot").transform;
-        remoteCreepyTrackerOriginPivot.position = remoteCreepyTrackerOrigin.position;
-        remoteCreepyTrackerOriginPivot.rotation = remoteCreepyTrackerOrigin.rotation;
-        remoteCreepyTrackerOrigin.parent = remoteCreepyTrackerOriginPivot;
-        remoteCreepyTrackerOrigin.localPosition = deltapos;
-        remoteCreepyTrackerOrigin.localRotation = deltarot;
+        //Vector3 deltapos = _getPositionFromConfig(ConfigProperties.load(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.position"));
+        //Quaternion deltarot = _getRotationFromConfig(ConfigProperties.load(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.rotation"));
+
+        //remoteCreepyTrackerOriginPivot = new GameObject("RemoteCreepyTrackerOriginPivot").transform;
+        //remoteCreepyTrackerOriginPivot.position = remoteCreepyTrackerOrigin.position;
+        //remoteCreepyTrackerOriginPivot.rotation = remoteCreepyTrackerOrigin.rotation;
+        //remoteCreepyTrackerOrigin.parent = remoteCreepyTrackerOriginPivot;
+        //remoteCreepyTrackerOrigin.localPosition = deltapos;
+        //remoteCreepyTrackerOrigin.localRotation = deltarot;
 
         //remoteCreepyTrackerOriginDelta.position = deltapos;
         //remoteCreepyTrackerOriginDelta.rotation = deltarot;
 
+        Vector3 deltapos = _getPositionFromConfig(ConfigProperties.load(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.position"));
+        Quaternion deltarot = _getRotationFromConfig(ConfigProperties.load(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.rotation"));
+
+        remoteCreepyTrackerOriginPivot = new GameObject("RemoteCreepyTrackerOriginPivot").transform;
+        remoteCreepyTrackerOriginPivot.position = Vector3.zero;
+        remoteCreepyTrackerOriginPivot.rotation = Quaternion.identity;
+        remoteCreepyTrackerOrigin.parent = remoteCreepyTrackerOriginPivot;
+        remoteCreepyTrackerOriginPivot.position = deltapos;
+        remoteCreepyTrackerOriginPivot.rotation = deltarot;
 
     }
 
@@ -244,8 +263,8 @@ public class AlteredTelepresenceMain : MonoBehaviour
 
     private void _saveRemoteCreepyTrackerPivot()
     {
-        string p = _gameObjectPositionToString(remoteCreepyTrackerOrigin.localPosition);
-        string r = _gameObjectRotationToString(remoteCreepyTrackerOrigin.rotation);
+        string p = _gameObjectPositionToString(remoteCreepyTrackerOriginPivot.position);
+        string r = _gameObjectRotationToString(remoteCreepyTrackerOriginPivot.rotation);
         ConfigProperties.save(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.position", p);
         ConfigProperties.save(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.rotation", r);
         print("REMOTE CT PIVOT SAVED");
@@ -298,6 +317,8 @@ public class AlteredTelepresenceMain : MonoBehaviour
 
     private void _configureWorkspace()
     {
+        
+
         Debug.Log("DOING A WORKSPACE");
         remoteCreepyTrackerOriginPivot.transform.parent = remoteWorkspaceOrigin.transform;
         //remoteCreepyTrackerOrigin.parent = remoteWorkspaceOrigin.transform;

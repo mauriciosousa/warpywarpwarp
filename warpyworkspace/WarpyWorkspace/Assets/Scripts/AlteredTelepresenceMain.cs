@@ -36,7 +36,8 @@ public class AlteredTelepresenceMain : MonoBehaviour
     public BodiesManager remoteBodiesManager;
     public UdpBodiesListener remoteUdpListener;
 
-    public TrackerMesh ravatarManagerTracker;
+    public TrackerMesh remoteRavatarManagerTracker;
+    public TrackerMesh localRavatarManagerTracker;
 
     public Transform localWorkspaceOrigin;
     public Transform remoteWorkspaceOrigin;
@@ -58,9 +59,9 @@ public class AlteredTelepresenceMain : MonoBehaviour
     private SurfaceRectangle _localSurface;
     private SurfaceRectangle _remoteSurface;
 
-    public Transform ARCameraRig;
-    public Transform leftARCameraRig_RigidBody;
-    public Transform rightARCameraRig_RigidBody;
+    public Transform VRCameraRig;
+    public Transform leftVRCameraRig_RigidBody;
+    public Transform rightVRCameraRig_RigidBody;
 
     private bool _everythingIsConfigured = false;
 
@@ -121,9 +122,9 @@ public class AlteredTelepresenceMain : MonoBehaviour
     void Update()
     {
 
-        Transform t = setupLocation == SetupLocation.LEFT ? leftARCameraRig_RigidBody : rightARCameraRig_RigidBody;
-        ARCameraRig.transform.position = t.position;
-        ARCameraRig.transform.rotation = t.rotation;
+        Transform t = setupLocation == SetupLocation.LEFT ? leftVRCameraRig_RigidBody : rightVRCameraRig_RigidBody;
+        VRCameraRig.transform.position = t.position;
+        //VRCameraRig.transform.rotation = t.rotation;
 
         if (!_everythingIsConfigured && _localSurface != null && _remoteSurface != null)
         {
@@ -131,10 +132,16 @@ public class AlteredTelepresenceMain : MonoBehaviour
 
             calibrateOptiTrackAndCreepyTracker();
 
-            ravatarManagerTracker.Init(
+            remoteRavatarManagerTracker.Init(
             remoteTrackerListenPort,
             int.Parse(ConfigProperties.load(ConfigFile, _localPrefix + ".client.avatar.listen.port")),
             remoteCreepyTrackerOrigin
+            );
+
+            localRavatarManagerTracker.Init(
+            localTrackerListenPort,
+            int.Parse(ConfigProperties.load(ConfigFile, _remotePrefix + ".client.avatar.listen.port")),
+            localCreepyTrackerOrigin
             );
 
             _configureWorkspace();
@@ -144,6 +151,11 @@ public class AlteredTelepresenceMain : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             showGUI = !showGUI;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            VRCameraRig.transform.rotation = Quaternion.LookRotation(localWorkspaceOrigin.transform.forward, localWorkspaceOrigin.transform.up);
         }
 
     }
@@ -317,8 +329,8 @@ public class AlteredTelepresenceMain : MonoBehaviour
 
     private void _configureWorkspace()
     {
-        
 
+        return;
         Debug.Log("DOING A WORKSPACE");
         remoteCreepyTrackerOriginPivot.transform.parent = remoteWorkspaceOrigin.transform;
         //remoteCreepyTrackerOrigin.parent = remoteWorkspaceOrigin.transform;

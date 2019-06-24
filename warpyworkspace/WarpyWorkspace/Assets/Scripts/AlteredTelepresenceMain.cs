@@ -101,7 +101,8 @@ public class AlteredTelepresenceMain : MonoBehaviour
         remoteTrackerSurfaceListenerPort = int.Parse(ConfigProperties.load(ConfigFile, _remotePrefix + ".tracker.surface.listener.port"));
         int remoteAvatarListenPort = int.Parse(ConfigProperties.load(ConfigFile, _remotePrefix + ".client.avatar.listen.port"));
 
-
+        localBodiesManager.local = true;
+        remoteBodiesManager.local = false;
 
         GetComponent<CreepyTrackerSurfaceRequestListener>().StartReceive(localTrackerSurfaceListenerPort, remoteTrackerSurfaceListenerPort);
         localUdpListener.startListening(localTrackerBroadcastPort);
@@ -122,9 +123,9 @@ public class AlteredTelepresenceMain : MonoBehaviour
     void Update()
     {
 
-        Transform t = setupLocation == SetupLocation.LEFT ? leftVRCameraRig_RigidBody : rightVRCameraRig_RigidBody;
-        VRCameraRig.transform.position = t.position;
-        //VRCameraRig.transform.rotation = t.rotation;
+        //Transform t = setupLocation == SetupLocation.LEFT ? leftVRCameraRig_RigidBody : rightVRCameraRig_RigidBody;
+        //VRCameraRig.transform.position = t.position;
+        ////VRCameraRig.transform.rotation = t.rotation;
 
         if (!_everythingIsConfigured && _localSurface != null && _remoteSurface != null)
         {
@@ -153,11 +154,16 @@ public class AlteredTelepresenceMain : MonoBehaviour
             showGUI = !showGUI;
         }
 
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (Input.GetKeyDown(KeyCode.Return))
         {
-            VRCameraRig.transform.rotation = Quaternion.LookRotation(localWorkspaceOrigin.transform.forward, localWorkspaceOrigin.transform.up);
+            _calibrateHuman();
         }
 
+    }
+
+    private void _calibrateHuman()
+    {
+        localBodiesManager.calibrateHuman();
     }
 
     private void calibrateOptiTrackAndCreepyTracker()
@@ -367,6 +373,13 @@ public class AlteredTelepresenceMain : MonoBehaviour
             top += lineSkip;
 
             if (GUI.Button(new Rect(left, top, 200, lineSkip - 10), "SAVE CT PIVOT"))
+            {
+                _saveRemoteCreepyTrackerPivot();
+            }
+
+            top += lineSkip;
+
+            if (GUI.Button(new Rect(left, top, 200, lineSkip - 10), "RECENTER HMD"))
             {
                 _saveRemoteCreepyTrackerPivot();
             }

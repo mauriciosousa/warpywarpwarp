@@ -12,6 +12,19 @@ public class BodiesManager : MonoBehaviour
 
     public Transform CenterObject;
 
+    public Vector3 getHeadPosition(out bool canApplyHeadPosition)
+    {
+        canApplyHeadPosition = false;
+
+        if (human != null)
+        {
+            canApplyHeadPosition = true;
+            return transform.position = human.body.Joints[BodyJointType.head];
+        }
+
+        return Vector3.zero;
+    }
+
     public Transform humanGO;
     public CreepyTrackerIKSolver ikLeftArm;
     public CreepyTrackerIKSolver ikRightArm;
@@ -51,6 +64,10 @@ public class BodiesManager : MonoBehaviour
 
     public Transform leftTarget;
     public Transform rightTarget;
+
+    [Space(20)]
+    [Header("AT Evaluation Settings:")]
+    public bool local = false;
 
     void Start()
     {
@@ -281,5 +298,53 @@ public class BodiesManager : MonoBehaviour
             armsWarpInfo.RIGHT_IKWrist = RightWrist.position;
             armsWarpInfo.RIGHT_IKHandTip = RightHandTip.position;
         }
+    }
+
+    public void calibrateHuman()
+    {
+        //Human h = getHumanWithHandUp();
+        //if (h == null)
+        //{
+        //    throw new Exception("Cannot find that human!");
+        //}
+        //else
+        //{
+        //    UnityEngine.XR.InputTracking.Recenter();
+        //    human = h;
+        //}
+
+        if (human != null)
+        {
+            UnityEngine.XR.InputTracking.Recenter();
+            print("HUMAN RECENTER DONE");
+        }
+        else
+        {
+            Debug.LogError("No human to calibrate");
+        }
+    }
+
+    public Human getHumanWithHandUp()
+    {
+
+        string id = _getHumanIdWithHandUp();
+        foreach (KeyValuePair<String, Human> h in _humans)
+        {
+            if (h.Key == id) return h.Value;
+        }
+        return null;
+    }
+
+    private string _getHumanIdWithHandUp()
+    {
+        foreach (Human h in _humans.Values)
+        {
+            if (h.body.Joints[BodyJointType.leftHand].y > h.body.Joints[BodyJointType.head].y ||
+                h.body.Joints[BodyJointType.rightHand].y > h.body.Joints[BodyJointType.head].y)
+            {
+                return h.id;
+            }
+        }
+        return string.Empty;
     }
 }

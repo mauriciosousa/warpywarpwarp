@@ -133,17 +133,17 @@ public class AlteredTelepresenceMain : MonoBehaviour
 
             calibrateOptiTrackAndCreepyTracker();
 
-            remoteRavatarManagerTracker.Init(
-            remoteTrackerListenPort,
-            int.Parse(ConfigProperties.load(ConfigFile, _localPrefix + ".client.avatar.listen.port")),
-            remoteCreepyTrackerOrigin
-            );
+            //remoteRavatarManagerTracker.Init(
+            //remoteTrackerListenPort,
+            //int.Parse(ConfigProperties.load(ConfigFile, _localPrefix + ".client.avatar.listen.port")),
+            //remoteCreepyTrackerOrigin
+            //);
 
-            localRavatarManagerTracker.Init(
-            localTrackerListenPort,
-            int.Parse(ConfigProperties.load(ConfigFile, _remotePrefix + ".client.avatar.listen.port")),
-            localCreepyTrackerOrigin
-            );
+            //localRavatarManagerTracker.Init(
+            //localTrackerListenPort,
+            //int.Parse(ConfigProperties.load(ConfigFile, _remotePrefix + ".client.avatar.listen.port")),
+            //localCreepyTrackerOrigin
+            //);
 
             _configureWorkspace();
             _everythingIsConfigured = true;
@@ -336,7 +336,6 @@ public class AlteredTelepresenceMain : MonoBehaviour
     private void _configureWorkspace()
     {
 
-        return;
         Debug.Log("DOING A WORKSPACE");
         remoteCreepyTrackerOriginPivot.transform.parent = remoteWorkspaceOrigin.transform;
         //remoteCreepyTrackerOrigin.parent = remoteWorkspaceOrigin.transform;
@@ -348,7 +347,6 @@ public class AlteredTelepresenceMain : MonoBehaviour
         if (formation == Formation.FACE_TO_FACE)
         {
             remoteWorkspaceOrigin.transform.rotation = Quaternion.LookRotation(-localWorkspaceOrigin.transform.forward, localWorkspaceOrigin.transform.up);
-            //remoteWorkspaceOrigin.transform.position -= 0.1f * localWorkspaceOrigin.transform.forward;
         }
     }
 

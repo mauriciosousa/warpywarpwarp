@@ -5,9 +5,11 @@ using UnityEngine;
 public class IsColliding : MonoBehaviour {
 
     public bool COLLIDING = false;
+    private string _tag = "Player"; // Must be defined in the Editor
 
 	void Start () {
         COLLIDING = false;
+        gameObject.tag = _tag;
 	}
 	
 	void Update () {
@@ -16,18 +18,16 @@ public class IsColliding : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == _tag)
         {
-            //Debug.Log("ENTER");
             COLLIDING = true;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == _tag)
         {
-            //Debug.Log("EXIT");
             COLLIDING = false;
         }
     }

@@ -63,7 +63,15 @@ public class AlteredTelepresenceMain : MonoBehaviour
     public Transform leftVRCameraRig_RigidBody;
     public Transform rightVRCameraRig_RigidBody;
 
+    public GameObject scenario;
+
     private bool _everythingIsConfigured = false;
+
+    public bool startLocalRavatar;
+    public bool startRemoteRavatar;
+
+    public IsColliding localHumanCollider;
+    public bool humansColliding;
 
     void Start()
     {
@@ -118,6 +126,9 @@ public class AlteredTelepresenceMain : MonoBehaviour
         //
         _sensors = new Dictionary<string, GameObject>();
         _surfaceRequest();
+
+        scenario.SetActive(true);
+
     }
 
     void Update()
@@ -133,17 +144,23 @@ public class AlteredTelepresenceMain : MonoBehaviour
 
             calibrateOptiTrackAndCreepyTracker();
 
-            //remoteRavatarManagerTracker.Init(
-            //remoteTrackerListenPort,
-            //int.Parse(ConfigProperties.load(ConfigFile, _localPrefix + ".client.avatar.listen.port")),
-            //remoteCreepyTrackerOrigin
-            //);
+            if (startRemoteRavatar)
+            {
+                remoteRavatarManagerTracker.Init(
+                remoteTrackerListenPort,
+                int.Parse(ConfigProperties.load(ConfigFile, _localPrefix + ".client.avatar.listen.port")),
+                remoteCreepyTrackerOrigin
+                );
+            }
 
-            //localRavatarManagerTracker.Init(
-            //localTrackerListenPort,
-            //int.Parse(ConfigProperties.load(ConfigFile, _remotePrefix + ".client.avatar.listen.port")),
-            //localCreepyTrackerOrigin
-            //);
+            if (startLocalRavatar)
+            {
+                localRavatarManagerTracker.Init(
+                localTrackerListenPort,
+                int.Parse(ConfigProperties.load(ConfigFile, _remotePrefix + ".client.avatar.listen.port")),
+                localCreepyTrackerOrigin
+                );
+            }
 
             _configureWorkspace();
             _everythingIsConfigured = true;
@@ -158,6 +175,8 @@ public class AlteredTelepresenceMain : MonoBehaviour
         {
             _calibrateHuman();
         }
+
+        humansColliding = localHumanCollider.COLLIDING;
 
     }
 
@@ -335,18 +354,18 @@ public class AlteredTelepresenceMain : MonoBehaviour
 
     private void _configureWorkspace()
     {
-
+        
         Debug.Log("DOING A WORKSPACE");
         remoteCreepyTrackerOriginPivot.transform.parent = remoteWorkspaceOrigin.transform;
         //remoteCreepyTrackerOrigin.parent = remoteWorkspaceOrigin.transform;
 
+        
         remoteWorkspaceOrigin.transform.position = localWorkspaceOrigin.transform.position;
-        remoteWorkspaceOrigin.transform.rotation = localWorkspaceOrigin.transform.rotation;
+        //remoteWorkspaceOrigin.transform.rotation = localWorkspaceOrigin.transform.rotation;
 
-
-        if (formation == Formation.FACE_TO_FACE)
+        if (formation == Formation.SIDE_TO_SIDE)
         {
-            remoteWorkspaceOrigin.transform.rotation = Quaternion.LookRotation(-localWorkspaceOrigin.transform.forward, localWorkspaceOrigin.transform.up);
+            remoteWorkspaceOrigin.transform.rotation = Quaternion.LookRotation(localWorkspaceOrigin.transform.forward, localWorkspaceOrigin.transform.up);
         }
     }
 
@@ -379,7 +398,7 @@ public class AlteredTelepresenceMain : MonoBehaviour
 
             if (GUI.Button(new Rect(left, top, 200, lineSkip - 10), "RECENTER HMD"))
             {
-                _saveRemoteCreepyTrackerPivot();
+                _calibrateHuman();
             }
         }
     }

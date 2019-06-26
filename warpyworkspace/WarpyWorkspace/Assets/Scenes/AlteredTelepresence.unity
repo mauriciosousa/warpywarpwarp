@@ -303,8 +303,6 @@ MonoBehaviour:
   scenario: {fileID: 814166657}
   startLocalRavatar: 0
   startRemoteRavatar: 0
-  localHumanCollider: {fileID: 209419885}
-  humansColliding: 0
 --- !u!114 &44025216
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -336,10 +334,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 44025213}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8c9d816cf1559e49ae67897d28aa482, type: 3}
+  m_Script: {fileID: 11500000, guid: cba44f6c3cfc6ca4190df458db940a12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  COLLIDING: 0
+  localHumanCollider: {fileID: 209419885}
+  humansColliding: 0
+  localHumanSpineJoint: {fileID: 1276747240}
+  remoteHumanSpineJoint: {fileID: 1105340886}
+  distance: 0
+  proxemics: 3
 --- !u!114 &44025219
 MonoBehaviour:
   m_ObjectHideFlags: 0

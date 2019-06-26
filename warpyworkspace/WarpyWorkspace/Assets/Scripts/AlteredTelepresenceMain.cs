@@ -70,9 +70,6 @@ public class AlteredTelepresenceMain : MonoBehaviour
     public bool startLocalRavatar;
     public bool startRemoteRavatar;
 
-    public IsColliding localHumanCollider;
-    public bool humansColliding;
-
     void Start()
     {
         Application.runInBackground = true;
@@ -175,9 +172,6 @@ public class AlteredTelepresenceMain : MonoBehaviour
         {
             _calibrateHuman();
         }
-
-        humansColliding = localHumanCollider.COLLIDING;
-
     }
 
     private void _calibrateHuman()

@@ -16,11 +16,16 @@ public class AssemblerCursor : MonoBehaviour {
 
     public Collider interactionZone;
 
+    public bool canDo = false;
+
 	void Start () {
-        cursor.gameObject.SetActive(true);
 	}
 	
 	void Update () {
+
+        cursor.gameObject.GetComponent<Renderer>().enabled = canDo;
+
+        if (!canDo) return;
 
         if (Input.GetKey(KeyCode.Joystick1Button0) || Input.GetKey(KeyCode.Joystick1Button1))
         {
@@ -47,7 +52,5 @@ public class AssemblerCursor : MonoBehaviour {
                 cursor.position = tip.position + delta*dir;
             }
         }
-
-		
 	}
 }

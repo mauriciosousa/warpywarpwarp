@@ -5,11 +5,7 @@ using UnityEngine;
 using System.IO;
 
 
-public enum Role
-{
-    ASSEMBLER, 
-    INSTRUCTOR
-}
+
 
 public enum Test
 {
@@ -21,63 +17,7 @@ public enum BallQuadrant
     I, II, III, IV
 }
 
-public class ResultsFile
-{
-    private string _file;
-    private string _sep = "$";
 
-    public ResultsFile(string filename)
-    {
-        _file = filename;
-
-        string header = "";
-
-        header += "Timestamp" + _sep;
-        header += "Task" + _sep;
-        header += "Test" + _sep;
-        header += "Condition" + _sep;
-        header += "BallQuadrant" + _sep;
-        header += "ErrorDistance" + _sep;
-        header += "Time" + _sep;
-        header += "SameSpacePercentage" + _sep;
-        header += "InstructorBall.x" + _sep;
-        header += "InstructorBall.y" + _sep;
-        header += "InstructorBall.z" + _sep;
-        header += "AssemblerBall.x" + _sep;
-        header += "AssemblerBall.y" + _sep;
-        header += "AssemblerBall.z";
-
-        _writeLine(header);
-        Debug.Log("created: " + filename);
-    }
-
-    private void _writeLine(string line)
-    {
-        File.AppendAllText(_file, line + Environment.NewLine);
-    }
-
-    public void writeLine(int task, Test test, Formation condition, BallQuadrant ballQuadrant, float errorDistance, float time, float sameSpacePercentage, Vector3 instructorBall, Vector3 assemblerBall)
-    {
-        string line = "";
-
-        line += DateTime.Now.ToString("yyyyMMddHHmmss") + _sep;
-        line += task + _sep;
-        line += test + _sep;
-        line += condition + _sep;
-        line += ballQuadrant.ToString() + _sep;
-        line += errorDistance + _sep;
-        line += time + _sep;
-        line += sameSpacePercentage + _sep;
-        line += instructorBall.x + _sep;
-        line += instructorBall.y + _sep;
-        line += instructorBall.z + _sep;
-        line += assemblerBall.x + _sep;
-        line += assemblerBall.y + _sep;
-        line += assemblerBall.z + _sep;
-
-        _writeLine(line);
-    }
-}
 
 public class Workspace : MonoBehaviour {
 
@@ -179,7 +119,7 @@ public class Workspace : MonoBehaviour {
 
         assemblerBall.SetActive(false);
 
-        participantRole = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.ASSEMBLER;
+        participantRole = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.MANIPULATOR;
 
         _network = GetComponent<WarpyNetwork>();
         _network.__init__();
@@ -200,7 +140,7 @@ public class Workspace : MonoBehaviour {
             _lastButtonPress = Time.time;
         }
 
-        if (button && _network.Connected && participantRole == Role.ASSEMBLER)
+        if (button && _network.Connected && participantRole == Role.MANIPULATOR)
         {
             _networkView.RPC("RPC_ButtonPressed", RPCMode.All);
         }
@@ -267,7 +207,7 @@ public class Workspace : MonoBehaviour {
         {
             _listOfCollidingFrames.Add(_localCapsuleCollider.COLLIDING);
 
-            if (participantRole == Role.ASSEMBLER && _network.Connected)
+            if (participantRole == Role.MANIPULATOR && _network.Connected)
             {
                 _networkView.RPC("RPC_SyncAssemblersBall", RPCMode.Others, assemblerBall.transform.localPosition);
             }
@@ -425,11 +365,11 @@ public class Workspace : MonoBehaviour {
     {
         if (leftIsInstructorTasks.Contains(TASK))
         {
-            participantRole = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.ASSEMBLER;
+            participantRole = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.MANIPULATOR;
         }
         else
         {
-            participantRole = _location == SetupLocation.LEFT ? Role.ASSEMBLER : Role.INSTRUCTOR;
+            participantRole = _location == SetupLocation.LEFT ? Role.MANIPULATOR : Role.INSTRUCTOR;
 
         }
 

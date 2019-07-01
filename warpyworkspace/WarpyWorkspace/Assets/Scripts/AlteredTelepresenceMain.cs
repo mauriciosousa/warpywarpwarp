@@ -55,20 +55,24 @@ public class AlteredTelepresenceMain : MonoBehaviour
     private int localTrackerSurfaceListenerPort;
     private int remoteTrackerSurfaceListenerPort;
 
+    private int _leftID = -1;
+    private int _rightID = -2;
+    private string _test = "A";
+
     public Dictionary<string, GameObject> _sensors;
     private SurfaceRectangle _localSurface;
     private SurfaceRectangle _remoteSurface;
 
-    public Transform VRCameraRig;
     public Transform leftVRCameraRig_RigidBody;
     public Transform rightVRCameraRig_RigidBody;
-
-    public GameObject scenario;
 
     private bool _everythingIsConfigured = false;
 
     public bool startLocalRavatar;
     public bool startRemoteRavatar;
+
+    public EvaluationProceadure evaluationProceadure;
+    public AlteredTelepresenceNetwork alteredTelepresenceNetwork;
 
     void Start()
     {
@@ -89,6 +93,10 @@ public class AlteredTelepresenceMain : MonoBehaviour
         }
 
         formation = (Formation)Enum.Parse(enumType: typeof(Formation), value: ConfigProperties.load(ConfigFile, "start.formation"));
+
+        _leftID = int.Parse(ConfigProperties.load(ConfigFile, "left.id"));
+        _rightID = int.Parse(ConfigProperties.load(ConfigFile, "right.id"));
+        _test = ConfigProperties.load(ConfigFile, "test");
 
         //
         localTrackerListenPort = int.Parse(ConfigProperties.load(ConfigFile, _localPrefix + ".tracker.listen.port"));
@@ -125,9 +133,6 @@ public class AlteredTelepresenceMain : MonoBehaviour
         //
         _sensors = new Dictionary<string, GameObject>();
         _surfaceRequest();
-
-        scenario.SetActive(true);
-
     }
 
     void Update()
@@ -162,6 +167,7 @@ public class AlteredTelepresenceMain : MonoBehaviour
             }
 
             _configureWorkspace();
+            alteredTelepresenceNetwork.Init();
             _everythingIsConfigured = true;
         }
 
@@ -250,6 +256,7 @@ public class AlteredTelepresenceMain : MonoBehaviour
             sensor.transform.localPosition = s.position;
             sensor.transform.localRotation = s.rotation;
             GameObject cube = LittleCube(sensor.transform, sensor.name + "cube");
+            cube.GetComponent<Renderer>().enabled = false;
             _sensors[s.id] = sensor;
         }
 
@@ -396,7 +403,18 @@ public class AlteredTelepresenceMain : MonoBehaviour
             {
                 _calibrateHuman();
             }
+
+            top += 200;
+            if (GUI.Button(new Rect(left, top, 200, lineSkip - 10), "START EVALUATION"))
+            {
+                _startEvaluation();
+            }
         }
+    }
+
+    private void _startEvaluation()
+    {
+        evaluationProceadure.Init(setupLocation, formation, _leftID, _rightID);
     }
 
     private string _gameObjectRotationToString(Quaternion rotation)

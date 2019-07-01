@@ -61,11 +61,20 @@ public class EvaluationProceadure : MonoBehaviour {
         _role = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.MANIPULATOR;
         _leftID = leftID;
         _rightID = rightID;
+    }
 
+    public void startEvaluation()
+    {
         t = 0;
         print("Starting Evaluation with " + _location + " " + _formation + " " + _role);
 
         workspace.SetActive(true);
+    }
+
+    internal void rightStartEvaluation()
+    {
+        if (_location == SetupLocation.RIGHT)
+        { startEvaluation(); }
     }
 
     void Update () {

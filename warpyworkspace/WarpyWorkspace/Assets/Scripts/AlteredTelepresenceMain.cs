@@ -168,6 +168,7 @@ public class AlteredTelepresenceMain : MonoBehaviour
 
             _configureWorkspace();
             alteredTelepresenceNetwork.Init();
+            evaluationProceadure.Init(setupLocation, formation, _leftID, _rightID);
             _everythingIsConfigured = true;
         }
 
@@ -370,6 +371,8 @@ public class AlteredTelepresenceMain : MonoBehaviour
         {
             remoteWorkspaceOrigin.transform.rotation = Quaternion.LookRotation(localWorkspaceOrigin.transform.forward, localWorkspaceOrigin.transform.up);
         }
+
+
     }
 
     void OnGUI()
@@ -404,18 +407,17 @@ public class AlteredTelepresenceMain : MonoBehaviour
                 _calibrateHuman();
             }
 
-            top += 200;
-            if (GUI.Button(new Rect(left, top, 200, lineSkip - 10), "START EVALUATION"))
+            if (setupLocation == SetupLocation.LEFT)
             {
-                _startEvaluation();
+                top += 200;
+                if (GUI.Button(new Rect(left, top, 200, lineSkip - 10), "START EVALUATION"))
+                {
+                    evaluationProceadure.startEvaluation();
+                }
             }
         }
     }
 
-    private void _startEvaluation()
-    {
-        evaluationProceadure.Init(setupLocation, formation, _leftID, _rightID);
-    }
 
     private string _gameObjectRotationToString(Quaternion rotation)
     {

@@ -138,11 +138,11 @@ public class EvaluationProceadure : MonoBehaviour {
     {
         if (T <= 8)
         {
-            return _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.MANIPULATOR;
+            return location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.MANIPULATOR;
         }
         else
         {
-            return _location == SetupLocation.LEFT ? Role.MANIPULATOR : Role.INSTRUCTOR;
+            return location == SetupLocation.LEFT ? Role.MANIPULATOR : Role.INSTRUCTOR;
         }
     }
 
@@ -166,13 +166,31 @@ public class EvaluationProceadure : MonoBehaviour {
     public void StartTask(int t)
     {
         evalState = EvalState.SESSION;
+
+        if (role == Role.MANIPULATOR)
+        {
+            cursor.canDo = true;
+        }
+
+        if (_location == SetupLocation.LEFT)
+        {
+            _startTime = DateTime.Now;
+        }
     }
 
     public void EndTask()
     {
         evalState = EvalState.PAUSE;
         T += 1;
-        role = _getRole(_location);
+        cursor.canDo = false;
+
+        // get distances
+
+        if (_location == SetupLocation.LEFT)
+        {
+            TimeSpan timeSpan = DateTime.Now - _startTime;
+            print(timeSpan.TotalMilliseconds.ToString());
+        }
     }
 
     private void _endTask()

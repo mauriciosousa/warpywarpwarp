@@ -22,11 +22,13 @@ public class EvaluationProceadure : MonoBehaviour {
     private int _leftID;
     private int _rightID;
 
+    public GUIStyle style;
+
     public AssemblerCursor cursor;
 
     private int t;
-    private int t_intermission = 4;
-    private int t_lastOne = 7;
+    private int t_intermission = 9;
+    private int t_lastOne = 16;
 
     public int task;
     public int Task
@@ -51,6 +53,7 @@ public class EvaluationProceadure : MonoBehaviour {
         {
             Directory.CreateDirectory(_resultsFolder);
         }
+        role = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.MANIPULATOR;
         _network = GetComponent<AlteredTelepresenceNetwork>();
 	}
 
@@ -58,13 +61,14 @@ public class EvaluationProceadure : MonoBehaviour {
     {
         _location = location;
         _formation = formation;
-        role = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.MANIPULATOR;
         _leftID = leftID;
         _rightID = rightID;
     }
 
+    private bool _evaluationStarted = false;
     public void startEvaluation()
     {
+        _evaluationStarted = true;
         t = 0;
         print("Starting Evaluation with " + _location + " " + _formation + " " + role);
 
@@ -105,8 +109,10 @@ public class EvaluationProceadure : MonoBehaviour {
     {
         Debug.Log("BUTTON PRESSED in " + location);
 
-        
-
+        if (_evaluationStarted)
+        {
+            _network.moveOn();
+        }
     }
 
     internal void syncCursor(Vector3 p)
@@ -119,12 +125,9 @@ public class EvaluationProceadure : MonoBehaviour {
 
     public void moveOn()
     {
+        role = _getRole();
 
-        // review who can do this!!!
-
-        if (t == 0) role = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.MANIPULATOR;
-        else role = _getRole();
-
+        return;
 
         if (t >= 1 && t <= t_lastOne && t != t_intermission)
         {
@@ -150,11 +153,10 @@ public class EvaluationProceadure : MonoBehaviour {
 
     private Role _getRole()
     {
-        if (_location == SetupLocation.LEFT && t >= 1 && t <= 8)
-        {
+        if (_location == SetupLocation.LEFT && t <= 8)
             return Role.INSTRUCTOR;
-        }
-        else return Role.MANIPULATOR;
+
+        return Role.MANIPULATOR;
     }
 
     private void _startTask()
@@ -181,10 +183,16 @@ public class EvaluationProceadure : MonoBehaviour {
 
     void OnGUI()
     {
-        if (t >= 1 && t <= 16)
-        {
-            GUI.Label(new Rect(Screen.width - 100, 10, 100, 35), _getRole().ToString());
-        }
+        int top = 50;
+        int left = 10;
+        
+        GUI.Label(new Rect(left, top, 100, 35), _getRole().ToString(), style);
+
+        top += 40;
+        GUI.Label(new Rect(left, top, 100, 35), "T = " + t, style);
+        
+
+
     }
 
     internal void communicateStart()

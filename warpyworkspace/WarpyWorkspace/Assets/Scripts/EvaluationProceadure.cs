@@ -111,7 +111,11 @@ public class EvaluationProceadure : MonoBehaviour {
 
         if (_evaluationStarted)
         {
-            _network.moveOn();
+            role = _getRole();
+            if (role == Role.MANIPULATOR)
+            {
+                _network.moveOn();
+            }
         }
     }
 
@@ -124,11 +128,7 @@ public class EvaluationProceadure : MonoBehaviour {
     }
 
     public void moveOn()
-    {
-        role = _getRole();
-
-        return;
-
+    {        
         if (t >= 1 && t <= t_lastOne && t != t_intermission)
         {
             _endTask();

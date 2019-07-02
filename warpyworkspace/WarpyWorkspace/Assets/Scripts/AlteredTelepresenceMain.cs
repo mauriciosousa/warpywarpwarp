@@ -185,7 +185,7 @@ public class AlteredTelepresenceMain : MonoBehaviour
 
     private void _calibrateHuman()
     {
-        localBodiesManager.calibrateHuman();
+        localBodiesManager.calibrateHuman(setupLocation);
     }
 
     private void calibrateOptiTrackAndCreepyTracker()

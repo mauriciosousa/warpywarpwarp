@@ -357,7 +357,8 @@ public class BodiesManager : MonoBehaviour
         }
     }
 
-    public void calibrateHuman()
+    public Transform headPivot;
+    public void calibrateHuman(SetupLocation location)
     {
         //Human h = getHumanWithHandUp();
         //if (h == null)
@@ -373,6 +374,12 @@ public class BodiesManager : MonoBehaviour
         if (human != null)
         {
             UnityEngine.XR.InputTracking.Recenter();
+            if (location == SetupLocation.RIGHT)
+            {
+                headPivot.transform.forward = -headPivot.transform.forward;
+            }
+
+
             print("HUMAN RECENTER DONE");
         }
         else

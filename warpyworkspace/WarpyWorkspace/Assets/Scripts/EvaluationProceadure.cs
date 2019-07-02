@@ -85,6 +85,12 @@ public class EvaluationProceadure : MonoBehaviour {
     }
 
     void Update () {
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            _network.ping();
+        }
+
         if (!_init) return;  
 
         task = Task;
@@ -92,11 +98,6 @@ public class EvaluationProceadure : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             moveOn();
-        }
-
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            _network.ping();
         }
 
         if (task >= 1 && task <= 16 && _role == Role.MANIPULATOR)

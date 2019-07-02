@@ -62,6 +62,20 @@ public class AlteredTelepresenceNetwork : MonoBehaviour {
     }
 
     [RPC]
+    void RPC_ping()
+    {
+        _eval.ping();
+    }
+
+    public void ping()
+    {
+        if (Connected)
+        {
+            _networkView.RPC("RPC_ping", RPCMode.Others);
+        }
+    }
+
+    [RPC]
     void RPC_rightStartEvaluation()
     {
         _eval.rightStartEvaluation();

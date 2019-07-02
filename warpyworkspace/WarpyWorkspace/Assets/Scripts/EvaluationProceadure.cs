@@ -73,6 +73,11 @@ public class EvaluationProceadure : MonoBehaviour {
         if (_location == SetupLocation.LEFT) _network.rightStartEvaluation();
     }
 
+    internal void ping()
+    {
+        Debug.Log("PING");
+    }
+
     internal void rightStartEvaluation()
     {
         if (_location == SetupLocation.RIGHT)
@@ -87,6 +92,11 @@ public class EvaluationProceadure : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             moveOn();
+        }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            _network.ping();
         }
 
         if (task >= 1 && task <= 16 && _role == Role.MANIPULATOR)

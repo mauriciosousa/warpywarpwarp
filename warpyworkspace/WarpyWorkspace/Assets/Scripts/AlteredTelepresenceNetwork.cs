@@ -35,6 +35,8 @@ public class AlteredTelepresenceNetwork : MonoBehaviour {
         _port = int.Parse(ConfigProperties.load(ConfigFile, "rpc.port"));
         _address = ConfigProperties.load(ConfigFile, "left.setup.address");
 
+        _eval = GetComponent<EvaluationProceadure>();
+
         if (_location == SetupLocation.LEFT)
         {
             Network.InitializeServer(4, _port, false);
@@ -91,16 +93,16 @@ public class AlteredTelepresenceNetwork : MonoBehaviour {
 
 
     [RPC]
-    void RPC_moveOn()
+    void RPC_buttonPressed(string location)
     {
-        _eval.moveOn();
+        _eval.buttonPressed(location);
     }
 
-    public void moveOn()
+    internal void buttonPressed(string location)
     {
         if (Connected)
         {
-            _networkView.RPC("RPC_moveOn", RPCMode.Others);
+            _networkView.RPC("RPC_buttonPressed", RPCMode.All, location);
         }
     }
 

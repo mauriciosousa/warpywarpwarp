@@ -18,7 +18,7 @@ public class EvaluationProceadure : MonoBehaviour {
 
     private SetupLocation _location;
     private Formation _formation; // = condition
-    private Role _role;
+    public Role role;
     private int _leftID;
     private int _rightID;
 
@@ -58,7 +58,7 @@ public class EvaluationProceadure : MonoBehaviour {
     {
         _location = location;
         _formation = formation;
-        _role = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.MANIPULATOR;
+        role = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.MANIPULATOR;
         _leftID = leftID;
         _rightID = rightID;
     }
@@ -66,7 +66,7 @@ public class EvaluationProceadure : MonoBehaviour {
     public void startEvaluation()
     {
         t = 0;
-        print("Starting Evaluation with " + _location + " " + _formation + " " + _role);
+        print("Starting Evaluation with " + _location + " " + _formation + " " + role);
 
         workspace.SetActive(true);
 
@@ -97,18 +97,23 @@ public class EvaluationProceadure : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            moveOn();
+            _network.buttonPressed(_location.ToString());
         }
 
-        if (task >= 1 && task <= 16 && _role == Role.MANIPULATOR)
+        if (task >= 1 && task <= 16 && role == Role.MANIPULATOR)
         {
             _network.syncCursor(cursor.transform.localPosition);
         }
 	}
 
+    internal void buttonPressed(string location)
+    {
+        Debug.Log("BUTTON PRESSED in " + location);
+    }
+
     internal void syncCursor(Vector3 p)
     {
-        if (_role == Role.INSTRUCTOR)
+        if (role == Role.INSTRUCTOR)
         {
             cursor.transform.localPosition = p;
         }
@@ -116,13 +121,12 @@ public class EvaluationProceadure : MonoBehaviour {
 
     public void moveOn()
     {
-        if (t == 0) _role = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.MANIPULATOR;
-        else _role = _getRole();
 
-        if (_role == Role.MANIPULATOR)
-        {
-            _network.moveOn();
-        }
+        // review who can do this!!!
+
+        if (t == 0) role = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.MANIPULATOR;
+        else role = _getRole();
+
 
         if (t >= 1 && t <= t_lastOne && t != t_intermission)
         {

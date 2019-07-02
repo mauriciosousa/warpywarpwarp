@@ -159,6 +159,7 @@ public class EvaluationProceadure : MonoBehaviour {
     {
         evalState = EvalState.PAUSE;
         T += 1;
+        role = _getRole(_location);
     }
 
     private void _endTask()

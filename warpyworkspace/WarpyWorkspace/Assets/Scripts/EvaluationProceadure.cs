@@ -93,6 +93,11 @@ public class EvaluationProceadure : MonoBehaviour {
         {
             _network.syncCursor(cursor.transform.localPosition);
         }
+
+        if (_evaluationStarted)
+        {
+            role = _getRole(_location);
+        }
 	}
 
     internal void buttonPressed(string location)
@@ -100,8 +105,12 @@ public class EvaluationProceadure : MonoBehaviour {
         //SomeEnum enum = (SomeEnum)Enum.Parse(typeof(SomeEnum), "EnumValue");
         SetupLocation whoPressed = (SetupLocation)Enum.Parse(typeof(SetupLocation), location);
         
+
         if (_evaluationStarted)
         {
+
+            print(whoPressed.ToString() + " is " + _getRole(whoPressed).ToString());
+
             if (_getRole(whoPressed) == Role.MANIPULATOR && _location == SetupLocation.LEFT)
             {
 
@@ -127,10 +136,14 @@ public class EvaluationProceadure : MonoBehaviour {
 
     private Role _getRole(SetupLocation location)
     {
-        if (location == SetupLocation.LEFT && T <= 8)
-            return Role.INSTRUCTOR;
-
-        return Role.MANIPULATOR;
+        if (T <= 8)
+        {
+            return _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.MANIPULATOR;
+        }
+        else
+        {
+            return _location == SetupLocation.LEFT ? Role.MANIPULATOR : Role.INSTRUCTOR;
+        }
     }
 
     private void _startTask()

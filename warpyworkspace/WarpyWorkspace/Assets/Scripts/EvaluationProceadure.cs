@@ -63,8 +63,22 @@ public class EvaluationProceadure : MonoBehaviour {
             Directory.CreateDirectory(_resultsFolder);
         }
         _network = GetComponent<AlteredTelepresenceNetwork>();
+
         ABalls = new List<GameObject>();
         BBalls = new List<GameObject>();
+
+        foreach (Transform child in balls)
+        {
+            if (child.name[0] == 'A')
+            {
+                ABalls.Add(child.gameObject);
+            }
+            else
+            {
+                BBalls.Add(child.gameObject);
+
+            }
+        }
         insideOneAnother = new List<bool>();
 
     }
@@ -119,6 +133,21 @@ public class EvaluationProceadure : MonoBehaviour {
             }
         }
 	}
+
+    void FixedUpdate()
+    {
+        if (evalState == EvalState.SESSION)
+        {
+            if (role == Role.MANIPULATOR)
+            {
+                //
+            }
+            else
+            {
+                insideOneAnother.Add(proxemics.humansColliding);
+            }
+        }
+    }
 
     internal void buttonPressed(string location)
     {

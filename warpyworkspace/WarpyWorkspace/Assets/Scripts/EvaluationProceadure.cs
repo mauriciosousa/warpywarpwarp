@@ -50,7 +50,6 @@ public class EvaluationProceadure : MonoBehaviour {
         {
             Directory.CreateDirectory(_resultsFolder);
         }
-        role = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.MANIPULATOR;
         _network = GetComponent<AlteredTelepresenceNetwork>();
 	}
 
@@ -67,6 +66,7 @@ public class EvaluationProceadure : MonoBehaviour {
     {
         _evaluationStarted = true;
         T = 1;
+        role = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.MANIPULATOR;
         print("Starting Evaluation with " + _location + " " + _formation + " " + role);
 
         workspace.SetActive(true);
@@ -89,15 +89,14 @@ public class EvaluationProceadure : MonoBehaviour {
             _network.buttonPressed(_location.ToString());
         }
 
-        if (evalState == EvalState.SESSION && _getRole(_location) == Role.MANIPULATOR)
+        role = _getRole(_location);
+        if (evalState == EvalState.SESSION && role == Role.MANIPULATOR)
         {
             _network.syncCursor(cursor.transform.localPosition);
         }
 
-        if (_evaluationStarted)
-        {
-            role = _getRole(_location);
-        }
+        
+        
 	}
 
     internal void buttonPressed(string location)
@@ -156,6 +155,8 @@ public class EvaluationProceadure : MonoBehaviour {
 
     public void StartTask(int t)
     {
+        print("" + role + " " + _location);
+
         evalState = EvalState.SESSION;
 
         if (role == Role.MANIPULATOR)
@@ -166,9 +167,9 @@ public class EvaluationProceadure : MonoBehaviour {
         if (_location == SetupLocation.LEFT)
         {
             _startTime = DateTime.Now;
+            print("  TASK " + T + " started!!!!");
         }
 
-        print("  TASK " + T  + " started!!!!");
     }
 
     public void EndTask()
@@ -202,14 +203,17 @@ public class EvaluationProceadure : MonoBehaviour {
     {
         int top = 50;
         int left = 10;
+        if (_evaluationStarted)
+        {
+
+            GUI.Label(new Rect(left, top, 100, 35), _getRole(_location).ToString(), style);
         
-        GUI.Label(new Rect(left, top, 100, 35), _getRole(_location).ToString(), style);
+            top += 40;
+            GUI.Label(new Rect(left, top, 100, 35), "T = " + T, style);
 
-        top += 40;
-        GUI.Label(new Rect(left, top, 100, 35), "T = " + T, style);
-
-        top += 40;
-        GUI.Label(new Rect(left, top, 100, 35), evalState.ToString(), style);
+            top += 40;
+            GUI.Label(new Rect(left, top, 100, 35), evalState.ToString(), style);
+        }
     }
 
     internal void communicateStart()

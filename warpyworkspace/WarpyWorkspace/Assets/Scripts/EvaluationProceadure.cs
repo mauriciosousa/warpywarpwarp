@@ -161,17 +161,16 @@ public class EvaluationProceadure : MonoBehaviour {
         T += 1;
     }
 
-
-
-
     private void _endTask()
     {
-        cursor.canDo = false;
-        if (_location == SetupLocation.LEFT)
-        {
-            TimeSpan timeSpan = DateTime.Now - _startTime;
-            print(timeSpan.TotalMilliseconds.ToString());
-        }
+        _network.EndTask();
+
+        //cursor.canDo = false;
+        //if (_location == SetupLocation.LEFT)
+        //{
+        //    TimeSpan timeSpan = DateTime.Now - _startTime;
+        //    print(timeSpan.TotalMilliseconds.ToString());
+        //}
     }
 
     void OnGUI()

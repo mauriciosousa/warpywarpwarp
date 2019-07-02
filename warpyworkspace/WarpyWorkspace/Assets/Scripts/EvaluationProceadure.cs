@@ -109,7 +109,7 @@ public class EvaluationProceadure : MonoBehaviour {
         if (_evaluationStarted)
         {
 
-            print(whoPressed.ToString() + " is " + _getRole(whoPressed).ToString());
+            //print(whoPressed.ToString() + " is " + _getRole(whoPressed).ToString());
 
             if (_getRole(whoPressed) == Role.MANIPULATOR && _location == SetupLocation.LEFT)
             {
@@ -152,15 +152,6 @@ public class EvaluationProceadure : MonoBehaviour {
         {
             _network.StartTask(T);
         }
-
-        //print("T" + t);
-
-        //if (_getRole(_location) == Role.MANIPULATOR) cursor.canDo = true;
-
-        //if (_location == SetupLocation.LEFT)
-        //{
-        //    _startTime = DateTime.Now;
-        //}
     }
 
     public void StartTask(int t)
@@ -176,6 +167,8 @@ public class EvaluationProceadure : MonoBehaviour {
         {
             _startTime = DateTime.Now;
         }
+
+        print("  TASK " + T  + " started!!!!");
     }
 
     public void EndTask()
@@ -189,7 +182,7 @@ public class EvaluationProceadure : MonoBehaviour {
         if (_location == SetupLocation.LEFT)
         {
             TimeSpan timeSpan = DateTime.Now - _startTime;
-            print(timeSpan.TotalMilliseconds.ToString());
+            print("  TASK " + (T - 1) + " ended.... with " + timeSpan.TotalMilliseconds.ToString() + "ms");
         }
     }
 

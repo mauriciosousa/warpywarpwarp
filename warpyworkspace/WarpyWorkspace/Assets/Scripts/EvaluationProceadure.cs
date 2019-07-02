@@ -16,6 +16,11 @@ public enum EvalState
     SESSION, PAUSE
 }
 
+public enum Test
+{
+    A, B
+}
+
 public class EvaluationProceadure : MonoBehaviour {
 
     public GameObject workspace;
@@ -26,6 +31,7 @@ public class EvaluationProceadure : MonoBehaviour {
     public Role role;
     private int _leftID;
     private int _rightID;
+    private Test _test;
 
     public GUIStyle style;
 
@@ -42,7 +48,13 @@ public class EvaluationProceadure : MonoBehaviour {
 
     private bool _init = false;
 
-    
+
+    public Transform balls;
+    public List<GameObject> ABalls;
+    public List<GameObject> BBalls;
+
+    public ProxemicsAnalysis proxemics;
+    private List<bool> insideOneAnother; 
 
 	void Start () {
         _resultsFolder = Application.dataPath + Path.DirectorySeparatorChar + "Results";
@@ -51,14 +63,19 @@ public class EvaluationProceadure : MonoBehaviour {
             Directory.CreateDirectory(_resultsFolder);
         }
         _network = GetComponent<AlteredTelepresenceNetwork>();
-	}
+        ABalls = new List<GameObject>();
+        BBalls = new List<GameObject>();
+        insideOneAnother = new List<bool>();
 
-    public void Init(SetupLocation location, Formation formation, int leftID, int rightID)
+    }
+
+    public void Init(SetupLocation location, Formation formation, int leftID, int rightID, Test test)
     {
         _location = location;
         _formation = formation;
         _leftID = leftID;
         _rightID = rightID;
+        _test = test;
     }
 
     private bool _evaluationStarted = false;
@@ -90,13 +107,17 @@ public class EvaluationProceadure : MonoBehaviour {
         }
 
         role = _getRole(_location);
-        if (evalState == EvalState.SESSION && role == Role.MANIPULATOR)
+        if (evalState == EvalState.SESSION)
         {
-            _network.syncCursor(cursor.transform.localPosition);
+            if (role == Role.MANIPULATOR)
+            {
+                _network.syncCursor(cursor.transform.localPosition);
+            }
+            else
+            {
+                insideOneAnother.Add(proxemics.humansColliding);
+            }
         }
-
-        
-        
 	}
 
     internal void buttonPressed(string location)
@@ -153,6 +174,7 @@ public class EvaluationProceadure : MonoBehaviour {
         }
     }
 
+    private Transform _instructorBall;
     public void StartTask(int t)
     {
         print("" + role + " " + _location);
@@ -163,13 +185,18 @@ public class EvaluationProceadure : MonoBehaviour {
         {
             cursor.canDo = true;
         }
+        else
+        {
+            _instructorBall = _getInstructorBall(_test, t);
+            _instructorBall.gameObject.GetComponent<Renderer>().enabled = true;
+        }
 
         if (_location == SetupLocation.LEFT)
         {
             _startTime = DateTime.Now;
             print("  TASK " + T + " started!!!!");
+            insideOneAnother.Clear();
         }
-
     }
 
     public void EndTask()
@@ -177,14 +204,27 @@ public class EvaluationProceadure : MonoBehaviour {
         evalState = EvalState.PAUSE;
         T += 1;
         cursor.canDo = false;
-
-        // get distances
+        _instructorBall.gameObject.GetComponent<Renderer>().enabled = false;
 
         if (_location == SetupLocation.LEFT)
         {
             TimeSpan timeSpan = DateTime.Now - _startTime;
             print("  TASK " + (T - 1) + " ended.... with " + timeSpan.TotalMilliseconds.ToString() + "ms");
+
+            float errorDistance = Vector3.Distance(_instructorBall.position, cursor.transform.position);
+            print(" Error Distance: " + errorDistance);
+
+            int inside = 0;
+            for (int i = 0; i < insideOneAnother.Count; i++)
+            {
+                if (insideOneAnother[i]) inside += 1;
+            }
+            float insidePercentage = inside / insideOneAnother.Count;
+            print(" percentage inside: " + insidePercentage);
+
         }
+
+        _instructorBall = null;
     }
 
     private void _endTask()
@@ -197,6 +237,12 @@ public class EvaluationProceadure : MonoBehaviour {
         //    TimeSpan timeSpan = DateTime.Now - _startTime;
         //    print(timeSpan.TotalMilliseconds.ToString());
         //}
+    }
+
+    private Transform _getInstructorBall(Test test, int t)
+    {
+        List<GameObject> list = test == Test.A ? ABalls : BBalls;
+        return list[t - 1].transform;
     }
 
     void OnGUI()

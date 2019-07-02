@@ -57,7 +57,7 @@ public class AlteredTelepresenceMain : MonoBehaviour
 
     private int _leftID = -1;
     private int _rightID = -2;
-    private string _test = "A";
+    private Test _test;
 
     public Dictionary<string, GameObject> _sensors;
     private SurfaceRectangle _localSurface;
@@ -96,7 +96,7 @@ public class AlteredTelepresenceMain : MonoBehaviour
 
         _leftID = int.Parse(ConfigProperties.load(ConfigFile, "left.id"));
         _rightID = int.Parse(ConfigProperties.load(ConfigFile, "right.id"));
-        _test = ConfigProperties.load(ConfigFile, "test");
+        _test = (Test)Enum.Parse(typeof(Test), ConfigProperties.load(ConfigFile, "test"));
 
         //
         localTrackerListenPort = int.Parse(ConfigProperties.load(ConfigFile, _localPrefix + ".tracker.listen.port"));
@@ -168,7 +168,7 @@ public class AlteredTelepresenceMain : MonoBehaviour
 
             _configureWorkspace();
             alteredTelepresenceNetwork.Init();
-            evaluationProceadure.Init(setupLocation, formation, _leftID, _rightID);
+            evaluationProceadure.Init(setupLocation, formation, _leftID, _rightID, _test);
             _everythingIsConfigured = true;
         }
 

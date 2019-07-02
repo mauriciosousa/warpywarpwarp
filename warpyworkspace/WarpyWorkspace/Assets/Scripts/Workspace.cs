@@ -7,11 +7,6 @@ using System.IO;
 
 
 
-public enum Test
-{
-    A, B
-}
-
 public enum BallQuadrant
 {
     I, II, III, IV

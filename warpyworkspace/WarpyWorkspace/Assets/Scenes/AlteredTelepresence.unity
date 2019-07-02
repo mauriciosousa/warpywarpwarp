@@ -302,6 +302,7 @@ MonoBehaviour:
   startLocalRavatar: 0
   startRemoteRavatar: 0
   evaluationProceadure: {fileID: 540901944}
+  alteredTelepresenceNetwork: {fileID: 540901945}
 --- !u!114 &44025216
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2321,6 +2322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5426662d743a5b44acdd18302cc5bb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  networkPeerType: 0
 --- !u!148 &540901946
 NetworkView:
   m_ObjectHideFlags: 0

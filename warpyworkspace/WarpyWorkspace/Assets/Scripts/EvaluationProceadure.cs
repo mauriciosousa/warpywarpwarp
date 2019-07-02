@@ -69,19 +69,11 @@ public class EvaluationProceadure : MonoBehaviour {
         print("Starting Evaluation with " + _location + " " + _formation + " " + role);
 
         workspace.SetActive(true);
-
-        if (_location == SetupLocation.LEFT) _network.rightStartEvaluation();
     }
 
     internal void ping()
     {
         Debug.Log("PING");
-    }
-
-    internal void rightStartEvaluation()
-    {
-        if (_location == SetupLocation.RIGHT)
-        { startEvaluation(); }
     }
 
     void Update () {
@@ -91,14 +83,17 @@ public class EvaluationProceadure : MonoBehaviour {
             _network.ping();
         }
 
-        if (!_init) return;  
-
-        task = Task;
-
         if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             _network.buttonPressed(_location.ToString());
         }
+
+
+        if (!_init) return;  
+
+        task = Task;
+
+
 
         if (task >= 1 && task <= 16 && role == Role.MANIPULATOR)
         {
@@ -109,6 +104,9 @@ public class EvaluationProceadure : MonoBehaviour {
     internal void buttonPressed(string location)
     {
         Debug.Log("BUTTON PRESSED in " + location);
+
+        
+
     }
 
     internal void syncCursor(Vector3 p)
@@ -187,6 +185,11 @@ public class EvaluationProceadure : MonoBehaviour {
         {
             GUI.Label(new Rect(Screen.width - 100, 10, 100, 35), _getRole().ToString());
         }
+    }
+
+    internal void communicateStart()
+    {
+        _network.startEvaluation();
     }
 }
 

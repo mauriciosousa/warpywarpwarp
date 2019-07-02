@@ -78,16 +78,16 @@ public class AlteredTelepresenceNetwork : MonoBehaviour {
     }
 
     [RPC]
-    void RPC_rightStartEvaluation()
+    void RPC_startEvaluation()
     {
-        _eval.rightStartEvaluation();
+        _eval.startEvaluation();
     }
 
-    public void rightStartEvaluation()
+    public void startEvaluation()
     {
         if (Connected)
         {
-            _networkView.RPC("RPC_rightStartEvaluation", RPCMode.Others);
+            _networkView.RPC("RPC_startEvaluation", RPCMode.All);
         }
     }
 

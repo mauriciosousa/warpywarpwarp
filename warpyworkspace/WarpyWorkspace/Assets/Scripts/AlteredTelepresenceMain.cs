@@ -412,7 +412,7 @@ public class AlteredTelepresenceMain : MonoBehaviour
                 top += 200;
                 if (GUI.Button(new Rect(left, top, 200, lineSkip - 10), "START EVALUATION"))
                 {
-                    evaluationProceadure.startEvaluation();
+                    evaluationProceadure.communicateStart();
                 }
             }
         }

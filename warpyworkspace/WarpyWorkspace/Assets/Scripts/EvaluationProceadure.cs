@@ -11,6 +11,11 @@ public enum Role
     INSTRUCTOR
 }
 
+public enum EvalState
+{
+    SESSION, PAUSE
+}
+
 public class EvaluationProceadure : MonoBehaviour {
 
     public GameObject workspace;
@@ -26,26 +31,18 @@ public class EvaluationProceadure : MonoBehaviour {
 
     public AssemblerCursor cursor;
 
-    private int t;
-    private int t_intermission = 9;
-    private int t_lastOne = 16;
+    public int T = 1;
+    public EvalState evalState = EvalState.PAUSE;
 
-    public int task;
-    public int Task
-    {
-        get
-        {
-            if (t > 0 && t < t_intermission) return t;
-            else if (t == t_intermission || t > t_lastOne || t == 0) return -1;
-            else return t - 1;
-        }
-    }
+
 
     private DateTime _startTime;
 
     private string _resultsFolder;
 
     private bool _init = false;
+
+    
 
 	void Start () {
         _resultsFolder = Application.dataPath + Path.DirectorySeparatorChar + "Results";
@@ -69,7 +66,7 @@ public class EvaluationProceadure : MonoBehaviour {
     public void startEvaluation()
     {
         _evaluationStarted = true;
-        t = 0;
+        T = 1;
         print("Starting Evaluation with " + _location + " " + _formation + " " + role);
 
         workspace.SetActive(true);
@@ -92,14 +89,7 @@ public class EvaluationProceadure : MonoBehaviour {
             _network.buttonPressed(_location.ToString());
         }
 
-
-        if (!_init) return;  
-
-        task = Task;
-
-
-
-        if (task >= 1 && task <= 16 && role == Role.MANIPULATOR)
+        if (evalState == EvalState.SESSION && _getRole(_location) == Role.MANIPULATOR)
         {
             _network.syncCursor(cursor.transform.localPosition);
         }
@@ -107,14 +97,22 @@ public class EvaluationProceadure : MonoBehaviour {
 
     internal void buttonPressed(string location)
     {
-        Debug.Log("BUTTON PRESSED in " + location);
-
+        //SomeEnum enum = (SomeEnum)Enum.Parse(typeof(SomeEnum), "EnumValue");
+        SetupLocation whoPressed = (SetupLocation)Enum.Parse(typeof(SetupLocation), location);
+        
         if (_evaluationStarted)
         {
-            role = _getRole();
-            if (role == Role.MANIPULATOR)
+            if (_getRole(whoPressed) == Role.MANIPULATOR && _location == SetupLocation.LEFT)
             {
-                _network.moveOn();
+
+                if (evalState == EvalState.PAUSE)
+                {
+                    _startTask();
+                }
+                else
+                {
+                    _endTask();
+                }
             }
         }
     }
@@ -127,33 +125,9 @@ public class EvaluationProceadure : MonoBehaviour {
         }
     }
 
-    public void moveOn()
-    {        
-        if (t >= 1 && t <= t_lastOne && t != t_intermission)
-        {
-            _endTask();
-        }
-
-
-        t += 1;
-        if (t == t_intermission)
-        {
-            print("INTERMISSION");
-        }
-        else if (t > 7)
-        {
-            print("END");
-        }
-        else
-        {
-            _startTask();
-            
-        }
-    }
-
-    private Role _getRole()
+    private Role _getRole(SetupLocation location)
     {
-        if (_location == SetupLocation.LEFT && t <= 8)
+        if (location == SetupLocation.LEFT && T <= 8)
             return Role.INSTRUCTOR;
 
         return Role.MANIPULATOR;
@@ -161,15 +135,34 @@ public class EvaluationProceadure : MonoBehaviour {
 
     private void _startTask()
     {
-        print("T" + t);
-
-        if (_getRole() == Role.MANIPULATOR) cursor.canDo = true;
-
-        if (_location == SetupLocation.LEFT)
+        if (T <= 16)
         {
-            _startTime = DateTime.Now;
+            _network.StartTask(T);
         }
+
+        //print("T" + t);
+
+        //if (_getRole(_location) == Role.MANIPULATOR) cursor.canDo = true;
+
+        //if (_location == SetupLocation.LEFT)
+        //{
+        //    _startTime = DateTime.Now;
+        //}
     }
+
+    public void StartTask(int t)
+    {
+        evalState = EvalState.SESSION;
+    }
+
+    public void EndTask()
+    {
+        evalState = EvalState.PAUSE;
+        T += 1;
+    }
+
+
+
 
     private void _endTask()
     {
@@ -186,13 +179,13 @@ public class EvaluationProceadure : MonoBehaviour {
         int top = 50;
         int left = 10;
         
-        GUI.Label(new Rect(left, top, 100, 35), _getRole().ToString(), style);
+        GUI.Label(new Rect(left, top, 100, 35), _getRole(_location).ToString(), style);
 
         top += 40;
-        GUI.Label(new Rect(left, top, 100, 35), "T = " + t, style);
-        
+        GUI.Label(new Rect(left, top, 100, 35), "T = " + T, style);
 
-
+        top += 40;
+        GUI.Label(new Rect(left, top, 100, 35), evalState.ToString(), style);
     }
 
     internal void communicateStart()

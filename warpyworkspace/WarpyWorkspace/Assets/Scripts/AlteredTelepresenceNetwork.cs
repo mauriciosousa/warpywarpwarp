@@ -107,20 +107,6 @@ public class AlteredTelepresenceNetwork : MonoBehaviour {
     }
 
     [RPC]
-    void RPC_moveOn()
-    {
-        _eval.moveOn();
-    }
-
-    internal void moveOn()
-    {
-        if (Connected)
-        {
-            _networkView.RPC("RPC_moveOn", RPCMode.All);
-        }
-    }
-
-    [RPC]
     void RPC_syncCursor(Vector3 p)
     {
         _eval.syncCursor(p);
@@ -131,6 +117,34 @@ public class AlteredTelepresenceNetwork : MonoBehaviour {
         if (Connected)
         {
             _networkView.RPC("RPC_syncCursor", RPCMode.Others, p);
+        }
+    }
+
+    [RPC]
+    void RPC_StartTask(int t)
+    {
+        _eval.StartTask(t);
+    }
+
+    public void StartTask(int t)
+    {
+        if (Connected)
+        {
+            _networkView.RPC("RPC_StartTask", RPCMode.All, t);
+        }
+    }
+
+    [RPC]
+    void RPC_EndTask()
+    {
+        _eval.EndTask();
+    }
+
+    public void EndTask()
+    {
+        if (Connected)
+        {
+            _networkView.RPC("RPC_EndTask", RPCMode.All);
         }
     }
 }

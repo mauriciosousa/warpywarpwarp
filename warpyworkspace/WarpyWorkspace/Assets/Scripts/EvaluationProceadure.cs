@@ -69,6 +69,8 @@ public class EvaluationProceadure : MonoBehaviour {
         print("Starting Evaluation with " + _location + " " + _formation + " " + _role);
 
         workspace.SetActive(true);
+
+        if (_location == SetupLocation.LEFT) _network.rightStartEvaluation();
     }
 
     internal void rightStartEvaluation()

@@ -361,7 +361,7 @@ public class MainResultsFile
     {
         string line = "";
 
-        line += DateTime.Now.ToString("yyyyMMddHHmmss") + _sep;
+        line += DateTime.Now.ToString("yyyy/MM/dd-HH:mm:ss") + _sep;
         line += leftID + _sep;
         line += rightID + _sep;
         line += leftRole.ToString() + _sep;

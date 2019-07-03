@@ -21,7 +21,6 @@ public class GrabSphere : MonoBehaviour {
 
     public GameObject glow;
 
-    public Workspace workspace;
     
 	
 	void Update () {

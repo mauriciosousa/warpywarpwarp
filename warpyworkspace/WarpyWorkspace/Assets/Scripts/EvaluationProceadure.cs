@@ -21,6 +21,11 @@ public enum Test
     A, B
 }
 
+public enum BallQuadrant
+{
+    I, II, III, IV
+}
+
 public class EvaluationProceadure : MonoBehaviour {
 
     public GameObject workspace;
@@ -57,6 +62,8 @@ public class EvaluationProceadure : MonoBehaviour {
     private float pc_whole = 0;
     private float pc_inside = 0;
 
+    private MainResultsFile _resultsFile;
+
 	void Start () {
         _resultsFolder = Application.dataPath + Path.DirectorySeparatorChar + "Results";
         if (!Directory.Exists(_resultsFolder))
@@ -89,6 +96,16 @@ public class EvaluationProceadure : MonoBehaviour {
         _leftID = leftID;
         _rightID = rightID;
         _test = test;
+
+        if (_location == SetupLocation.LEFT)
+        {
+            string resultsFolder = Application.dataPath + Path.DirectorySeparatorChar + "Results";
+            if (!Directory.Exists(resultsFolder))
+            {
+                Directory.CreateDirectory(resultsFolder);
+            }
+            _resultsFile = new MainResultsFile(resultsFolder + Path.DirectorySeparatorChar + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt");
+        }
     }
 
     private bool _evaluationStarted = false;
@@ -233,14 +250,13 @@ public class EvaluationProceadure : MonoBehaviour {
     public void EndTask()
     {
         evalState = EvalState.PAUSE;
-        T += 1;
         cursor.canDo = false;
         _instructorBall.gameObject.GetComponent<Renderer>().enabled = false;
 
         if (_location == SetupLocation.LEFT)
         {
             TimeSpan timeSpan = DateTime.Now - _startTime;
-            print("  TASK " + (T - 1) + " ended.... with " + timeSpan.TotalMilliseconds.ToString() + "ms");
+            print("  TASK " + T + " ended.... with " + timeSpan.TotalMilliseconds.ToString() + "ms");
 
             float errorDistance = Vector3.Distance(_instructorBall.position, cursor.transform.position);
             print(" Error Distance: " + errorDistance);
@@ -248,9 +264,23 @@ public class EvaluationProceadure : MonoBehaviour {
             float insidePercentage = (pc_inside * 100) / pc_whole;
             print(" percentage inside: " + insidePercentage);
 
+            _resultsFile.writeLine(_leftID, _rightID, _getRole(_location), T, _test, _getQuadrant(_instructorBall.localPosition), errorDistance, insidePercentage, _formation);
+        }
+        _instructorBall = null;
+        T += 1;
+    }
+
+    private BallQuadrant _getQuadrant(Vector3 lp)
+    {
+        if (lp.x > 0)
+        {
+            return lp.z > 0 ? BallQuadrant.I : BallQuadrant.IV;
+        }
+        else
+        {
+            return lp.z > 0 ? BallQuadrant.II : BallQuadrant.III;
         }
 
-        _instructorBall = null;
     }
 
     private void _endTask()
@@ -294,31 +324,27 @@ public class EvaluationProceadure : MonoBehaviour {
     }
 }
 
-public class ResultsFile
+public class MainResultsFile
 {
     private string _file;
     private string _sep = "$";
 
-    public ResultsFile(string filename)
+    public MainResultsFile(string filename)
     {
         _file = filename;
 
         string header = "";
 
-        header += "Timestamp" + _sep;
-        header += "Task" + _sep;
-        header += "Test" + _sep;
-        header += "Condition" + _sep;
-        header += "BallQuadrant" + _sep;
-        header += "ErrorDistance" + _sep;
-        header += "Time" + _sep;
-        header += "SameSpacePercentage" + _sep;
-        header += "InstructorBall.x" + _sep;
-        header += "InstructorBall.y" + _sep;
-        header += "InstructorBall.z" + _sep;
-        header += "AssemblerBall.x" + _sep;
-        header += "AssemblerBall.y" + _sep;
-        header += "AssemblerBall.z";
+        header += "Timestamp" + _sep; //
+        header += "leftID" + _sep;//
+        header += "rightID" + _sep;//
+        header += "leftRole" + _sep;//
+        header += "task" + _sep;//
+        header += "test" + _sep;//)
+        header += "ballQuadrant" + _sep;
+        header += "errorDistance" + _sep;
+        header += "%inside" + _sep;
+        header += "condition" + _sep;
 
         _writeLine(header);
         Debug.Log("created: " + filename);
@@ -329,25 +355,44 @@ public class ResultsFile
         File.AppendAllText(_file, line + Environment.NewLine);
     }
 
-    public void writeLine(int task, Test test, Formation condition, BallQuadrant ballQuadrant, float errorDistance, float time, float sameSpacePercentage, Vector3 instructorBall, Vector3 assemblerBall)
+    public void writeLine(int leftID, int rightID, Role leftRole, int task, Test test, BallQuadrant quadrant, float errorDistance, float percentage, Formation condition)
     {
         string line = "";
 
         line += DateTime.Now.ToString("yyyyMMddHHmmss") + _sep;
+        line += leftID + _sep;
+        line += rightID + _sep;
+        line += leftRole.ToString() + _sep;
         line += task + _sep;
         line += test + _sep;
-        line += condition + _sep;
-        line += ballQuadrant.ToString() + _sep;
+        line += quadrant.ToString() + _sep;
         line += errorDistance + _sep;
-        line += time + _sep;
-        line += sameSpacePercentage + _sep;
-        line += instructorBall.x + _sep;
-        line += instructorBall.y + _sep;
-        line += instructorBall.z + _sep;
-        line += assemblerBall.x + _sep;
-        line += assemblerBall.y + _sep;
-        line += assemblerBall.z + _sep;
+        line += percentage + _sep;
+        line += condition.ToString() + _sep;
+
 
         _writeLine(line);
     }
+
+    //public void writeLine(int task, Test test, Formation condition, BallQuadrant ballQuadrant, float errorDistance, float time, float sameSpacePercentage, Vector3 instructorBall, Vector3 assemblerBall)
+    //{
+    //    string line = "";
+
+    //    line += DateTime.Now.ToString("yyyyMMddHHmmss") + _sep;
+    //    line += task + _sep;
+    //    line += test + _sep;
+    //    line += condition + _sep;
+    //    line += ballQuadrant.ToString() + _sep;
+    //    line += errorDistance + _sep;
+    //    line += time + _sep;
+    //    line += sameSpacePercentage + _sep;
+    //    line += instructorBall.x + _sep;
+    //    line += instructorBall.y + _sep;
+    //    line += instructorBall.z + _sep;
+    //    line += assemblerBall.x + _sep;
+    //    line += assemblerBall.y + _sep;
+    //    line += assemblerBall.z + _sep;
+
+    //    _writeLine(line);
+    //}
 }

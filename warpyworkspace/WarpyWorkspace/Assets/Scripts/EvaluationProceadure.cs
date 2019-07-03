@@ -41,6 +41,7 @@ public class EvaluationProceadure : MonoBehaviour {
     public GUIStyle style;
 
     public AssemblerCursor cursor;
+    public Transform arrow;
 
     public int T = 1;
     public EvalState evalState = EvalState.PAUSE;
@@ -104,6 +105,14 @@ public class EvaluationProceadure : MonoBehaviour {
     }
 
     private bool _evaluationStarted = false;
+    public bool EvaluationStarted
+    {
+        get
+        {
+            return _evaluationStarted;
+        }
+    }
+
     public void startEvaluation()
     {
         _evaluationStarted = true;
@@ -231,6 +240,8 @@ public class EvaluationProceadure : MonoBehaviour {
         else
         {
             _instructorBall.gameObject.GetComponent<Renderer>().enabled = true;
+            arrow.localPosition = new Vector3(_instructorBall.localPosition.x, 0.5f, _instructorBall.localPosition.z);
+            arrow.GetComponent<SlowRotation>().active = true;
         }
 
         if (_location == SetupLocation.LEFT)
@@ -251,6 +262,8 @@ public class EvaluationProceadure : MonoBehaviour {
         T += 1;
         cursor.canDo = false;
         _instructorBall.gameObject.GetComponent<Renderer>().enabled = false;
+        arrow.GetComponent<SlowRotation>().active = false;
+
 
         if (_location == SetupLocation.LEFT)
         {
@@ -268,8 +281,14 @@ public class EvaluationProceadure : MonoBehaviour {
             _evalDataFile = null;
         }
         _instructorBall = null;
+        cursor.transform.localPosition = Vector3.zero;
 
         if (T > 16) ACABOU = true;
+    }
+
+    private void _endTask()
+    {
+        _network.EndTask();
     }
 
     private BallQuadrant _getQuadrant(Vector3 lp)
@@ -283,18 +302,6 @@ public class EvaluationProceadure : MonoBehaviour {
             return lp.z > 0 ? BallQuadrant.II : BallQuadrant.III;
         }
 
-    }
-
-    private void _endTask()
-    {
-        _network.EndTask();
-
-        //cursor.canDo = false;
-        //if (_location == SetupLocation.LEFT)
-        //{
-        //    TimeSpan timeSpan = DateTime.Now - _startTime;
-        //    print(timeSpan.TotalMilliseconds.ToString());
-        //}
     }
 
     private Transform _getInstructorBall(Test test, int t)
@@ -333,14 +340,17 @@ public class EvaluationProceadure : MonoBehaviour {
         }
         else
         {
-            style.fontSize = 100;
-            GUI.Label(new Rect(left, top, 100, 35), "ACABOU", style);
+            style.fontSize = 150;
+            GUI.Label(new Rect(100, 100, Screen.width, Screen.height), "ACABOU", style);
         }
     }
 
     internal void communicateStart()
     {
-        _network.startEvaluation();
+        if (_location == SetupLocation.LEFT && _network.Peers != 0)
+        {
+            _network.startEvaluation();
+        }
     }
 }
 

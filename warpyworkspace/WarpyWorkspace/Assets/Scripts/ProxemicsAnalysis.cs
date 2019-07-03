@@ -30,10 +30,10 @@ public class ProxemicsAnalysis : MonoBehaviour {
 	void Update () {
         humansColliding = localHumanCollider.COLLIDING;
 
-        Vector3 localPosition = new Vector3(localHumanSpineJoint.position.x, 0, localHumanSpineJoint.position.z);
-        Vector3 remotePosition = new Vector3(remoteHumanSpineJoint.position.x, 0, remoteHumanSpineJoint.position.z);
+        Vector3 localParticipantPosition = new Vector3(localHumanSpineJoint.position.x, 0, localHumanSpineJoint.position.z);
+        Vector3 remoteParticipantPosition = new Vector3(remoteHumanSpineJoint.position.x, 0, remoteHumanSpineJoint.position.z);
 
-        distance = Vector3.Distance(localPosition, remotePosition);
+        distance = Vector3.Distance(localParticipantPosition, remoteParticipantPosition);
 
         if (distance <= 0.46f) distanceClassification = ProxemicDistances.Intimate;
         else if (distance > 0.46f && distance <= 1.2f) distanceClassification = ProxemicDistances.Personal;

@@ -379,7 +379,7 @@ public class AlteredTelepresenceMain : MonoBehaviour
     {
         if (showGUI)
         {
-            int left = 10;
+            int left = Screen.width / 2 - 100;
             int top = 10;
             int lineSkip = 35;
 
@@ -406,14 +406,16 @@ public class AlteredTelepresenceMain : MonoBehaviour
             {
                 _calibrateHuman();
             }
+        }
 
-            if (setupLocation == SetupLocation.LEFT)
+        if (setupLocation == SetupLocation.LEFT && !evaluationProceadure.EvaluationStarted)
+        {
+            int left = Screen.width / 2 - 200;
+            int top = Screen.height - 30;
+
+            if (GUI.Button(new Rect(left, top, 400, 30), "START EVALUATION"))
             {
-                top += 200;
-                if (GUI.Button(new Rect(left, top, 200, lineSkip - 10), "START EVALUATION"))
-                {
-                    evaluationProceadure.communicateStart();
-                }
+                evaluationProceadure.communicateStart();
             }
         }
     }

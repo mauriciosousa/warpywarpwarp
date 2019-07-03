@@ -20,7 +20,7 @@ public class ProxemicsAnalysis : MonoBehaviour {
 
     public float distance = 0f;
 
-    public ProxemicDistances proxemics = ProxemicDistances.Public;
+    public ProxemicDistances distanceClassification = ProxemicDistances.Public;
 
     void Start () {
 		
@@ -35,10 +35,10 @@ public class ProxemicsAnalysis : MonoBehaviour {
 
         distance = Vector3.Distance(localPosition, remotePosition);
 
-        if (distance <= 0.46f) proxemics = ProxemicDistances.Intimate;
-        else if (distance > 0.46f && distance <= 1.2f) proxemics = ProxemicDistances.Personal;
-        else if (distance > 1.2f && distance <= 3.7) proxemics = ProxemicDistances.Social;
-        else proxemics = ProxemicDistances.Public;
+        if (distance <= 0.46f) distanceClassification = ProxemicDistances.Intimate;
+        else if (distance > 0.46f && distance <= 1.2f) distanceClassification = ProxemicDistances.Personal;
+        else if (distance > 1.2f && distance <= 3.7) distanceClassification = ProxemicDistances.Social;
+        else distanceClassification = ProxemicDistances.Public;
 
     }
 }

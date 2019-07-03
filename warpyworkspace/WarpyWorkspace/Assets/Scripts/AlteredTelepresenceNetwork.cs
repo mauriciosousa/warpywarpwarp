@@ -23,6 +23,14 @@ public class AlteredTelepresenceNetwork : MonoBehaviour {
         }
     }
 
+    public int Peers
+    {
+        get
+        {
+            return Network.connections.Length;
+        }
+    }
+
     void Awake()
     {
         ConfigFile = Application.dataPath + "/config.txt";

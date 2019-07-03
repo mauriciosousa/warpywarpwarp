@@ -61,15 +61,10 @@ public class EvaluationProceadure : MonoBehaviour {
     public ProxemicsAnalysis proxemics;
     private float pc_whole = 0;
     private float pc_inside = 0;
-
     private MainResultsFile _resultsFile;
 
 	void Start () {
-        _resultsFolder = Application.dataPath + Path.DirectorySeparatorChar + "Results";
-        if (!Directory.Exists(_resultsFolder))
-        {
-            Directory.CreateDirectory(_resultsFolder);
-        }
+        _resultsFolder = null;
         _network = GetComponent<AlteredTelepresenceNetwork>();
 
         ABalls = new List<GameObject>();
@@ -99,12 +94,12 @@ public class EvaluationProceadure : MonoBehaviour {
 
         if (_location == SetupLocation.LEFT)
         {
-            string resultsFolder = Application.dataPath + Path.DirectorySeparatorChar + "Results";
-            if (!Directory.Exists(resultsFolder))
+            _resultsFolder = Application.dataPath + Path.DirectorySeparatorChar + "Results";
+            if (!Directory.Exists(_resultsFolder))
             {
-                Directory.CreateDirectory(resultsFolder);
+                Directory.CreateDirectory(_resultsFolder);
             }
-            _resultsFile = new MainResultsFile(resultsFolder + Path.DirectorySeparatorChar + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt");
+            _resultsFile = new MainResultsFile(_resultsFolder + Path.DirectorySeparatorChar + "MainResults-" + _formation + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt");
         }
     }
 
@@ -153,16 +148,14 @@ public class EvaluationProceadure : MonoBehaviour {
 
     void FixedUpdate()
     {
-        if (evalState == EvalState.SESSION)
-        {
-            if (role == Role.MANIPULATOR)
+        if (evalState == EvalState.SESSION && _location == SetupLocation.LEFT)
+        {            
+            pc_whole += 1;
+            if (proxemics.humansColliding) pc_inside += 1;
+
+            if (_evalDataFile != null)
             {
-                //
-            }
-            else
-            {
-                pc_whole += 1;
-                if (proxemics.humansColliding) pc_inside += 1;
+                _evalDataFile.writeLine(proxemics.distance, proxemics.distanceClassification);
             }
         }
     }
@@ -222,6 +215,7 @@ public class EvaluationProceadure : MonoBehaviour {
     }
 
     private Transform _instructorBall;
+    private EvaluationData _evalDataFile;
     public void StartTask(int t)
     {
         print("" + role + " " + _location);
@@ -245,9 +239,12 @@ public class EvaluationProceadure : MonoBehaviour {
             print("  TASK " + T + " started!!!!");
             pc_inside = 0;
             pc_whole = 0;
+
+            _evalDataFile = new EvaluationData(_resultsFolder + Path.DirectorySeparatorChar + "Task_" + T + ".txt");
         }
     }
 
+    public bool ACABOU = false;
     public void EndTask()
     {
         evalState = EvalState.PAUSE;
@@ -268,8 +265,11 @@ public class EvaluationProceadure : MonoBehaviour {
             print(" percentage inside: " + insidePercentage);
 
             _resultsFile.writeLine(_leftID, _rightID, _getRole(_location), (T-1), _test, _getQuadrant(_instructorBall.localPosition), errorDistance, insidePercentage, _formation);
+            _evalDataFile = null;
         }
         _instructorBall = null;
+
+        if (T > 16) ACABOU = true;
     }
 
     private BallQuadrant _getQuadrant(Vector3 lp)
@@ -307,16 +307,34 @@ public class EvaluationProceadure : MonoBehaviour {
     {
         int top = 50;
         int left = 10;
-        if (_evaluationStarted)
+
+        if (!ACABOU)
         {
+            GUI.Label(new Rect(left, top, 100, 35), "" + _network.networkPeerType + ", Connected = " + _network.Connected + ", " + (_network.Peers == 1 ? "1 Client" : "" + _network.Peers + " Clients"), style);
 
-            GUI.Label(new Rect(left, top, 100, 35), _getRole(_location).ToString(), style);
-        
-            top += 40;
-            GUI.Label(new Rect(left, top, 100, 35), "T = " + T, style);
+            if (_evaluationStarted)
+            {
+                top += 40;
+                GUI.Label(new Rect(left, top, 100, 35), _getRole(_location).ToString(), style);
 
-            top += 40;
-            GUI.Label(new Rect(left, top, 100, 35), evalState.ToString(), style);
+                top += 40;
+                GUI.Label(new Rect(left, top, 100, 35), evalState.ToString(), style);
+
+                top += 40;
+                if (evalState == EvalState.SESSION)
+                {
+                    GUI.Label(new Rect(left, top, 100, 35), "T = " + T, style);
+                }
+                else
+                {
+                    GUI.Label(new Rect(left, top, 100, 35), "Next T = " + T, style);
+                }
+            }
+        }
+        else
+        {
+            style.fontSize = 100;
+            GUI.Label(new Rect(left, top, 100, 35), "ACABOU", style);
         }
     }
 
@@ -325,6 +343,8 @@ public class EvaluationProceadure : MonoBehaviour {
         _network.startEvaluation();
     }
 }
+
+
 
 public class MainResultsFile
 {
@@ -375,26 +395,40 @@ public class MainResultsFile
 
         _writeLine(line);
     }
+}
 
-    //public void writeLine(int task, Test test, Formation condition, BallQuadrant ballQuadrant, float errorDistance, float time, float sameSpacePercentage, Vector3 instructorBall, Vector3 assemblerBall)
-    //{
-    //    string line = "";
+public class EvaluationData
+{
+    private string _file;
+    private string _sep = "$";
 
-    //    line += DateTime.Now.ToString("yyyyMMddHHmmss") + _sep;
-    //    line += task + _sep;
-    //    line += test + _sep;
-    //    line += condition + _sep;
-    //    line += ballQuadrant.ToString() + _sep;
-    //    line += errorDistance + _sep;
-    //    line += time + _sep;
-    //    line += sameSpacePercentage + _sep;
-    //    line += instructorBall.x + _sep;
-    //    line += instructorBall.y + _sep;
-    //    line += instructorBall.z + _sep;
-    //    line += assemblerBall.x + _sep;
-    //    line += assemblerBall.y + _sep;
-    //    line += assemblerBall.z + _sep;
+    public EvaluationData(string filename)
+    {
+        _file = filename;
 
-    //    _writeLine(line);
-    //}
+        string header = "";
+
+        header += "Timestamp" + _sep;
+        header += "Distance" + _sep;
+        header += "ProxemicClassification" + _sep;
+
+        _writeLine(header);
+        Debug.Log("created: " + filename);
+    }
+
+    private void _writeLine(string line)
+    {
+        File.AppendAllText(_file, line + Environment.NewLine);
+    }
+
+    public void writeLine(float distance, ProxemicDistances proxemicClassification)
+    {
+        string line = "";
+
+        line += DateTime.Now.ToString("yyyy/MM/dd-HH:mm:ss") + _sep;
+        line += distance + _sep;
+        line += proxemicClassification.ToString() + _sep;
+
+        _writeLine(line);
+    }
 }

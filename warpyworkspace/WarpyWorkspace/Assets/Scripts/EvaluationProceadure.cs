@@ -228,13 +228,14 @@ public class EvaluationProceadure : MonoBehaviour {
 
         evalState = EvalState.SESSION;
 
+        _instructorBall = _getInstructorBall(_test, t);
+
         if (role == Role.MANIPULATOR)
         {
             cursor.canDo = true;
         }
         else
         {
-            _instructorBall = _getInstructorBall(_test, t);
             _instructorBall.gameObject.GetComponent<Renderer>().enabled = true;
         }
 
@@ -250,24 +251,25 @@ public class EvaluationProceadure : MonoBehaviour {
     public void EndTask()
     {
         evalState = EvalState.PAUSE;
+        T += 1;
         cursor.canDo = false;
         _instructorBall.gameObject.GetComponent<Renderer>().enabled = false;
 
         if (_location == SetupLocation.LEFT)
         {
             TimeSpan timeSpan = DateTime.Now - _startTime;
-            print("  TASK " + T + " ended.... with " + timeSpan.TotalMilliseconds.ToString() + "ms");
+            print("  TASK " + (T-1) + " ended.... with " + timeSpan.TotalMilliseconds.ToString() + "ms");
 
             float errorDistance = Vector3.Distance(_instructorBall.position, cursor.transform.position);
             print(" Error Distance: " + errorDistance);
 
             float insidePercentage = (pc_inside * 100) / pc_whole;
+            if (float.IsNaN(insidePercentage)) insidePercentage = 0;
             print(" percentage inside: " + insidePercentage);
 
-            _resultsFile.writeLine(_leftID, _rightID, _getRole(_location), T, _test, _getQuadrant(_instructorBall.localPosition), errorDistance, insidePercentage, _formation);
+            _resultsFile.writeLine(_leftID, _rightID, _getRole(_location), (T-1), _test, _getQuadrant(_instructorBall.localPosition), errorDistance, insidePercentage, _formation);
         }
         _instructorBall = null;
-        T += 1;
     }
 
     private BallQuadrant _getQuadrant(Vector3 lp)

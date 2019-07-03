@@ -54,7 +54,8 @@ public class EvaluationProceadure : MonoBehaviour {
     public List<GameObject> BBalls;
 
     public ProxemicsAnalysis proxemics;
-    private List<bool> insideOneAnother; 
+    private float pc_whole = 0;
+    private float pc_inside = 0;
 
 	void Start () {
         _resultsFolder = Application.dataPath + Path.DirectorySeparatorChar + "Results";
@@ -79,8 +80,6 @@ public class EvaluationProceadure : MonoBehaviour {
 
             }
         }
-        insideOneAnother = new List<bool>();
-
     }
 
     public void Init(SetupLocation location, Formation formation, int leftID, int rightID, Test test)
@@ -129,7 +128,8 @@ public class EvaluationProceadure : MonoBehaviour {
             }
             else
             {
-                insideOneAnother.Add(proxemics.humansColliding);
+                pc_whole = 0;
+                pc_inside = 0;
             }
         }
 	}
@@ -144,7 +144,8 @@ public class EvaluationProceadure : MonoBehaviour {
             }
             else
             {
-                insideOneAnother.Add(proxemics.humansColliding);
+                pc_whole += 1;
+                if (proxemics.humansColliding) pc_inside += 1;
             }
         }
     }
@@ -224,7 +225,8 @@ public class EvaluationProceadure : MonoBehaviour {
         {
             _startTime = DateTime.Now;
             print("  TASK " + T + " started!!!!");
-            insideOneAnother.Clear();
+            pc_inside = 0;
+            pc_whole = 0;
         }
     }
 
@@ -243,12 +245,7 @@ public class EvaluationProceadure : MonoBehaviour {
             float errorDistance = Vector3.Distance(_instructorBall.position, cursor.transform.position);
             print(" Error Distance: " + errorDistance);
 
-            int inside = 0;
-            for (int i = 0; i < insideOneAnother.Count; i++)
-            {
-                if (insideOneAnother[i]) inside += 1;
-            }
-            float insidePercentage = inside / insideOneAnother.Count;
+            float insidePercentage = (pc_inside * 100) / pc_whole;
             print(" percentage inside: " + insidePercentage);
 
         }

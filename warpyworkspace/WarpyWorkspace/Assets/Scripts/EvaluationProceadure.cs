@@ -29,7 +29,6 @@ public enum BallQuadrant
 public class EvaluationProceadure : MonoBehaviour {
 
     public GameObject workspace;
-    public GameObject buildingsBoard;
     private AlteredTelepresenceNetwork _network;
 
     private SetupLocation _location;
@@ -93,6 +92,8 @@ public class EvaluationProceadure : MonoBehaviour {
 
             }
         }
+
+        workspace.SetActive(false);
     }
 
     public void Init(SetupLocation location, Formation formation, int leftID, int rightID, Test test)
@@ -131,8 +132,6 @@ public class EvaluationProceadure : MonoBehaviour {
         role = _location == SetupLocation.LEFT ? Role.INSTRUCTOR : Role.MANIPULATOR;
         print("Starting Evaluation with " + _location + " " + _formation + " " + role);
 
-        workspace.SetActive(true);
-        buildingsBoard.SetActive(false);
     }
 
     internal void ping()
@@ -266,7 +265,7 @@ public class EvaluationProceadure : MonoBehaviour {
     {
         print("" + role + " " + _location);
 
-        buildingsBoard.SetActive(true);
+        workspace.SetActive(true);
 
         evalState = EvalState.SESSION;
 
@@ -309,7 +308,7 @@ public class EvaluationProceadure : MonoBehaviour {
         _instructorBall.gameObject.GetComponent<Renderer>().enabled = false;
         arrow.GetComponent<SlowRotation>().active = false;
 
-        buildingsBoard.SetActive(false);
+        workspace.SetActive(false);
 
 
         if (_location == SetupLocation.LEFT)

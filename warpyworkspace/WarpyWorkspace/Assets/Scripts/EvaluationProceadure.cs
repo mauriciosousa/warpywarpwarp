@@ -101,13 +101,14 @@ public class EvaluationProceadure : MonoBehaviour {
         _rightID = rightID;
         _test = test;
 
+        _resultsFolder = Application.dataPath + Path.DirectorySeparatorChar + "Results";
+        if (!Directory.Exists(_resultsFolder))
+        {
+            Directory.CreateDirectory(_resultsFolder);
+        }
+
         if (_location == SetupLocation.LEFT)
         {
-            _resultsFolder = Application.dataPath + Path.DirectorySeparatorChar + "Results";
-            if (!Directory.Exists(_resultsFolder))
-            {
-                Directory.CreateDirectory(_resultsFolder);
-            }
             _resultsFile = new MainResultsFile(_resultsFolder + Path.DirectorySeparatorChar + "MainResults-" + _formation + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt");
         }
     }
@@ -282,7 +283,8 @@ public class EvaluationProceadure : MonoBehaviour {
 
             _evalDataFile = new EvaluationData(_resultsFolder + Path.DirectorySeparatorChar + "Task_" + T + ".txt");
         }
-        _angleData = new WorkspaceAngleData(_resultsFolder + Path.DirectorySeparatorChar + "Angle_T" + T + "_participant_" + (_location == SetupLocation.LEFT ? _leftID : _rightID) + "-" + role +".txt");
+
+        _angleData = new WorkspaceAngleData(_resultsFolder + Path.DirectorySeparatorChar + "Angle_T" + T + "_participant_" + (_location == SetupLocation.LEFT ? _leftID : _rightID) + "-" + role + "-" + _formation + ".txt");
     }
 
     public bool ACABOU = false;

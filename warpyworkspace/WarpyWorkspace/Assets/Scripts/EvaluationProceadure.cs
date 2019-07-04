@@ -64,7 +64,15 @@ public class EvaluationProceadure : MonoBehaviour {
     private float pc_inside = 0;
     private MainResultsFile _resultsFile;
 
-	void Start () {
+    private DateTime _lastTimestamp;
+
+
+    private void Awake()
+    {
+        _lastTimestamp = DateTime.Now;
+    }
+
+    void Start () {
         _resultsFolder = null;
         _network = GetComponent<AlteredTelepresenceNetwork>();
 
@@ -157,14 +165,32 @@ public class EvaluationProceadure : MonoBehaviour {
 
     void FixedUpdate()
     {
-        if (evalState == EvalState.SESSION && _location == SetupLocation.LEFT)
-        {            
-            pc_whole += 1;
-            if (proxemics.humansColliding) pc_inside += 1;
+        TimeSpan span = DateTime.Now - _lastTimestamp;
+        if (span.Milliseconds >= 1000)
+        {
+            _lastTimestamp = DateTime.Now;
+        
 
-            if (_evalDataFile != null)
+
+            if (evalState == EvalState.SESSION && _location == SetupLocation.LEFT)
+            {            
+                pc_whole += 1;
+                if (proxemics.humansColliding) pc_inside += 1;
+
+                if (_evalDataFile != null)
+                {
+                    _evalDataFile.writeLine(proxemics.distance, proxemics.distanceClassification, proxemics.isFocusedOnWorkspace);
+                }
+            }
+
+            if (evalState == EvalState.SESSION && _angleData != null)
             {
-                _evalDataFile.writeLine(proxemics.distance, proxemics.distanceClassification);
+                Vector3 headToWorkspace = workspace.transform.position - Camera.main.transform.position;
+                Vector3 headRotation = Camera.main.transform.rotation.ToEuler();
+
+                float angle = Vector3.Angle(headToWorkspace, headRotation);
+
+                _angleData.writeLine(angle);
             }
         }
     }
@@ -225,6 +251,7 @@ public class EvaluationProceadure : MonoBehaviour {
 
     private Transform _instructorBall;
     private EvaluationData _evalDataFile;
+    private WorkspaceAngleData _angleData;
     public void StartTask(int t)
     {
         print("" + role + " " + _location);
@@ -253,6 +280,7 @@ public class EvaluationProceadure : MonoBehaviour {
 
             _evalDataFile = new EvaluationData(_resultsFolder + Path.DirectorySeparatorChar + "Task_" + T + ".txt");
         }
+        _angleData = new WorkspaceAngleData(_resultsFolder + Path.DirectorySeparatorChar + "Angle_T" + T + "_participant_" + (_location == SetupLocation.LEFT ? _leftID : _rightID) + "-" + role +".txt");
     }
 
     public bool ACABOU = false;
@@ -280,6 +308,8 @@ public class EvaluationProceadure : MonoBehaviour {
             _resultsFile.writeLine(_leftID, _rightID, _getRole(_location), (T-1), _test, _getQuadrant(_instructorBall.localPosition), errorDistance, insidePercentage, _formation);
             _evalDataFile = null;
         }
+
+        _angleData = null;
         _instructorBall = null;
         cursor.transform.localPosition = Vector3.zero;
 
@@ -421,6 +451,7 @@ public class EvaluationData
         header += "Timestamp" + _sep;
         header += "Distance" + _sep;
         header += "ProxemicClassification" + _sep;
+        header += "FocusOnWorkspace" + _sep;
 
         _writeLine(header);
         Debug.Log("created: " + filename);
@@ -431,13 +462,48 @@ public class EvaluationData
         File.AppendAllText(_file, line + Environment.NewLine);
     }
 
-    public void writeLine(float distance, ProxemicDistances proxemicClassification)
+    public void writeLine(float distance, ProxemicDistances proxemicClassification, bool focusOnWorkspace)
     {
         string line = "";
 
         line += DateTime.Now.ToString("yyyy/MM/dd-HH:mm:ss") + _sep;
         line += distance + _sep;
         line += proxemicClassification.ToString() + _sep;
+        line += focusOnWorkspace + _sep;
+
+        _writeLine(line);
+    }
+}
+
+public class WorkspaceAngleData
+{
+    private string _file;
+    private string _sep = "$";
+
+    public WorkspaceAngleData(string filename)
+    {
+        _file = filename;
+
+        string header = "";
+
+        header += "Timestamp" + _sep;
+        header += "Angle" + _sep;
+
+        _writeLine(header);
+        Debug.Log("created: " + filename);
+    }
+
+    private void _writeLine(string line)
+    {
+        File.AppendAllText(_file, line + Environment.NewLine);
+    }
+
+    public void writeLine(float angle)
+    {
+        string line = "";
+
+        line += DateTime.Now.ToString("yyyy/MM/dd-HH:mm:ss") + _sep;
+        line += angle + _sep;
 
         _writeLine(line);
     }

@@ -163,14 +163,13 @@ public class EvaluationProceadure : MonoBehaviour {
         }
 	}
 
+    public float angle = 0f;
     void FixedUpdate()
     {
         TimeSpan span = DateTime.Now - _lastTimestamp;
-        if (span.Milliseconds >= 1000)
+        if (span.Milliseconds >= 200)
         {
             _lastTimestamp = DateTime.Now;
-        
-
 
             if (evalState == EvalState.SESSION && _location == SetupLocation.LEFT)
             {            
@@ -185,10 +184,13 @@ public class EvaluationProceadure : MonoBehaviour {
 
             if (evalState == EvalState.SESSION && _angleData != null)
             {
-                Vector3 headToWorkspace = workspace.transform.position - Camera.main.transform.position;
-                Vector3 headRotation = Camera.main.transform.rotation.ToEuler();
+                Vector3 headToWorkspace = (workspace.transform.position - Camera.main.transform.position);
+                Vector3 headRotation = (Camera.main.transform.rotation.eulerAngles);
 
-                float angle = Vector3.Angle(headToWorkspace, headRotation);
+                //Debug.DrawLine(workspace.transform.position, Camera.main.transform.position, Color.green);
+                //Debug.DrawLine(Camera.main.transform.position, Camera.main.transform.position + Camera.main.transform.forward);
+
+                angle = Vector3.Angle(headToWorkspace, headRotation);
 
                 _angleData.writeLine(angle);
             }

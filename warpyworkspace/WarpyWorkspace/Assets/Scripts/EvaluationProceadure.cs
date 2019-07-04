@@ -29,6 +29,7 @@ public enum BallQuadrant
 public class EvaluationProceadure : MonoBehaviour {
 
     public GameObject workspace;
+    public GameObject buildingsBoard;
     private AlteredTelepresenceNetwork _network;
 
     private SetupLocation _location;
@@ -42,6 +43,7 @@ public class EvaluationProceadure : MonoBehaviour {
 
     public AssemblerCursor cursor;
     public Transform arrow;
+    public Transform startArrow;
 
     public int T = 1;
     public EvalState evalState = EvalState.PAUSE;
@@ -130,6 +132,7 @@ public class EvaluationProceadure : MonoBehaviour {
         print("Starting Evaluation with " + _location + " " + _formation + " " + role);
 
         workspace.SetActive(true);
+        buildingsBoard.SetActive(false);
     }
 
     internal void ping()
@@ -161,6 +164,10 @@ public class EvaluationProceadure : MonoBehaviour {
                 pc_whole = 0;
                 pc_inside = 0;
             }
+        }
+        else if (!ACABOU && _evaluationStarted && role == Role.MANIPULATOR)//pause
+        {
+            startArrow.GetComponent<SlowRotation>().active = true;
         }
 	}
 
@@ -259,9 +266,15 @@ public class EvaluationProceadure : MonoBehaviour {
     {
         print("" + role + " " + _location);
 
+        buildingsBoard.SetActive(true);
+
         evalState = EvalState.SESSION;
 
         _instructorBall = _getInstructorBall(_test, t);
+
+        startArrow.GetComponent<SlowRotation>().active = false;
+
+        cursor.transform.localPosition = Vector3.zero;
 
         if (role == Role.MANIPULATOR)
         {
@@ -295,6 +308,8 @@ public class EvaluationProceadure : MonoBehaviour {
         cursor.canDo = false;
         _instructorBall.gameObject.GetComponent<Renderer>().enabled = false;
         arrow.GetComponent<SlowRotation>().active = false;
+
+        buildingsBoard.SetActive(false);
 
 
         if (_location == SetupLocation.LEFT)

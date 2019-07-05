@@ -77,10 +77,11 @@ public class AlteredTelepresenceMain : MonoBehaviour
     void Start()
     {
         Application.runInBackground = true;
+        //QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 60;
 
-        QualitySettings.vSyncCount = 0;
 
-        ConfigFile = Application.dataPath + "/config.txt";
+       ConfigFile = Application.dataPath + "/config.txt";
 
         setupLocation = (SetupLocation)Enum.Parse(enumType: typeof(SetupLocation), value: ConfigProperties.load(ConfigFile, "setup.type"));
         if (setupLocation == SetupLocation.LEFT)

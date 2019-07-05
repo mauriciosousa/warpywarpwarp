@@ -25,26 +25,13 @@ public class BodiesManager : MonoBehaviour
         return Vector3.zero;
     }
 
-    public Transform humanGO;
-
+    //public Transform humanGO;
 
     public CreepyTrackerIKSolver ikLeftArm;
     public CreepyTrackerIKSolver ikRightArm;
 
-    private List<Transform> _listOfChildren;
-    private Dictionary<BodyJointType, Transform> _bodyTrans;
-
-
-    [Space(20)]
-    public Transform LeftShoulder;
-    public Transform LeftElbow;
-    public Transform LeftWrist;
-    public Transform LeftHandTip;
-    [Space(10)]
-    public Transform RightShoulder;
-    public Transform RightElbow;
-    public Transform RightWrist;
-    public Transform RightHandTip;
+    //private List<Transform> _listOfChildren;
+    //private Dictionary<BodyJointType, Transform> _bodyTrans;
 
     //[Space(10)]
     //[Range(0.01f, 0.5f)]
@@ -72,32 +59,36 @@ public class BodiesManager : MonoBehaviour
     public bool local = false;
 
     [Space(20)]
-    public Transform spineBase;
-    public Transform spineMid;
-    public Transform spineShoulder;
-    public Transform neck;
+    [Header("Human:")]
     public Transform head;
+    [Space(5)]
+    public Transform rightShoulder;
+    public Transform rightElbow;
+    public Transform rightWrist;
+    public Transform rightHand;
+    public Transform rightHandTip;
+    [Space(5)]
+    public Transform leftShoulder;
+    public Transform leftElbow;
+    public Transform leftWrist;
+    public Transform leftHand;
+    public Transform leftHandTip;
+    public Transform spineBase;
 
-    private Transform rightShoulder;
-    private Transform rightElbow;
-    private Transform rightWrist;
-    private Transform rightHand;
-    private Transform rightHandTip;
 
-    private Transform leftShoulder;
-    private Transform leftElbow;
-    private Transform leftWrist;
-    private Transform leftHand;
-    private Transform leftHandTip;
+
+
 
     void Start()
     {
         _humans = new Dictionary<string, Human>();
-        _listOfChildren = new List<Transform>();
-        _bodyTrans = new Dictionary<BodyJointType, Transform>();
-        _populateBodyTrans(humanGO);
-        _disassembleHierarchy(humanGO);
-        _associateHumanToJoints();
+        //_listOfChildren = new List<Transform>();
+        //_bodyTrans = new Dictionary<BodyJointType, Transform>();
+        //_populateBodyTrans(humanGO);
+        //_disassembleHierarchy(humanGO);
+        //_associateHumanToJoints();
+
+        _assembleHierarchy();
         ikLeftArm.IsActive = doArmWarping;
         ikRightArm.IsActive = doArmWarping;
         armsWarpInfo = new IKWarpInfo();
@@ -143,9 +134,9 @@ public class BodiesManager : MonoBehaviour
             }
 
 
-            _disassembleHierarchy(humanGO);
-            _updateHumanJoints(human.body.Joints);
-            _assembleHumanHierarchy(humanGO);
+            //_disassembleHierarchy(humanGO);
+            //_updateHumanJoints(human.body.Joints);
+            //_assembleHumanHierarchy(humanGO);
 
             //_disassembleHierarchy(humanGO);
             //foreach (BodyJointType joint in (BodyJointType[])Enum.GetValues(typeof(BodyJointType)))
@@ -155,6 +146,9 @@ public class BodiesManager : MonoBehaviour
             //_assembleHumanHierarchy(humanGO);
 
 
+            _disassembleHierarchy();
+            _updateHumanJoints(human.body.Joints);
+            _assembleHierarchy();
 
 
 
@@ -167,18 +161,46 @@ public class BodiesManager : MonoBehaviour
             //armsWarpInfo.debug = DebugBonesPC;
 
             //_saveJointInfo(true); --- uncomment
-        
-        //----ikLeftArm.Solve(doArmWarping, leftTarget.position, lerpTime);
+
+            //----ikLeftArm.Solve(doArmWarping, leftTarget.position, lerpTime);
             //----ikRightArm.Solve(doArmWarping, rightTarget.position, lerpTime);
-        
-        //_saveJointInfo(false); -- uncomment
-            
-        //armsWarpInfo.Solve();
+
+            //_saveJointInfo(false); -- uncomment
+
+            //armsWarpInfo.Solve();
         }
         _cleanDeadHumans();
     }
 
+    private void _disassembleHierarchy()
+    {
+        Transform human = head.parent;
 
+        rightShoulder.parent = human;
+        rightElbow.parent = human;
+        rightWrist.parent = human;
+        rightHand.parent = human;
+        rightHandTip.parent = human;
+
+        leftShoulder.parent = human;
+        leftElbow.parent = human;
+        leftWrist.parent = human;
+        leftHand.parent = human;
+        leftHandTip.parent = human;
+    }
+
+    private void _assembleHierarchy()
+    {
+        rightHandTip.parent = rightHand;
+        rightHand.parent = rightWrist;
+        rightWrist.parent = rightElbow;
+        rightElbow.parent = rightShoulder;
+
+        leftHandTip.parent = leftHand;
+        leftHand.parent = leftWrist;
+        leftWrist.parent = leftElbow;
+        leftElbow.parent = leftShoulder;
+    }
 
     public void setNewFrame(Body[] bodies)
     {
@@ -218,144 +240,144 @@ public class BodiesManager : MonoBehaviour
         deadhumans = new List<Human>();
     }
 
-    private void _getAllChildren(Transform trans)
-    {
-        if (trans.childCount > 0)
-        {
-            foreach (Transform t in trans)
-            {
-                if (t.name != "Sphere")
-                {
-                    _listOfChildren.Add(t);
-                    _getAllChildren(t);
-                }
-            }
-        }
-    }
+    //private void _getAllChildren(Transform trans)
+    //{
+    //    if (trans.childCount > 0)
+    //    {
+    //        foreach (Transform t in trans)
+    //        {
+    //            if (t.name != "Sphere")
+    //            {
+    //                _listOfChildren.Add(t);
+    //                _getAllChildren(t);
+    //            }
+    //        }
+    //    }
+    //}
 
-    public void _disassembleHierarchy(Transform trans)
-    {
-        _listOfChildren = new List<Transform>();
-        if (trans.childCount > 0)
-        {
-            for (int i = 0; i < trans.childCount; i++)
-            {
-                _getAllChildren(trans.GetChild(0));
-            }
+    //public void _disassembleHierarchy(Transform trans)
+    //{
+    //    _listOfChildren = new List<Transform>();
+    //    if (trans.childCount > 0)
+    //    {
+    //        for (int i = 0; i < trans.childCount; i++)
+    //        {
+    //            _getAllChildren(trans.GetChild(0));
+    //        }
 
-            //foreach (Transform t in trans)
-            //{
-            //    _getAllChildren(t);
-            //}
-        }
+    //        //foreach (Transform t in trans)
+    //        //{
+    //        //    _getAllChildren(t);
+    //        //}
+    //    }
 
-        for (int i = 0; i < _listOfChildren.Count; i++)
-        {
-            _listOfChildren[i].parent = trans;
-        }
+    //    for (int i = 0; i < _listOfChildren.Count; i++)
+    //    {
+    //        _listOfChildren[i].parent = trans;
+    //    }
 
-        //foreach (Transform g in _listOfChildren)
-        //{
-        //    g.parent = trans;
-        //}
+    //    //foreach (Transform g in _listOfChildren)
+    //    //{
+    //    //    g.parent = trans;
+    //    //}
 
-        _listOfChildren.Add(trans.Find(BodyJointType.spineBase.ToString()));
-    }
+    //    _listOfChildren.Add(trans.Find(BodyJointType.spineBase.ToString()));
+    //}
 
-    private void _assembleHumanHierarchy(Transform trans)
-    {
-        _bodyTrans[BodyJointType.spineMid].parent = _bodyTrans[BodyJointType.spineBase];
-        _bodyTrans[BodyJointType.spineShoulder].parent = _bodyTrans[BodyJointType.spineMid];
+    //private void _assembleHumanHierarchy(Transform trans)
+    //{
+    //    _bodyTrans[BodyJointType.spineMid].parent = _bodyTrans[BodyJointType.spineBase];
+    //    _bodyTrans[BodyJointType.spineShoulder].parent = _bodyTrans[BodyJointType.spineMid];
 
-        _bodyTrans[BodyJointType.neck].parent = _bodyTrans[BodyJointType.spineShoulder];
-        _bodyTrans[BodyJointType.head].parent = _bodyTrans[BodyJointType.neck];
+    //    _bodyTrans[BodyJointType.neck].parent = _bodyTrans[BodyJointType.spineShoulder];
+    //    _bodyTrans[BodyJointType.head].parent = _bodyTrans[BodyJointType.neck];
 
-        _bodyTrans[BodyJointType.rightShoulder].parent = _bodyTrans[BodyJointType.spineShoulder];
-        _bodyTrans[BodyJointType.rightElbow].parent = _bodyTrans[BodyJointType.rightShoulder];
-        _bodyTrans[BodyJointType.rightWrist].parent = _bodyTrans[BodyJointType.rightElbow];
-        _bodyTrans[BodyJointType.rightHand].parent = _bodyTrans[BodyJointType.rightWrist];
-        _bodyTrans[BodyJointType.rightThumb].parent = _bodyTrans[BodyJointType.rightWrist];
-        _bodyTrans[BodyJointType.rightHandTip].parent = _bodyTrans[BodyJointType.rightHand];
+    //    _bodyTrans[BodyJointType.rightShoulder].parent = _bodyTrans[BodyJointType.spineShoulder];
+    //    _bodyTrans[BodyJointType.rightElbow].parent = _bodyTrans[BodyJointType.rightShoulder];
+    //    _bodyTrans[BodyJointType.rightWrist].parent = _bodyTrans[BodyJointType.rightElbow];
+    //    _bodyTrans[BodyJointType.rightHand].parent = _bodyTrans[BodyJointType.rightWrist];
+    //    _bodyTrans[BodyJointType.rightThumb].parent = _bodyTrans[BodyJointType.rightWrist];
+    //    _bodyTrans[BodyJointType.rightHandTip].parent = _bodyTrans[BodyJointType.rightHand];
 
-        _bodyTrans[BodyJointType.leftShoulder].parent = _bodyTrans[BodyJointType.spineShoulder];
-        _bodyTrans[BodyJointType.leftElbow].parent = _bodyTrans[BodyJointType.leftShoulder];
-        _bodyTrans[BodyJointType.leftWrist].parent = _bodyTrans[BodyJointType.leftElbow];
-        _bodyTrans[BodyJointType.leftHand].parent = _bodyTrans[BodyJointType.leftWrist];
-        _bodyTrans[BodyJointType.leftThumb].parent = _bodyTrans[BodyJointType.leftWrist];
-        _bodyTrans[BodyJointType.leftHandTip].parent = _bodyTrans[BodyJointType.leftHand];
+    //    _bodyTrans[BodyJointType.leftShoulder].parent = _bodyTrans[BodyJointType.spineShoulder];
+    //    _bodyTrans[BodyJointType.leftElbow].parent = _bodyTrans[BodyJointType.leftShoulder];
+    //    _bodyTrans[BodyJointType.leftWrist].parent = _bodyTrans[BodyJointType.leftElbow];
+    //    _bodyTrans[BodyJointType.leftHand].parent = _bodyTrans[BodyJointType.leftWrist];
+    //    _bodyTrans[BodyJointType.leftThumb].parent = _bodyTrans[BodyJointType.leftWrist];
+    //    _bodyTrans[BodyJointType.leftHandTip].parent = _bodyTrans[BodyJointType.leftHand];
 
-        _bodyTrans[BodyJointType.rightHip].parent = _bodyTrans[BodyJointType.spineBase];
-        _bodyTrans[BodyJointType.rightKnee].parent = _bodyTrans[BodyJointType.rightHip];
-        _bodyTrans[BodyJointType.rightAnkle].parent = _bodyTrans[BodyJointType.rightKnee];
-        _bodyTrans[BodyJointType.rightFoot].parent = _bodyTrans[BodyJointType.rightAnkle];
+    //    _bodyTrans[BodyJointType.rightHip].parent = _bodyTrans[BodyJointType.spineBase];
+    //    _bodyTrans[BodyJointType.rightKnee].parent = _bodyTrans[BodyJointType.rightHip];
+    //    _bodyTrans[BodyJointType.rightAnkle].parent = _bodyTrans[BodyJointType.rightKnee];
+    //    _bodyTrans[BodyJointType.rightFoot].parent = _bodyTrans[BodyJointType.rightAnkle];
 
-        _bodyTrans[BodyJointType.leftHip].parent = _bodyTrans[BodyJointType.spineBase];
-        _bodyTrans[BodyJointType.leftKnee].parent = _bodyTrans[BodyJointType.leftHip];
-        _bodyTrans[BodyJointType.leftAnkle].parent = _bodyTrans[BodyJointType.leftKnee];
-        _bodyTrans[BodyJointType.leftFoot].parent = _bodyTrans[BodyJointType.leftAnkle];
-    }
+    //    _bodyTrans[BodyJointType.leftHip].parent = _bodyTrans[BodyJointType.spineBase];
+    //    _bodyTrans[BodyJointType.leftKnee].parent = _bodyTrans[BodyJointType.leftHip];
+    //    _bodyTrans[BodyJointType.leftAnkle].parent = _bodyTrans[BodyJointType.leftKnee];
+    //    _bodyTrans[BodyJointType.leftFoot].parent = _bodyTrans[BodyJointType.leftAnkle];
+    //}
 
-    private void _populateBodyTrans(Transform humanGO)
-    {
-        _bodyTrans.Clear();
-        _disassembleHierarchy(humanGO);
-        foreach (BodyJointType joint in (BodyJointType[])Enum.GetValues(typeof(BodyJointType)))
-        {
-                _bodyTrans[joint] = _getTransformOfJoint(joint);
-        }
-        _assembleHumanHierarchy(humanGO);
-    }
+    //private void _populateBodyTrans(Transform humanGO)
+    //{
+    //    _bodyTrans.Clear();
+    //    _disassembleHierarchy(humanGO);
+    //    foreach (BodyJointType joint in (BodyJointType[])Enum.GetValues(typeof(BodyJointType)))
+    //    {
+    //            _bodyTrans[joint] = _getTransformOfJoint(joint);
+    //    }
+    //    _assembleHumanHierarchy(humanGO);
+    //}
 
-    private Transform _getTransformOfJoint(BodyJointType joint)
-    {
-        Transform ret = null;
+    //private Transform _getTransformOfJoint(BodyJointType joint)
+    //{
+    //    Transform ret = null;
 
-        foreach (Transform t in _listOfChildren)
-        {
-            if (t.gameObject.name == joint.ToString())
-            {
-                ret = t; break;
-            }
-        }
-        return ret;
-    }
+    //    foreach (Transform t in _listOfChildren)
+    //    {
+    //        if (t.gameObject.name == joint.ToString())
+    //        {
+    //            ret = t; break;
+    //        }
+    //    }
+    //    return ret;
+    //}
 
-    private void _saveJointInfo(bool isBeforeIK)
-    {
-        if (local) return;
+    //private void _saveJointInfo(bool isBeforeIK)
+    //{
+    //    if (local) return;
 
-        try
-        {
-            if (isBeforeIK)
-            {
-                armsWarpInfo.LEFT_OriginalShoulder = LeftShoulder.position;
-                armsWarpInfo.LEFT_OriginalElbow = LeftElbow.position;
-                armsWarpInfo.LEFT_OriginalWrist = LeftWrist.position;
-                armsWarpInfo.LEFT_OriginalHandTip = LeftHandTip.position;
+    //    try
+    //    {
+    //        if (isBeforeIK)
+    //        {
+    //            armsWarpInfo.LEFT_OriginalShoulder = LeftShoulder.position;
+    //            armsWarpInfo.LEFT_OriginalElbow = LeftElbow.position;
+    //            armsWarpInfo.LEFT_OriginalWrist = LeftWrist.position;
+    //            armsWarpInfo.LEFT_OriginalHandTip = LeftHandTip.position;
 
-                armsWarpInfo.RIGHT_OriginalShoulder = RightShoulder.position;
-                armsWarpInfo.RIGHT_OriginalElbow = RightElbow.position;
-                armsWarpInfo.RIGHT_OriginalWrist = RightWrist.position;
-                armsWarpInfo.RIGHT_OriginalHandTip = RightHandTip.position;
-            }
-            else
-            {
-                armsWarpInfo.LEFT_IKShoulder = LeftShoulder.position;
-                armsWarpInfo.LEFT_IKElbow = LeftElbow.position;
-                armsWarpInfo.LEFT_IKWrist = LeftWrist.position;
-                armsWarpInfo.LEFT_IKHandTip = LeftHandTip.position;
+    //            armsWarpInfo.RIGHT_OriginalShoulder = RightShoulder.position;
+    //            armsWarpInfo.RIGHT_OriginalElbow = RightElbow.position;
+    //            armsWarpInfo.RIGHT_OriginalWrist = RightWrist.position;
+    //            armsWarpInfo.RIGHT_OriginalHandTip = RightHandTip.position;
+    //        }
+    //        else
+    //        {
+    //            armsWarpInfo.LEFT_IKShoulder = LeftShoulder.position;
+    //            armsWarpInfo.LEFT_IKElbow = LeftElbow.position;
+    //            armsWarpInfo.LEFT_IKWrist = LeftWrist.position;
+    //            armsWarpInfo.LEFT_IKHandTip = LeftHandTip.position;
 
-                armsWarpInfo.RIGHT_IKShoulder = RightShoulder.position;
-                armsWarpInfo.RIGHT_IKElbow = RightElbow.position;
-                armsWarpInfo.RIGHT_IKWrist = RightWrist.position;
-                armsWarpInfo.RIGHT_IKHandTip = RightHandTip.position;
-            }
-        }
-        catch (Exception)
-        {
-            // lol 
-        }
-    }
+    //            armsWarpInfo.RIGHT_IKShoulder = RightShoulder.position;
+    //            armsWarpInfo.RIGHT_IKElbow = RightElbow.position;
+    //            armsWarpInfo.RIGHT_IKWrist = RightWrist.position;
+    //            armsWarpInfo.RIGHT_IKHandTip = RightHandTip.position;
+    //        }
+    //    }
+    //    catch (Exception)
+    //    {
+    //        // lol 
+    //    }
+    //}
 
     public Transform headPivot;
     public void calibrateHuman(SetupLocation location)
@@ -414,33 +436,30 @@ public class BodiesManager : MonoBehaviour
     
 
 
-    private void _associateHumanToJoints()
-    {
-        spineBase = humanGO.Find(BodyJointType.spineBase.ToString());
-        spineMid = humanGO.Find(BodyJointType.spineMid.ToString());
-        spineShoulder = humanGO.Find(BodyJointType.spineShoulder.ToString());
-        neck = humanGO.Find(BodyJointType.neck.ToString());
-        head = humanGO.Find(BodyJointType.head.ToString());
+    //private void _associateHumanToJoints()
+    //{
+    //    spineBase = humanGO.Find(BodyJointType.spineBase.ToString());
+    //    spineMid = humanGO.Find(BodyJointType.spineMid.ToString());
+    //    spineShoulder = humanGO.Find(BodyJointType.spineShoulder.ToString());
+    //    neck = humanGO.Find(BodyJointType.neck.ToString());
+    //    head = humanGO.Find(BodyJointType.head.ToString());
 
-        rightShoulder = humanGO.Find(BodyJointType.rightShoulder.ToString());
-        rightElbow = humanGO.Find(BodyJointType.rightElbow.ToString());
-        rightWrist = humanGO.Find(BodyJointType.rightWrist.ToString());
-        rightHand = humanGO.Find(BodyJointType.rightHand.ToString());
-        rightHandTip = humanGO.Find(BodyJointType.rightHandTip.ToString());
+    //    rightShoulder = humanGO.Find(BodyJointType.rightShoulder.ToString());
+    //    rightElbow = humanGO.Find(BodyJointType.rightElbow.ToString());
+    //    rightWrist = humanGO.Find(BodyJointType.rightWrist.ToString());
+    //    rightHand = humanGO.Find(BodyJointType.rightHand.ToString());
+    //    rightHandTip = humanGO.Find(BodyJointType.rightHandTip.ToString());
 
-        leftShoulder = humanGO.Find(BodyJointType.leftShoulder.ToString());
-        leftElbow = humanGO.Find(BodyJointType.leftElbow.ToString());
-        leftWrist = humanGO.Find(BodyJointType.leftWrist.ToString());
-        leftHand = humanGO.Find(BodyJointType.leftHand.ToString());
-        leftHandTip = humanGO.Find(BodyJointType.leftHandTip.ToString());
-    }
+    //    leftShoulder = humanGO.Find(BodyJointType.leftShoulder.ToString());
+    //    leftElbow = humanGO.Find(BodyJointType.leftElbow.ToString());
+    //    leftWrist = humanGO.Find(BodyJointType.leftWrist.ToString());
+    //    leftHand = humanGO.Find(BodyJointType.leftHand.ToString());
+    //    leftHandTip = humanGO.Find(BodyJointType.leftHandTip.ToString());
+    //}
 
     private void _updateHumanJoints(Dictionary<BodyJointType, Vector3> joints)
     {
         spineBase.localPosition = human.body.Joints[BodyJointType.spineBase];
-        spineMid.localPosition = human.body.Joints[BodyJointType.spineMid];
-        spineShoulder.localPosition = human.body.Joints[BodyJointType.spineShoulder];
-        neck.localPosition = human.body.Joints[BodyJointType.neck];
         head.localPosition = human.body.Joints[BodyJointType.head];
 
         rightShoulder.localPosition = human.body.Joints[BodyJointType.rightShoulder];

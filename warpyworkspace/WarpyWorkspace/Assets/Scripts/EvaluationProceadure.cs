@@ -173,10 +173,10 @@ public class EvaluationProceadure : MonoBehaviour {
     public float angle = 0f;
     void FixedUpdate()
     {
-        TimeSpan span = DateTime.Now - _lastTimestamp;
-        if (span.Milliseconds >= 200) // TODO: FILE NOT WRITE EVERY TIME LOZ
+        //TimeSpan span = DateTime.Now - _lastTimestamp;
+        //if (span.Milliseconds >= 200) // TODO: FILE NOT WRITE EVERY TIME LOZ
         {
-            _lastTimestamp = DateTime.Now;
+        //    _lastTimestamp = DateTime.Now;
 
             if (evalState == EvalState.SESSION && _location == SetupLocation.LEFT)
             {            
@@ -344,7 +344,7 @@ public class EvaluationProceadure : MonoBehaviour {
         if (T > 16)
         {
             ACABOU = true;
-            _resultsFile.flush();
+            if (_location == SetupLocation.LEFT) _resultsFile.flush();
         }
     }
 

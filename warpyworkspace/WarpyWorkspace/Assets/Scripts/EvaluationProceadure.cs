@@ -174,7 +174,7 @@ public class EvaluationProceadure : MonoBehaviour {
     void FixedUpdate()
     {
         TimeSpan span = DateTime.Now - _lastTimestamp;
-        if (span.Milliseconds >= 200)
+        if (span.Milliseconds >= 200) // TODO: FILE NOT WRITE EVERY TIME LOZ
         {
             _lastTimestamp = DateTime.Now;
 
@@ -192,7 +192,10 @@ public class EvaluationProceadure : MonoBehaviour {
             if (evalState == EvalState.SESSION && _angleData != null)
             {
                 Vector3 headToWorkspace = (workspace.transform.position - Camera.main.transform.position);
+                headToWorkspace = _ipisiloneAZeroENormaliz(headToWorkspace);
+
                 Vector3 headRotation = (Camera.main.transform.rotation.eulerAngles);
+                headRotation = _ipisiloneAZeroENormaliz(headRotation);
 
                 //Debug.DrawLine(workspace.transform.position, Camera.main.transform.position, Color.green);
                 //Debug.DrawLine(Camera.main.transform.position, Camera.main.transform.position + Camera.main.transform.forward);
@@ -202,6 +205,11 @@ public class EvaluationProceadure : MonoBehaviour {
                 _angleData.writeLine(angle);
             }
         }
+    }
+
+    private Vector3 _ipisiloneAZeroENormaliz(Vector3 p)
+    {
+        return new Vector3(p.x, 0f, p.z).normalized;
     }
 
     internal void buttonPressed(string location)
@@ -324,14 +332,20 @@ public class EvaluationProceadure : MonoBehaviour {
             print(" percentage inside: " + insidePercentage);
 
             _resultsFile.writeLine(_leftID, _rightID, _getRole(_location), (T-1), _test, _getQuadrant(_instructorBall.localPosition), errorDistance, insidePercentage, _formation);
+            _evalDataFile.flush();
             _evalDataFile = null;
         }
 
+        _angleData.flush();
         _angleData = null;
         _instructorBall = null;
         cursor.transform.localPosition = Vector3.zero;
 
-        if (T > 16) ACABOU = true;
+        if (T > 16)
+        {
+            ACABOU = true;
+            _resultsFile.flush();
+        }
     }
 
     private void _endTask()
@@ -409,6 +423,8 @@ public class MainResultsFile
     private string _file;
     private string _sep = "$";
 
+    private List<string> _lines;
+
     public MainResultsFile(string filename)
     {
         _file = filename;
@@ -426,7 +442,9 @@ public class MainResultsFile
         header += "%inside" + _sep;
         header += "condition" + _sep;
 
-        _writeLine(header);
+        _lines = new List<string>();
+        //_writeLine(header);
+        _lines.Add(header);
         Debug.Log("created: " + filename);
     }
 
@@ -450,8 +468,13 @@ public class MainResultsFile
         line += percentage + _sep;
         line += condition.ToString() + _sep;
 
+        _lines.Add(line);
+        //_writeLine(line);
+    }
 
-        _writeLine(line);
+    public void flush()
+    {
+        File.WriteAllLines(_file, _lines.ToArray());
     }
 }
 
@@ -459,6 +482,7 @@ public class EvaluationData
 {
     private string _file;
     private string _sep = "$";
+    private List<string> _lines;
 
     public EvaluationData(string filename)
     {
@@ -471,7 +495,9 @@ public class EvaluationData
         header += "ProxemicClassification" + _sep;
         header += "FocusOnWorkspace" + _sep;
 
-        _writeLine(header);
+        _lines = new List<string>();
+        _lines.Add(header);
+//        _writeLine(header);
         Debug.Log("created: " + filename);
     }
 
@@ -489,7 +515,13 @@ public class EvaluationData
         line += proxemicClassification.ToString() + _sep;
         line += focusOnWorkspace + _sep;
 
-        _writeLine(line);
+        _lines.Add(line);
+        //_writeLine(line);
+    }
+
+    public void flush()
+    {
+        File.WriteAllLines(_file, _lines.ToArray());
     }
 }
 
@@ -497,6 +529,8 @@ public class WorkspaceAngleData
 {
     private string _file;
     private string _sep = "$";
+    private List<string> _lines;
+
 
     public WorkspaceAngleData(string filename)
     {
@@ -507,7 +541,9 @@ public class WorkspaceAngleData
         header += "Timestamp" + _sep;
         header += "Angle" + _sep;
 
-        _writeLine(header);
+        _lines = new List<string>();
+        _lines.Add(header);
+        //_writeLine(header);
         Debug.Log("created: " + filename);
     }
 
@@ -523,6 +559,12 @@ public class WorkspaceAngleData
         line += DateTime.Now.ToString("yyyy/MM/dd-HH:mm:ss") + _sep;
         line += angle + _sep;
 
-        _writeLine(line);
+        _lines.Add(line);
+        //_writeLine(line);
+    }
+
+    public void flush()
+    {
+        File.WriteAllLines(_file, _lines.ToArray());
     }
 }

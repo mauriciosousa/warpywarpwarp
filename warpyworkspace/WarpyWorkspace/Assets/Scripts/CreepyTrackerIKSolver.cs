@@ -59,7 +59,7 @@ public class CreepyTrackerIKSolver : MonoBehaviour
 
     void LateUpdate()
     {
-        if (JointEntities.Length >= 3)
+        if (JointEntities.Length >= 3 && IsActive)
         {
             Debug.DrawLine(JointEntities[0].Joint.position, JointEntities[1].Joint.position, Color.red);
             Debug.DrawLine(JointEntities[1].Joint.position, JointEntities[2].Joint.position, Color.red);
@@ -72,6 +72,7 @@ public class CreepyTrackerIKSolver : MonoBehaviour
     private Vector3 _lastPosition;
     public void Solve (bool isActive, Vector3 target, float lerpTime)
 	{
+
         if (_lastPosition != null)
         {
             target = Vector3.Lerp(_lastPosition, target, lerpTime);
@@ -82,7 +83,7 @@ public class CreepyTrackerIKSolver : MonoBehaviour
         IsActive = isActive;
         if (!IsActive) return;
 
-		Transform endEffector = JointEntities[JointEntities.Length - 1].Joint;
+        Transform endEffector = JointEntities[JointEntities.Length - 1].Joint;
 		Vector3 rootPos, curEnd;
 
         Vector3 targetVector = Vector3.zero;

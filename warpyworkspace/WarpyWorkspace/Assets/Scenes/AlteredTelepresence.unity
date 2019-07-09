@@ -892,12 +892,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9f5bac72d659af458e8956dd8c1538c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CenterObject: {fileID: 1946220525}
+  CenterObject: {fileID: 1655163467}
   ikLeftArm: {fileID: 1240235995}
   ikRightArm: {fileID: 776718358}
   doArmWarping: 0
   DebugBonesPC: 0
-  lerpTime: 0.2
+  lerpTime: 0
   interactionZone: {fileID: 1375679480}
   local: 0
   head: {fileID: 623652911}
@@ -927,6 +927,8 @@ MonoBehaviour:
   leftFoot: {fileID: 1193030213}
   leftHandTipTarget: {fileID: 1240235994}
   rightHandTipTarget: {fileID: 776718357}
+  leftInside: 0
+  rightInside: 0
   headPivot: {fileID: 0}
 --- !u!4 &87961181
 Transform:
@@ -4798,21 +4800,21 @@ MonoBehaviour:
   - Joint: {fileID: 1309807352}
     AngleRestrictionRange:
       xAxis: 0
-      xMin: 0
-      xMax: 0
+      xMin: -30
+      xMax: 30
       yAxis: 0
-      yMin: 0
-      yMax: 0
+      yMin: -10
+      yMax: 110
       zAxis: 0
       zMin: 0
       zMax: 0
   - Joint: {fileID: 2077605634}
     AngleRestrictionRange:
       xAxis: 0
-      xMin: 0
-      xMax: 0
+      xMin: -20
+      xMax: 20
       yAxis: 0
-      yMin: 0
+      yMin: -150
       yMax: 0
       zAxis: 0
       zMin: 0
@@ -4820,25 +4822,25 @@ MonoBehaviour:
   - Joint: {fileID: 458999881}
     AngleRestrictionRange:
       xAxis: 0
-      xMin: 0
-      xMax: 0
+      xMin: -10
+      xMax: 10
       yAxis: 0
-      yMin: 0
-      yMax: 0
+      yMin: -10
+      yMax: 10
       zAxis: 0
-      zMin: 0
-      zMax: 0
+      zMin: -10
+      zMax: 10
   - Joint: {fileID: 351543501}
     AngleRestrictionRange:
       xAxis: 0
-      xMin: 0
-      xMax: 0
+      xMin: -5
+      xMax: 5
       yAxis: 0
-      yMin: 0
-      yMax: 0
+      yMin: -5
+      yMax: 5
       zAxis: 0
-      zMin: 0
-      zMax: 0
+      zMin: -5
+      zMax: 5
   IsDamping: 1
   DampingMax: 0.5
 --- !u!1 &784962123
@@ -7389,21 +7391,21 @@ MonoBehaviour:
   - Joint: {fileID: 515889721}
     AngleRestrictionRange:
       xAxis: 0
-      xMin: 0
-      xMax: 0
+      xMin: -30
+      xMax: 30
       yAxis: 0
-      yMin: 0
-      yMax: 0
+      yMin: -10
+      yMax: 110
       zAxis: 0
       zMin: 0
       zMax: 0
   - Joint: {fileID: 784962124}
     AngleRestrictionRange:
       xAxis: 0
-      xMin: 0
-      xMax: 0
+      xMin: -20
+      xMax: 20
       yAxis: 0
-      yMin: 0
+      yMin: -150
       yMax: 0
       zAxis: 0
       zMin: 0
@@ -7411,25 +7413,25 @@ MonoBehaviour:
   - Joint: {fileID: 1594249129}
     AngleRestrictionRange:
       xAxis: 0
-      xMin: 0
-      xMax: 0
+      xMin: -10
+      xMax: 10
       yAxis: 0
-      yMin: 0
-      yMax: 0
+      yMin: -10
+      yMax: 10
       zAxis: 0
-      zMin: 0
-      zMax: 0
+      zMin: -10
+      zMax: 10
   - Joint: {fileID: 1214190386}
     AngleRestrictionRange:
       xAxis: 0
-      xMin: 0
-      xMax: 0
+      xMin: -5
+      xMax: 5
       yAxis: 0
-      yMin: 0
-      yMax: 0
+      yMin: -5
+      yMax: 5
       zAxis: 0
-      zMin: 0
-      zMax: 0
+      zMin: -5
+      zMax: 5
   IsDamping: 1
   DampingMax: 0.5
 --- !u!1 &1256272998
@@ -8769,7 +8771,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9f5bac72d659af458e8956dd8c1538c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CenterObject: {fileID: 79709717}
+  CenterObject: {fileID: 1655163467}
   ikLeftArm: {fileID: 0}
   ikRightArm: {fileID: 0}
   doArmWarping: 0
@@ -8804,6 +8806,8 @@ MonoBehaviour:
   leftFoot: {fileID: 0}
   leftHandTipTarget: {fileID: 0}
   rightHandTipTarget: {fileID: 0}
+  leftInside: 0
+  rightInside: 0
   headPivot: {fileID: 2083511713}
 --- !u!114 &1429241493
 MonoBehaviour:

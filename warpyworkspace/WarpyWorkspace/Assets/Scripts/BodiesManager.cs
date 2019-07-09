@@ -92,7 +92,9 @@ public class BodiesManager : MonoBehaviour
     [Header("Inverse Kinematics Targets:")]
     public Transform leftHandTipTarget;
     public Transform rightHandTipTarget;
-
+    [Header("Hands Inside Interaction Area?")]
+    public bool leftInside;
+    public bool rightInside;
 
 
     void Start()
@@ -178,9 +180,9 @@ public class BodiesManager : MonoBehaviour
                 _saveJointInfo(true);
 
                 armsWarpInfo.leftWarping = interactionZone.isHandInside(leftHandTip.position);
+                leftInside = armsWarpInfo.leftWarping;
                 if (armsWarpInfo.leftWarping)
                 {
-                    print("IK LEFT HAND");
                     interactionZone.CalcTargetPosition(leftHandTipTarget, leftHandTip);
                     ikLeftArm.Solve(true, leftHandTipTarget.position, lerpTime);
                 }
@@ -190,9 +192,9 @@ public class BodiesManager : MonoBehaviour
                 }
 
                 armsWarpInfo.rightWarping = interactionZone.isHandInside(rightHandTip.position);
+                rightInside = armsWarpInfo.rightWarping;
                 if (armsWarpInfo.rightWarping)
                 {
-                    print("IK RIGHT HAND");
                     interactionZone.CalcTargetPosition(rightHandTipTarget, rightHandTip);
                     ikRightArm.Solve(true, rightHandTipTarget.position, lerpTime);
                 }
@@ -202,7 +204,7 @@ public class BodiesManager : MonoBehaviour
                 }
 
                 _saveJointInfo(false);
-                armsWarpInfo.Solve();
+                //armsWarpInfo.Solve();
             }
         }
         _cleanDeadHumans();

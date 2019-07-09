@@ -166,14 +166,9 @@ public class BodiesManager : MonoBehaviour
             _updateHumanJoints(human.body.Joints);
             _assembleHierarchy();
 
-            if (!local)
+            if (!local && doArmWarping)
             {
 
-                if (doArmWarping)
-                {
-                    ikLeftArm.IsActive = true;
-                    ikRightArm.IsActive = true;
-                }
 
                 armsWarpInfo.warping = doArmWarping;
                 armsWarpInfo.UpperArmDistance = UpperArmDistance;
@@ -182,6 +177,33 @@ public class BodiesManager : MonoBehaviour
                 armsWarpInfo.debug = DebugBonesPC;
 
                 _saveJointInfo(true);
+
+                if (interactionZone.leftHandInside)
+                {
+                    print("IK LEFT HAND");
+                }
+
+                if (interactionZone.rightHandInside)
+                {
+                    print("IK RIGHT HAND");
+                }
+
+
+
+
+
+
+                //if (interactionZone.leftHandInside)
+                //{
+                //    interactionZone.CalcTargetPosition(leftHandTipTarget, leftHandTip);
+                //    ikLeftArm.Solve(true, leftHandTipTarget.position, lerpTime);
+                //}
+                //else
+                //{
+                //    ikLeftArm.IsActive = false;
+                //}
+
+
 
                 //ikLeftArm.Solve(doArmWarping, CenterObject.position, lerpTime);
                 //ikRightArm.Solve(doArmWarping, CenterObject.position, lerpTime);

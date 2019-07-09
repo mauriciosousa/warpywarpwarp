@@ -35,12 +35,12 @@ public class TableTriggerInteractionZone : MonoBehaviour {
             rightHandInside = _collider.bounds.Contains(rightHandTip.position);
             leftHandInside = _collider.bounds.Contains(leftHandTip.position);
 
-            if (rightHandInside) calcTargetPosition(TargetRight, rightHandTip);
-            if (leftHandInside) calcTargetPosition(TargetLeft, leftHandTip);
+            //if (rightHandInside) calcTargetPosition(TargetRight, rightHandTip);
+            //if (leftHandInside) calcTargetPosition(TargetLeft, leftHandTip);
         }	
 	}
 
-    private void calcTargetPosition(Transform target, Transform hand)
+    public void CalcTargetPosition(Transform target, Transform hand)
     {
         Transform initParent = hand.parent;
         hand.parent = transform.parent;

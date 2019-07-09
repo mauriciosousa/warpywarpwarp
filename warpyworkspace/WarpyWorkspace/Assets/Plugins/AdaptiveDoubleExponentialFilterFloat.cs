@@ -2,15 +2,16 @@
 
 public class AdaptiveDoubleExponentialFilterFloat
 {
-	// as described in: msdn.microsoft.com/en-us/library/jj131429.aspx
+    // as described in: msdn.microsoft.com/en-us/library/jj131429.aspx
 
-	private float deltaLow = 0.02f;
-	private float deltaHigh = 0.05f;
-	private float gainLow = 0.1f;
-	private float gainHigh = 0.15f;
-	private float trendGain = 0.1f;
+    private float deltaLow = 0.02f;
+    private float deltaHigh = 0.05f;
+    private float gainLow = 0.1f;
+    private float gainHigh = 0.15f;
+    private float trendGain = 0.1f;
 
-	public bool filtering = true;
+
+    public bool filtering = true;
 
 	public float DeltaLow {
 		get { return deltaLow; }

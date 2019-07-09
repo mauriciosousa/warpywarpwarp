@@ -46,7 +46,7 @@ public class TableTriggerInteractionZone : MonoBehaviour {
         hand.parent = transform.parent;
         Vector3 lp = hand.localPosition;
 
-        target.localPosition = new Vector3(-lp.x, lp.y, -lp.z);
+        target.localPosition = new Vector3(lp.x, lp.y, -lp.z);
         hand.parent = initParent;
     }
 }

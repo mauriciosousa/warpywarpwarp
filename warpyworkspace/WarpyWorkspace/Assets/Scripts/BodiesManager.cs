@@ -48,11 +48,9 @@ public class BodiesManager : MonoBehaviour
     [Range(0, 1)]
     public float lerpTime = 0.2f;
 
+    public TableTriggerInteractionZone interactionZone;
 
     public IKWarpInfo armsWarpInfo;
-
-    public Transform leftTarget;
-    public Transform rightTarget;
 
     [Space(20)]
     [Header("AT Evaluation Settings:")]
@@ -61,21 +59,39 @@ public class BodiesManager : MonoBehaviour
     [Space(20)]
     [Header("Human:")]
     public Transform head;
+    public Transform neck;
+    public Transform spineShoulder;
+    public Transform spineMid;
+    public Transform spineBase;
     [Space(5)]
     public Transform rightShoulder;
     public Transform rightElbow;
     public Transform rightWrist;
     public Transform rightHand;
     public Transform rightHandTip;
+    public Transform rightThumb;
     [Space(5)]
     public Transform leftShoulder;
     public Transform leftElbow;
     public Transform leftWrist;
     public Transform leftHand;
     public Transform leftHandTip;
-    public Transform spineBase;
+    public Transform leftThumb;
+    [Space(5)]
+    public Transform rightHip;
+    public Transform rightKnee;
+    public Transform rightAnkle;
+    public Transform rightFoot;
+    [Space(5)]
+    public Transform leftHip;
+    public Transform leftKnee;
+    public Transform leftAnkle;
+    public Transform leftFoot;
 
-
+    [Space(5)]
+    [Header("Inverse Kinematics Targets:")]
+    public Transform leftHandTipTarget;
+    public Transform rightHandTipTarget;
 
 
 
@@ -89,8 +105,8 @@ public class BodiesManager : MonoBehaviour
         //_associateHumanToJoints();
 
         _assembleHierarchy();
-        ikLeftArm.IsActive = doArmWarping;
-        ikRightArm.IsActive = doArmWarping;
+        //ikLeftArm.IsActive = doArmWarping;
+        //ikRightArm.IsActive = doArmWarping;
         armsWarpInfo = new IKWarpInfo();
     }
 
@@ -150,24 +166,35 @@ public class BodiesManager : MonoBehaviour
             _updateHumanJoints(human.body.Joints);
             _assembleHierarchy();
 
+            if (!local)
+            {
+
+                if (doArmWarping)
+                {
+                    ikLeftArm.IsActive = true;
+                    ikRightArm.IsActive = true;
+                }
+
+                armsWarpInfo.warping = doArmWarping;
+                armsWarpInfo.UpperArmDistance = UpperArmDistance;
+                armsWarpInfo.ForearmDistance = ForearmDistance;
+                armsWarpInfo.HandDistance = HandDistance;
+                armsWarpInfo.debug = DebugBonesPC;
+
+                _saveJointInfo(true);
+
+                //ikLeftArm.Solve(doArmWarping, CenterObject.position, lerpTime);
+                //ikRightArm.Solve(doArmWarping, CenterObject.position, lerpTime);
 
 
+                //ikLeftArm.Solve(interactionZone.leftHandInside, leftHandTipTarget.position, lerpTime);
+                //ikRightArm.Solve(interactionZone.rightHandInside, rightHandTipTarget.position, lerpTime);
 
-
-            //armsWarpInfo.warping = doArmWarping;
-            //armsWarpInfo.UpperArmDistance = UpperArmDistance;
-            //armsWarpInfo.ForearmDistance = ForearmDistance;
-            //armsWarpInfo.HandDistance = HandDistance;
-            //armsWarpInfo.debug = DebugBonesPC;
-
-            //_saveJointInfo(true); --- uncomment
-
-            //----ikLeftArm.Solve(doArmWarping, leftTarget.position, lerpTime);
-            //----ikRightArm.Solve(doArmWarping, rightTarget.position, lerpTime);
-
-            //_saveJointInfo(false); -- uncomment
-
-            //armsWarpInfo.Solve();
+                _saveJointInfo(false);
+                
+                
+                //armsWarpInfo.Solve();
+            }
         }
         _cleanDeadHumans();
     }
@@ -342,43 +369,44 @@ public class BodiesManager : MonoBehaviour
     //    return ret;
     //}
 
-    //private void _saveJointInfo(bool isBeforeIK)
-    //{
-    //    if (local) return;
+    private void _saveJointInfo(bool isBeforeIK)
+    {
+        if (local) return;
 
-    //    try
-    //    {
-    //        if (isBeforeIK)
-    //        {
-    //            armsWarpInfo.LEFT_OriginalShoulder = LeftShoulder.position;
-    //            armsWarpInfo.LEFT_OriginalElbow = LeftElbow.position;
-    //            armsWarpInfo.LEFT_OriginalWrist = LeftWrist.position;
-    //            armsWarpInfo.LEFT_OriginalHandTip = LeftHandTip.position;
+        try
+        {
+            if (isBeforeIK)
+            {
+                armsWarpInfo.LEFT_OriginalShoulder = leftShoulder.position;
+                armsWarpInfo.LEFT_OriginalElbow = leftElbow.position;
+                armsWarpInfo.LEFT_OriginalWrist = leftWrist.position;
+                armsWarpInfo.LEFT_OriginalHandTip = leftHandTip.position;
 
-    //            armsWarpInfo.RIGHT_OriginalShoulder = RightShoulder.position;
-    //            armsWarpInfo.RIGHT_OriginalElbow = RightElbow.position;
-    //            armsWarpInfo.RIGHT_OriginalWrist = RightWrist.position;
-    //            armsWarpInfo.RIGHT_OriginalHandTip = RightHandTip.position;
-    //        }
-    //        else
-    //        {
-    //            armsWarpInfo.LEFT_IKShoulder = LeftShoulder.position;
-    //            armsWarpInfo.LEFT_IKElbow = LeftElbow.position;
-    //            armsWarpInfo.LEFT_IKWrist = LeftWrist.position;
-    //            armsWarpInfo.LEFT_IKHandTip = LeftHandTip.position;
+                armsWarpInfo.RIGHT_OriginalShoulder = rightShoulder.position;
+                armsWarpInfo.RIGHT_OriginalElbow = rightElbow.position;
+                armsWarpInfo.RIGHT_OriginalWrist = rightWrist.position;
+                armsWarpInfo.RIGHT_OriginalHandTip = rightHandTip.position;
+            }
+            else
+            {
+                armsWarpInfo.LEFT_IKShoulder = leftShoulder.position;
+                armsWarpInfo.LEFT_IKElbow = leftElbow.position;
+                armsWarpInfo.LEFT_IKWrist = leftWrist.position;
+                armsWarpInfo.LEFT_IKHandTip = leftHandTip.position;
 
-    //            armsWarpInfo.RIGHT_IKShoulder = RightShoulder.position;
-    //            armsWarpInfo.RIGHT_IKElbow = RightElbow.position;
-    //            armsWarpInfo.RIGHT_IKWrist = RightWrist.position;
-    //            armsWarpInfo.RIGHT_IKHandTip = RightHandTip.position;
-    //        }
-    //    }
-    //    catch (Exception)
-    //    {
-    //        // lol 
-    //    }
-    //}
+                armsWarpInfo.RIGHT_IKShoulder = rightShoulder.position;
+                armsWarpInfo.RIGHT_IKElbow = rightElbow.position;
+                armsWarpInfo.RIGHT_IKWrist = rightWrist.position;
+                armsWarpInfo.RIGHT_IKHandTip = rightHandTip.position;
+            }
+        }
+        catch (Exception)
+        {
+            // lol 
+        }
+    }
 
+    [Space(20)]
     public Transform headPivot;
     public void calibrateHuman(SetupLocation location)
     {
@@ -462,17 +490,41 @@ public class BodiesManager : MonoBehaviour
         spineBase.localPosition = human.body.Joints[BodyJointType.spineBase];
         head.localPosition = human.body.Joints[BodyJointType.head];
 
-        rightShoulder.localPosition = human.body.Joints[BodyJointType.rightShoulder];
-        rightElbow.localPosition = human.body.Joints[BodyJointType.rightElbow];
-        rightWrist.localPosition = human.body.Joints[BodyJointType.rightWrist];
-        rightHand.localPosition = human.body.Joints[BodyJointType.rightHand];
-        rightHandTip.localPosition = human.body.Joints[BodyJointType.rightHandTip];
+        rightShoulder.localPosition =   human.body.Joints[BodyJointType.rightShoulder];
+        rightElbow.localPosition =      human.body.Joints[BodyJointType.rightElbow];
+        rightWrist.localPosition =      human.body.Joints[BodyJointType.rightWrist];
+        rightHand.localPosition =       human.body.Joints[BodyJointType.rightHand];
+        rightHandTip.localPosition =    human.body.Joints[BodyJointType.rightHandTip];
 
-        leftShoulder.localPosition = human.body.Joints[BodyJointType.leftShoulder];
-        leftElbow.localPosition = human.body.Joints[BodyJointType.leftElbow];
-        leftWrist.localPosition = human.body.Joints[BodyJointType.leftWrist];
-        leftHand.localPosition = human.body.Joints[BodyJointType.leftHand];
-        leftHandTip.localPosition = human.body.Joints[BodyJointType.leftHandTip];
+        leftShoulder.localPosition =    human.body.Joints[BodyJointType.leftShoulder];
+        leftElbow.localPosition =       human.body.Joints[BodyJointType.leftElbow];
+        leftWrist.localPosition =       human.body.Joints[BodyJointType.leftWrist];
+        leftHand.localPosition =        human.body.Joints[BodyJointType.leftHand];
+        leftHandTip.localPosition =     human.body.Joints[BodyJointType.leftHandTip];
+
+        if (!local)
+        {
+            neck.localPosition = human.body.Joints[BodyJointType.neck];
+            spineShoulder.localPosition = human.body.Joints[BodyJointType.spineShoulder];
+            spineMid.localPosition = human.body.Joints[BodyJointType.spineMid];
+
+            rightHip.localPosition = human.body.Joints[BodyJointType.rightHip];
+            rightKnee.localPosition = human.body.Joints[BodyJointType.rightKnee];
+            rightAnkle.localPosition = human.body.Joints[BodyJointType.rightKnee];
+            rightFoot.localPosition = human.body.Joints[BodyJointType.rightFoot];
+            rightThumb.localPosition = human.body.Joints[BodyJointType.rightThumb];
+
+            leftHip.localPosition = human.body.Joints[BodyJointType.leftHip];
+            leftKnee.localPosition = human.body.Joints[BodyJointType.leftKnee];
+            leftAnkle.localPosition = human.body.Joints[BodyJointType.leftKnee];
+            leftFoot.localPosition = human.body.Joints[BodyJointType.leftFoot];
+            leftThumb.localPosition = human.body.Joints[BodyJointType.leftThumb];
+
+        }
     }
 
+    private Vector3 _mirrorJoint(Vector3 p)
+    {
+        return new Vector3(-p.x, p.y, p.z);
+    }
 }

@@ -182,6 +182,18 @@ public class AlteredTelepresenceMain : MonoBehaviour
         {
             _calibrateHuman();
         }
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            if (remoteWorkspaceOrigin.localScale.x == 1f)
+            {
+                remoteWorkspaceOrigin.localScale = new Vector3(-1f, 1f, 1f);
+            }
+            else
+            {
+                remoteWorkspaceOrigin.localScale = Vector3.one;
+            }
+        }
     }
 
     private void _calibrateHuman()
@@ -329,6 +341,17 @@ public class AlteredTelepresenceMain : MonoBehaviour
         {
             Debug.LogError("lokl");
         }
+
+        _nowThatWeKnowForCertainThatWeHaveRavatarsWeCanMirrorTheRemoteWorkspace();
+    }
+
+    private void _nowThatWeKnowForCertainThatWeHaveRavatarsWeCanMirrorTheRemoteWorkspace()
+    {
+        if (formation == Formation.FACE_TO_FACE)
+        {
+            remoteWorkspaceOrigin.localScale = new Vector3(-1f, 1f, 1f);
+            remoteBodiesManager.doArmWarping = true;
+        }
     }
 
     private void _surfaceRequest()
@@ -371,6 +394,11 @@ public class AlteredTelepresenceMain : MonoBehaviour
         if (formation == Formation.SIDE_TO_SIDE)
         {
             remoteWorkspaceOrigin.transform.rotation = Quaternion.LookRotation(localWorkspaceOrigin.transform.forward, localWorkspaceOrigin.transform.up);
+        }
+        else
+        {
+            // mirror remote
+            //remoteWorkspaceOrigin.transform.localScale = new Vector3(-1f, 1f, 1f);
         }
 
 

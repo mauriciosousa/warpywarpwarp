@@ -232,7 +232,8 @@ public class PointCloudMesh : MonoBehaviour
             mr.material.SetInt("_SizeFilter", medianFilterSize);
             mr.material.SetInt("_calculateNormals", calculateNormals? 1:0);
 
-            mr.material.SetInt("_Warping", wi.warping ? 1 : 0);
+            mr.material.SetInt("_LeftWarping", wi.leftWarping ? 1 : 0);
+            mr.material.SetInt("_RightWarping", wi.rightWarping ? 1 : 0);
             mr.material.SetFloat("_Distance", 0.5f);
 
             mr.material.SetVector("_LEFT_OriginalShoulder", wi.LEFT_OriginalShoulder);
@@ -278,7 +279,8 @@ public class PointCloudMesh : MonoBehaviour
 
                 //mr.material.SetInt("_Warping",  0);
 
-                mr.material.SetInt("_Warping", wi.warping ? 1 : 0);
+                mr.material.SetInt("_LeftWarping", wi.leftWarping ? 1 : 0);
+                mr.material.SetInt("_RightWarping", wi.rightWarping ? 1 : 0);
                 mr.material.SetFloat("_UpperArmDistance", wi.UpperArmDistance);
                 mr.material.SetFloat("_ForearmDistance", wi.ForearmDistance);
                 mr.material.SetFloat("_HandDistance", wi.HandDistance);

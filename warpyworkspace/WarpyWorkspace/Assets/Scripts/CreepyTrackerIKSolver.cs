@@ -64,6 +64,7 @@ public class CreepyTrackerIKSolver : MonoBehaviour
             Debug.DrawLine(JointEntities[0].Joint.position, JointEntities[1].Joint.position, Color.red);
             Debug.DrawLine(JointEntities[1].Joint.position, JointEntities[2].Joint.position, Color.red);
             Debug.DrawLine(JointEntities[0].Joint.position, JointEntities[2].Joint.position, Color.red);
+            Debug.DrawLine(JointEntities[2].Joint.position, JointEntities[3].Joint.position, Color.red);
         }
 
     }

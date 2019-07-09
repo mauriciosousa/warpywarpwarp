@@ -38,92 +38,103 @@ public class IKWarpInfo {
     public Matrix4x4 RIGHT_ForearmMatrix;
     public Matrix4x4 RIGHT_HandMatrix;
 
-    public bool warping;
+    public bool leftWarping;
+    public bool rightWarping;
 
     public bool debug;
 
-    private GameObject LEFTELB;
-    private GameObject LEFTWRIST;
-
     public IKWarpInfo()
     {
-        warping = false;
-        debug = false;
+        leftWarping = false;
+        rightWarping = false;
 
-        LEFTELB = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        LEFTELB.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-        LEFTWRIST = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        LEFTWRIST.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        debug = false;
 
         _reset();
     }
 
     public void Solve()
     {
-        if (!warping)
+        if (!leftWarping && !rightWarping)
         {
             _reset();
             return;
         }
 
-        // LEFT ARM
-        Vector3 shoulder = LEFT_OriginalShoulder;
-        Vector3 elbow = LEFT_OriginalElbow;
-        Vector3 wrist = LEFT_OriginalWrist;
-        Vector3 handTip = LEFT_OriginalHandTip;
+        Vector3 shoulder;
+        Vector3 elbow;
+        Vector3 wrist;
+        Vector3 handTip;
 
-        Vector3 oldVector_upper = LEFT_OriginalElbow - LEFT_OriginalShoulder;
-        Vector3 newVector_upper = LEFT_IKElbow - LEFT_IKShoulder;
-        // Shoulder -> Elbow
-        LEFT_UpperArmMatrix = _calcM(shoulder, oldVector_upper, newVector_upper);
-
-        elbow = LEFT_UpperArmMatrix.MultiplyPoint(elbow);
-        wrist = LEFT_UpperArmMatrix.MultiplyPoint(wrist);
-        Vector3 oldVector_forearm = wrist - elbow;
-        Vector3 newVector_forearm = LEFT_IKWrist - LEFT_IKElbow;
-        // Elbow -> Wrist
-
-        LEFT_ForearmMatrix = _calcM(elbow, oldVector_forearm, newVector_forearm);
-
-        wrist = LEFT_ForearmMatrix.MultiplyPoint(wrist);
-        handTip = LEFT_UpperArmMatrix.MultiplyPoint(handTip);
-        handTip = LEFT_ForearmMatrix.MultiplyPoint(handTip);
-
-        Vector3 oldVector_hand = handTip - wrist;
-        Vector3 newVector_hand = LEFT_IKHandTip - LEFT_IKWrist;
-        // Wrist -> HandTip
-        LEFT_HandMatrix = _calcM(wrist, oldVector_hand, newVector_hand);
+        Vector3 oldVector_upper;
+        Vector3 newVector_upper;
+        Vector3 oldVector_forearm;
+        Vector3 newVector_forearm;
+        Vector3 oldVector_hand;
+        Vector3 newVector_hand;
 
 
+        if (leftWarping)
+        {
+            // LEFT ARM
+            shoulder = LEFT_OriginalShoulder;
+            elbow = LEFT_OriginalElbow;
+            wrist = LEFT_OriginalWrist;
+            handTip = LEFT_OriginalHandTip;
 
+            oldVector_upper = LEFT_OriginalElbow - LEFT_OriginalShoulder;
+            newVector_upper = LEFT_IKElbow - LEFT_IKShoulder;
+            // Shoulder -> Elbow
+            LEFT_UpperArmMatrix = _calcM(shoulder, oldVector_upper, newVector_upper);
 
-        //  ARM
-        shoulder = RIGHT_OriginalShoulder;
-        elbow = RIGHT_OriginalElbow;
-        wrist = RIGHT_OriginalWrist;
-        handTip = RIGHT_OriginalHandTip;
+            elbow = LEFT_UpperArmMatrix.MultiplyPoint(elbow);
+            wrist = LEFT_UpperArmMatrix.MultiplyPoint(wrist);
+            oldVector_forearm = wrist - elbow;
+            newVector_forearm = LEFT_IKWrist - LEFT_IKElbow;
+            // Elbow -> Wrist
 
-        oldVector_upper = RIGHT_OriginalElbow - RIGHT_OriginalShoulder;
-        newVector_upper = RIGHT_IKElbow - RIGHT_IKShoulder;
-        // Shoulder -> Elbow
-        RIGHT_UpperArmMatrix = _calcM(shoulder, oldVector_upper, newVector_upper);
+            LEFT_ForearmMatrix = _calcM(elbow, oldVector_forearm, newVector_forearm);
 
-        elbow = RIGHT_UpperArmMatrix.MultiplyPoint(elbow);
-        wrist = RIGHT_UpperArmMatrix.MultiplyPoint(wrist);
-        oldVector_forearm = wrist - elbow;
-        newVector_forearm = RIGHT_IKWrist - RIGHT_IKElbow;
-        // Elbow -> Wrist
+            wrist = LEFT_ForearmMatrix.MultiplyPoint(wrist);
+            handTip = LEFT_UpperArmMatrix.MultiplyPoint(handTip);
+            handTip = LEFT_ForearmMatrix.MultiplyPoint(handTip);
 
-        RIGHT_ForearmMatrix = _calcM(elbow, oldVector_forearm, newVector_forearm);
+            oldVector_hand = handTip - wrist;
+            newVector_hand = LEFT_IKHandTip - LEFT_IKWrist;
+            // Wrist -> HandTip
+            LEFT_HandMatrix = _calcM(wrist, oldVector_hand, newVector_hand);
+        }
 
-        wrist = RIGHT_ForearmMatrix.MultiplyPoint(wrist);
-        handTip = RIGHT_UpperArmMatrix.MultiplyPoint(handTip);
-        handTip = RIGHT_ForearmMatrix.MultiplyPoint(handTip);
+        if (rightWarping)
+        {
+            //  ARM
+            shoulder = RIGHT_OriginalShoulder;
+            elbow = RIGHT_OriginalElbow;
+            wrist = RIGHT_OriginalWrist;
+            handTip = RIGHT_OriginalHandTip;
 
-        oldVector_hand = handTip - wrist;
-        newVector_hand = RIGHT_IKHandTip - RIGHT_IKWrist;
-        // Wrist -> HandTip
-        RIGHT_HandMatrix = _calcM(wrist, oldVector_hand, newVector_hand);
+            oldVector_upper = RIGHT_OriginalElbow - RIGHT_OriginalShoulder;
+            newVector_upper = RIGHT_IKElbow - RIGHT_IKShoulder;
+            // Shoulder -> Elbow
+            RIGHT_UpperArmMatrix = _calcM(shoulder, oldVector_upper, newVector_upper);
+
+            elbow = RIGHT_UpperArmMatrix.MultiplyPoint(elbow);
+            wrist = RIGHT_UpperArmMatrix.MultiplyPoint(wrist);
+            oldVector_forearm = wrist - elbow;
+            newVector_forearm = RIGHT_IKWrist - RIGHT_IKElbow;
+            // Elbow -> Wrist
+
+            RIGHT_ForearmMatrix = _calcM(elbow, oldVector_forearm, newVector_forearm);
+
+            wrist = RIGHT_ForearmMatrix.MultiplyPoint(wrist);
+            handTip = RIGHT_UpperArmMatrix.MultiplyPoint(handTip);
+            handTip = RIGHT_ForearmMatrix.MultiplyPoint(handTip);
+
+            oldVector_hand = handTip - wrist;
+            newVector_hand = RIGHT_IKHandTip - RIGHT_IKWrist;
+            // Wrist -> HandTip
+            RIGHT_HandMatrix = _calcM(wrist, oldVector_hand, newVector_hand);
+        }
     }
 
     private Matrix4x4 _calcM(Vector3 pivot, Vector3 oldVector, Vector3 newVector)

@@ -9,36 +9,26 @@ public class TableTriggerInteractionZone : MonoBehaviour {
 
     private BoxCollider _collider;
 
-    [Space(20)]
-    [Header("Remote Human Hands")]
-    public Transform rightHandTip;
-    public Transform leftHandTip;
-
-    [Space(20)]
-    [Header("Hand Targets")]
-    public Transform TargetLeft;
-    public Transform TargetRight;
-
-    [Space(20)]
-    [Header("Hands inside?")]
-    public bool rightHandInside = false;
-    public bool leftHandInside = false;
-
     void Start () {
         _collider = GetComponent<BoxCollider>();
 	}
-	
-	void Update () {
 
-        if (remoteBodies.human != null)
-        {
-            rightHandInside = _collider.bounds.Contains(rightHandTip.position);
-            leftHandInside = _collider.bounds.Contains(leftHandTip.position);
+    //void Update () {
 
-            //if (rightHandInside) calcTargetPosition(TargetRight, rightHandTip);
-            //if (leftHandInside) calcTargetPosition(TargetLeft, leftHandTip);
-        }	
-	}
+    //       if (remoteBodies.human != null)
+    //       {
+    //           rightHandInside = _collider.bounds.Contains(rightHandTip.position);
+    //           leftHandInside = _collider.bounds.Contains(leftHandTip.position);
+
+    //           //if (rightHandInside) calcTargetPosition(TargetRight, rightHandTip);
+    //           //if (leftHandInside) calcTargetPosition(TargetLeft, leftHandTip);
+    //       }	
+    //}
+
+    public bool isHandInside(Vector3 handtip)
+    {
+        return _collider.bounds.Contains(handtip);
+    }
 
     public void CalcTargetPosition(Transform target, Transform hand)
     {

@@ -61,7 +61,8 @@ Shader "Custom/MeshSimple"
 				// VARS PARA DISTORCER OS BRACITOS
 
 
-				int _Warping;
+				int _LeftWarping;
+				int _RightWarping;
 				float _UpperArmDistance;
 				float _ForearmDistance;
 				float _HandDistance;
@@ -640,7 +641,7 @@ Shader "Custom/MeshSimple"
 						{
 							c.r = 1; c.g = 0; c.b = 1;
 						}
-						if (_Warping == 1)
+						if (_RightWarping == 1)
 						{
 							pos = mul(unity_WorldToObject, mul(_RIGHT_UpperArmMatrix, worldPos));
 						}
@@ -652,7 +653,7 @@ Shader "Custom/MeshSimple"
 						{
 							c.r = 1; c.g = 1; c.b = 0;
 						}
-						if (_Warping == 1)
+						if (_RightWarping == 1)
 						{
 							pos = mul(_RIGHT_UpperArmMatrix, worldPos);
 							pos = mul(unity_WorldToObject, mul(_RIGHT_ForearmMatrix, pos));
@@ -665,7 +666,7 @@ Shader "Custom/MeshSimple"
 						{
 							c.r = 0; c.g = 1; c.b = 1;
 						}
-						if (_Warping == 1)
+						if (_RightWarping == 1)
 						{
 							pos = mul(_RIGHT_UpperArmMatrix, worldPos);
 							pos = mul(_RIGHT_ForearmMatrix, pos);
@@ -679,7 +680,7 @@ Shader "Custom/MeshSimple"
 						{
 							c.r = 1; c.g = 0; c.b = 1;
 						}
-						if (_Warping == 1)
+						if (_LeftWarping == 1)
 						{
 							pos = mul(unity_WorldToObject, mul(_LEFT_UpperArmMatrix, worldPos));
 						}
@@ -691,7 +692,7 @@ Shader "Custom/MeshSimple"
 						{
 							c.r = 1; c.g = 1; c.b = 0;
 						}
-						if (_Warping == 1)
+						if (_LeftWarping == 1)
 						{
 							pos = mul(_LEFT_UpperArmMatrix, worldPos);
 							pos = mul(unity_WorldToObject, mul(_LEFT_ForearmMatrix, pos));
@@ -704,7 +705,7 @@ Shader "Custom/MeshSimple"
 						{
 							c.r = 0; c.g = 1; c.b = 1;
 						}
-						if (_Warping == 1)
+						if (_LeftWarping == 1)
 						{
 							pos = mul(_LEFT_UpperArmMatrix, worldPos);
 							pos = mul(_LEFT_ForearmMatrix, pos);

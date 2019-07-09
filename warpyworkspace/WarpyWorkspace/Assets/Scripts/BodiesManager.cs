@@ -170,7 +170,6 @@ public class BodiesManager : MonoBehaviour
             {
 
 
-                armsWarpInfo.warping = doArmWarping;
                 armsWarpInfo.UpperArmDistance = UpperArmDistance;
                 armsWarpInfo.ForearmDistance = ForearmDistance;
                 armsWarpInfo.HandDistance = HandDistance;
@@ -178,44 +177,32 @@ public class BodiesManager : MonoBehaviour
 
                 _saveJointInfo(true);
 
-                if (interactionZone.leftHandInside)
+                armsWarpInfo.leftWarping = interactionZone.isHandInside(leftHandTip.position);
+                if (armsWarpInfo.leftWarping)
                 {
                     print("IK LEFT HAND");
+                    interactionZone.CalcTargetPosition(leftHandTipTarget, leftHandTip);
+                    ikLeftArm.Solve(true, leftHandTipTarget.position, lerpTime);
+                }
+                else
+                {
+                    ikLeftArm.IsActive = false;
                 }
 
-                if (interactionZone.rightHandInside)
+                armsWarpInfo.rightWarping = interactionZone.isHandInside(rightHandTip.position);
+                if (armsWarpInfo.rightWarping)
                 {
                     print("IK RIGHT HAND");
+                    interactionZone.CalcTargetPosition(rightHandTipTarget, rightHandTip);
+                    ikRightArm.Solve(true, rightHandTipTarget.position, lerpTime);
+                }
+                else
+                {
+                    ikRightArm.IsActive = false;
                 }
 
-
-
-
-
-
-                //if (interactionZone.leftHandInside)
-                //{
-                //    interactionZone.CalcTargetPosition(leftHandTipTarget, leftHandTip);
-                //    ikLeftArm.Solve(true, leftHandTipTarget.position, lerpTime);
-                //}
-                //else
-                //{
-                //    ikLeftArm.IsActive = false;
-                //}
-
-
-
-                //ikLeftArm.Solve(doArmWarping, CenterObject.position, lerpTime);
-                //ikRightArm.Solve(doArmWarping, CenterObject.position, lerpTime);
-
-
-                //ikLeftArm.Solve(interactionZone.leftHandInside, leftHandTipTarget.position, lerpTime);
-                //ikRightArm.Solve(interactionZone.rightHandInside, rightHandTipTarget.position, lerpTime);
-
                 _saveJointInfo(false);
-                
-                
-                //armsWarpInfo.Solve();
+                armsWarpInfo.Solve();
             }
         }
         _cleanDeadHumans();

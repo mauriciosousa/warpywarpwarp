@@ -34,17 +34,20 @@ public class BodiesManager : MonoBehaviour
     //private Dictionary<BodyJointType, Transform> _bodyTrans;
 
     //[Space(10)]
+    //[Header("Arm Segmentation Settings:")]
     //[Range(0.01f, 0.5f)]
-    private float UpperArmDistance = 0.1f;
+    //public float UpperArmDistance = 0.1f;
     //[Range(0.01f, 0.5f)]
-    private float ForearmDistance = 0.1f;
+    //public float ForearmDistance = 0.1f;
     //[Range(0.01f, 0.5f)]
-    private float HandDistance = 0.1f;
+    //public float HandDistance = 0.1f;
 
     [Space(20)]
     [Header("Body Warping Settings:")]
     public bool doArmWarping;
     public bool DebugBonesPC = false;
+    public bool FORCEIK = false;
+    public bool FORCEWARP = false;
     [Range(0, 1)]
     public float lerpTime = 0.2f;
 
@@ -87,6 +90,7 @@ public class BodiesManager : MonoBehaviour
     public Transform leftKnee;
     public Transform leftAnkle;
     public Transform leftFoot;
+    public Transform LEGBONE;
 
     [Space(5)]
     [Header("Inverse Kinematics Targets:")]
@@ -152,38 +156,26 @@ public class BodiesManager : MonoBehaviour
             }
 
 
-            //_disassembleHierarchy(humanGO);
-            //_updateHumanJoints(human.body.Joints);
-            //_assembleHumanHierarchy(humanGO);
-
-            //_disassembleHierarchy(humanGO);
-            //foreach (BodyJointType joint in (BodyJointType[])Enum.GetValues(typeof(BodyJointType)))
-            //{
-            //    humanGO.Find(joint.ToString()).localPosition = human.body.Joints[joint];
-            //}
-            //_assembleHumanHierarchy(humanGO);
-
 
             _disassembleHierarchy();
             _updateHumanJoints(human.body.Joints);
             _assembleHierarchy();
 
+
             if (!local && doArmWarping)
             {
 
+                LEGBONE.position = spineBase.position + (-transform.up);
 
-                armsWarpInfo.UpperArmDistance = UpperArmDistance;
-                armsWarpInfo.ForearmDistance = ForearmDistance;
-                armsWarpInfo.HandDistance = HandDistance;
                 armsWarpInfo.debug = DebugBonesPC;
 
                 _saveJointInfo(true);
 
                 armsWarpInfo.leftWarping = interactionZone.isHandInside(leftHandTip.position);
                 leftInside = armsWarpInfo.leftWarping;
-                if (armsWarpInfo.leftWarping)
+                if (FORCEIK)//armsWarpInfo.leftWarping)
                 {
-                    interactionZone.CalcTargetPosition(leftHandTipTarget, leftHandTip);
+                    //interactionZone.CalcTargetPosition(leftHandTipTarget, leftHandTip);
                     ikLeftArm.Solve(true, leftHandTipTarget.position, lerpTime);
                 }
                 else
@@ -193,9 +185,9 @@ public class BodiesManager : MonoBehaviour
 
                 armsWarpInfo.rightWarping = interactionZone.isHandInside(rightHandTip.position);
                 rightInside = armsWarpInfo.rightWarping;
-                if (armsWarpInfo.rightWarping)
+                if (FORCEIK)//armsWarpInfo.rightWarping)
                 {
-                    interactionZone.CalcTargetPosition(rightHandTipTarget, rightHandTip);
+                    //interactionZone.CalcTargetPosition(rightHandTipTarget, rightHandTip);
                     ikRightArm.Solve(true, rightHandTipTarget.position, lerpTime);
                 }
                 else
@@ -204,7 +196,18 @@ public class BodiesManager : MonoBehaviour
                 }
 
                 _saveJointInfo(false);
-                //armsWarpInfo.Solve();
+
+                if (FORCEWARP)
+                {
+                    armsWarpInfo.leftWarping = true;//remove these
+                    armsWarpInfo.rightWarping = true;
+                }
+
+                armsWarpInfo.Solve();
+            }
+            else if (!local && doArmWarping)
+            {
+                armsWarpInfo.reset();
             }
         }
         _cleanDeadHumans();

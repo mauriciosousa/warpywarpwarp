@@ -63,9 +63,9 @@ Shader "Custom/MeshSimple"
 
 				int _LeftWarping;
 				int _RightWarping;
-				float _UpperArmDistance;
-				float _ForearmDistance;
-				float _HandDistance;
+				//float _UpperArmDistance;
+				//float _ForearmDistance;
+				//float _HandDistance;
 				int _Debug;
 
 				float3 _LEFT_OriginalShoulder;
@@ -112,6 +112,7 @@ Shader "Custom/MeshSimple"
 				float3 rightKnee;
 				float3 rightAnkle;
 				float3 rightFoot;
+				float3 LEGBONE;
 
 
 				// **************************************************************
@@ -522,58 +523,93 @@ Shader "Custom/MeshSimple"
 						bone = 0;
 					}
 
-					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), rightHip, rightKnee);
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), spineMid, LEGBONE);
 					if (dist < d)
 					{
 						d = dist;
 						bone = 0;
 					}
 
-					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), rightKnee, rightAnkle);
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), leftHip, LEGBONE);
 					if (dist < d)
 					{
 						d = dist;
 						bone = 0;
 					}
 
-					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), rightAnkle, rightFoot);
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), rightHip, LEGBONE);
 					if (dist < d)
 					{
 						d = dist;
 						bone = 0;
 					}
 
-					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), leftHip, leftKnee);
+					//dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), rightHip, rightKnee);
+					//if (dist < d)
+					//{
+					//	d = dist;
+					//	bone = 0;
+					//}
+
+					//dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), rightKnee, rightAnkle);
+					//if (dist < d)
+					//{
+					//	d = dist;
+					//	bone = 0;
+					//}
+
+					//dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), rightAnkle, rightFoot);
+					//if (dist < d)
+					//{
+					//	d = dist;
+					//	bone = 0;
+					//}
+
+					//dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), leftHip, leftKnee);
+					//if (dist < d)
+					//{
+					//	d = dist;
+					//	bone = 0;
+					//}
+
+					//dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), leftHip, leftKnee);
+					//if (dist < d)
+					//{
+					//	d = dist;
+					//	bone = 0;
+					//}
+
+					//dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), leftKnee, leftAnkle);
+					//if (dist < d)
+					//{
+					//	d = dist;
+					//	bone = 0;
+					//}
+
+					//dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), leftAnkle, leftFoot);
+					//if (dist < d)
+					//{
+					//	d = dist;
+					//	bone = 0;
+					//}
+
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), rightShoulder, rightHip);
 					if (dist < d)
 					{
 						d = dist;
 						bone = 0;
 					}
 
-					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), leftHip, leftKnee);
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), leftShoulder, leftHip);
 					if (dist < d)
 					{
 						d = dist;
 						bone = 0;
 					}
-
-					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), leftKnee, leftAnkle);
-					if (dist < d)
-					{
-						d = dist;
-						bone = 0;
-					}
-
-					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), leftAnkle, leftFoot);
-					if (dist < d)
-					{
-						d = dist;
-						bone = 0;
-					}
-
 
 					// right upperarm
 					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), rightShoulder, rightElbow);
+					//if (dist < d && d < 0.2f) uat?
 					if (dist < d)
 					{
 						d = dist;
@@ -589,7 +625,21 @@ Shader "Custom/MeshSimple"
 					}
 
 					// right hand
-					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), rightWrist, rightHandTip);
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), rightWrist, rightHand);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 3;
+					}
+
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), rightHand, rightThumb);
+					if (dist < d)
+					{
+						d = dist;
+						bone = 3;
+					}
+
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), rightHand, rightHandTip);
 					if (dist < d)
 					{
 						d = dist;
@@ -613,25 +663,25 @@ Shader "Custom/MeshSimple"
 					}
 
 					// left hand
-					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), leftWrist, leftHandTip);
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), leftWrist, leftHand);
 					if (dist < d)
 					{
 						d = dist;
 						bone = 6;
 					}
 
-					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), rightShoulder, rightHip);
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), leftHand, leftThumb);
 					if (dist < d)
 					{
 						d = dist;
-						bone = 0;
+						bone = 6;
 					}
 
-					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), leftShoulder, leftHip);
+					dist = distToBone(float3(worldPos.x, worldPos.y, worldPos.z), leftHand, leftHandTip);
 					if (dist < d)
 					{
 						d = dist;
-						bone = 0;
+						bone = 6;
 					}
 
 					//right upper arm
@@ -712,7 +762,23 @@ Shader "Custom/MeshSimple"
 							pos = mul(unity_WorldToObject, mul(_LEFT_HandMatrix, pos));
 						}
 					}
+					else if (bone == -1)
+					{
+						if (_Debug == 1)
+						{
+							c.r = 1; c.g = 0; c.b = 0;
+						}
+					}
+					else if (bone == 0)
+					{
+						if (_Debug == 1)
+						{
+							//c.r = 0; c.g = 0; c.b = 0;
+						}
+					}
 				
+
+
 					// END NEAREST BONE
 
 					output.pos =  pos;

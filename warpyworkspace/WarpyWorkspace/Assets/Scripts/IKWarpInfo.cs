@@ -26,9 +26,9 @@ public class IKWarpInfo {
     public Vector3 RIGHT_IKWrist;
     public Vector3 RIGHT_IKHandTip;
 
-    public float UpperArmDistance;
-    public float ForearmDistance;
-    public float HandDistance;
+    //public float UpperArmDistance;
+    //public float ForearmDistance;
+    //public float HandDistance;
 
     public Matrix4x4 LEFT_UpperArmMatrix;
     public Matrix4x4 LEFT_ForearmMatrix;
@@ -156,4 +156,8 @@ public class IKWarpInfo {
        RIGHT_HandMatrix = Matrix4x4.identity;
     }
 
+    internal void reset()
+    {
+        _reset();
+    }
 }

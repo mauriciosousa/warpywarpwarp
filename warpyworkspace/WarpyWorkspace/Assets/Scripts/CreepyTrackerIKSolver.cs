@@ -73,12 +73,12 @@ public class CreepyTrackerIKSolver : MonoBehaviour
     public void Solve (bool isActive, Vector3 target, float lerpTime)
 	{
 
-        if (_lastPosition != null)
-        {
-            target = Vector3.Lerp(_lastPosition, target, lerpTime);
-        }
+        //if (_lastPosition != null)
+        //{
+        //    target = Vector3.Lerp(_lastPosition, target, lerpTime);
+        //}
         
-        _lastPosition = target;
+        //_lastPosition = target;
 
         IsActive = isActive;
         if (!IsActive) return;

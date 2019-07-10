@@ -281,9 +281,9 @@ public class PointCloudMesh : MonoBehaviour
 
                 mr.material.SetInt("_LeftWarping", wi.leftWarping ? 1 : 0);
                 mr.material.SetInt("_RightWarping", wi.rightWarping ? 1 : 0);
-                mr.material.SetFloat("_UpperArmDistance", wi.UpperArmDistance);
-                mr.material.SetFloat("_ForearmDistance", wi.ForearmDistance);
-                mr.material.SetFloat("_HandDistance", wi.HandDistance);
+                //mr.material.SetFloat("_UpperArmDistance", wi.UpperArmDistance);
+                //mr.material.SetFloat("_ForearmDistance", wi.ForearmDistance);
+                //mr.material.SetFloat("_HandDistance", wi.HandDistance);
 
                 mr.material.SetInt("_Debug", wi.debug ? 1 : 0);
 
@@ -331,6 +331,7 @@ public class PointCloudMesh : MonoBehaviour
                 mr.material.SetVector("rightKnee",      b.rightKnee.position);
                 mr.material.SetVector("rightAnkle",     b.rightAnkle.position);
                 mr.material.SetVector("rightFoot",      b.rightFoot.position);
+                mr.material.SetVector("LEGBONE", b.LEGBONE.position);
             }
         }
         catch

@@ -5,8 +5,9 @@ using System.Collections;
 
 public class CreepyTrackerIKSolver : MonoBehaviour
 {
-    private const float IK_POS_THRESH = 0.001f;//0.125f;
-    private const int MAX_IK_TRIES = 40;
+    [Range(0.00001f, 0.20f)]
+    public float IK_POS_THRESH = 0.125f;
+    public int MAX_IK_TRIES = 40;
     
 	[System.Serializable]
 	public class JointEntity
@@ -16,6 +17,8 @@ public class CreepyTrackerIKSolver : MonoBehaviour
 		
 		internal Quaternion _initialRotation;
 	}
+
+    public bool doAngleRestrictions = true;
  
 	/// <summary>
 	/// Rotation AngleRestriction values in degrees (from -180 to 180).
@@ -73,12 +76,13 @@ public class CreepyTrackerIKSolver : MonoBehaviour
     public void Solve (bool isActive, Vector3 target, float lerpTime)
 	{
 
-        //if (_lastPosition != null)
-        //{
-        //    target = Vector3.Lerp(_lastPosition, target, lerpTime);
-        //}
-        
-        //_lastPosition = target;
+        if (_lastPosition != null)
+        {
+            target = Vector3.Lerp(_lastPosition, target, lerpTime);
+        }
+
+        _lastPosition = target;
+
 
         IsActive = isActive;
         if (!IsActive) return;
@@ -95,48 +99,49 @@ public class CreepyTrackerIKSolver : MonoBehaviour
 		// START AT THE LAST LINK IN THE CHAIN
 		int link = JointEntities.Length - 1;
 		int tries = 0;
-		
-		// SEE IF I AM ALREADY CLOSE ENOUGH
-		do {
-			if (link < 0)
-				link = JointEntities.Length - 1;
- 
-			rootPos = JointEntities[link].Joint.position;
-			curEnd = endEffector.position;
- 
-			// CREATE THE VECTOR TO THE CURRENT EFFECTOR POS
-			currentVector = curEnd - rootPos;
-			// CREATE THE DESIRED EFFECTOR POSITION VECTOR
-			targetVector = target - rootPos;
- 
-			// NORMALIZE THE VECTORS
-			currentVector.Normalize ();
-			targetVector.Normalize ();
- 
-			// THE DOT PRODUCT GIVES ME THE COSINE OF THE DESIRED ANGLE
-			cosAngle = Vector3.Dot (currentVector, targetVector);
- 
-			// IF THE DOT PRODUCT RETURNS 1.0, I DON'T NEED TO ROTATE AS IT IS 0 DEGREES
-			if (cosAngle < 0.99999f) {
-				// USE THE CROSS PRODUCT TO CHECK WHICH WAY TO ROTATE
-				crossResult = Vector3.Cross (currentVector, targetVector);
-				crossResult.Normalize ();
 
-                turnAngle = Mathf.Acos (cosAngle); 
-				// APPLY DAMPING
-				if (IsDamping) {
-					if (turnAngle > DampingMax)
-						turnAngle = DampingMax;
-				}
-				turnAngle = turnAngle * Mathf.Rad2Deg;
- 
-				JointEntities[link].Joint.rotation = Quaternion.AngleAxis (turnAngle, crossResult) * JointEntities[link].Joint.rotation;
+        // SEE IF I AM ALREADY CLOSE ENOUGH
+        do {
+            if (link < 0)
+                link = JointEntities.Length - 1;
+
+            rootPos = JointEntities[link].Joint.position;
+            curEnd = endEffector.position;
+
+            // CREATE THE VECTOR TO THE CURRENT EFFECTOR POS
+            currentVector = curEnd - rootPos;
+            // CREATE THE DESIRED EFFECTOR POSITION VECTOR
+            targetVector = target - rootPos;
+
+            // NORMALIZE THE VECTORS
+            currentVector.Normalize();
+            targetVector.Normalize();
+
+            // THE DOT PRODUCT GIVES ME THE COSINE OF THE DESIRED ANGLE
+            cosAngle = Vector3.Dot(currentVector, targetVector);
+
+            // IF THE DOT PRODUCT RETURNS 1.0, I DON'T NEED TO ROTATE AS IT IS 0 DEGREES
+            if (cosAngle < 0.99999f) {
+                // USE THE CROSS PRODUCT TO CHECK WHICH WAY TO ROTATE
+                crossResult = Vector3.Cross(currentVector, targetVector);
+                crossResult.Normalize();
+
+                turnAngle = Mathf.Acos(cosAngle);
+                // APPLY DAMPING
+                if (IsDamping) {
+                    if (turnAngle > DampingMax)
+                        turnAngle = DampingMax;
+                }
+                turnAngle = turnAngle * Mathf.Rad2Deg;
+
+                JointEntities[link].Joint.rotation = Quaternion.AngleAxis(turnAngle, crossResult) * JointEntities[link].Joint.rotation;
                 JointEntities[link].Joint.localScale = Vector3.one;
 
-                CheckAngleRestrictions (JointEntities[link]);
+                if (doAngleRestrictions)
+                    CheckAngleRestrictions(JointEntities[link]);
             }
-			link--;
-		} while (tries++ < MAX_IK_TRIES && (curEnd - target).sqrMagnitude > IK_POS_THRESH);
+            link--;
+        } while (tries++ < MAX_IK_TRIES && (curEnd - target).sqrMagnitude > IK_POS_THRESH);
     }
  
 	/// <summary>

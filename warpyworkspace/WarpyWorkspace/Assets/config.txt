@@ -40,7 +40,7 @@ right.sensor.listen.port=5107
 right.workspaceCenter.transform.position:0:0:0
 right.workspaceCenter.transform.rotation=-0.009965885:0.999941:0.00415338:0.001241319
 right.workspaceCenter.transform.position=-0.1801608:0.8936805:0.642683
-right.trackedKinect.name=VANESSA
+right.trackedKinect.name=FRANK-SALES
 right.rigidBodyCalibration.transform.position=0.4622691:1.677606:-0.1024978
 right.rigidBodyCalibration.transform.rotation=0.1575674:-0.1327323:0.004087429:0.9785387
 right.remoteCreepyTrackerDelta.rotation=0:0:0:0

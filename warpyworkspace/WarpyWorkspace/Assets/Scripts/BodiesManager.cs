@@ -48,6 +48,7 @@ public class BodiesManager : MonoBehaviour
     public bool DebugBonesPC = false;
     public bool FORCEIK = false;
     public bool FORCEWARP = false;
+    public bool CALC_TARGET = false;
     [Range(0, 1)]
     public float lerpTime = 0.2f;
 
@@ -171,21 +172,17 @@ public class BodiesManager : MonoBehaviour
 
                 _saveJointInfo(true);
 
+                // LEFT ARM IK
                 armsWarpInfo.leftWarping = interactionZone.isHandInside(leftHandTip.position);
                 leftInside = armsWarpInfo.leftWarping;
-                if (FORCEIK)//armsWarpInfo.leftWarping)
-                {
-                    //interactionZone.CalcTargetPosition(leftHandTipTarget, leftHandTip);
-                    ikLeftArm.Solve(true, leftHandTipTarget.position, lerpTime);
-                }
-                else
-                {
-                    ikLeftArm.IsActive = false;
-                }
+                if (CALC_TARGET) interactionZone.CalcTargetPosition(leftHandTipTarget, leftHandTip);
+                if (FORCEIK) ikLeftArm.Solve(armsWarpInfo.leftWarping, leftHandTipTarget.position, lerpTime);
 
+
+                // RIGHT ARM IK
                 armsWarpInfo.rightWarping = interactionZone.isHandInside(rightHandTip.position);
                 rightInside = armsWarpInfo.rightWarping;
-                if (FORCEIK)//armsWarpInfo.rightWarping)
+                if (false)//armsWarpInfo.rightWarping)
                 {
                     //interactionZone.CalcTargetPosition(rightHandTipTarget, rightHandTip);
                     ikRightArm.Solve(true, rightHandTipTarget.position, lerpTime);
@@ -197,11 +194,11 @@ public class BodiesManager : MonoBehaviour
 
                 _saveJointInfo(false);
 
-                if (FORCEWARP)
-                {
-                    armsWarpInfo.leftWarping = true;//remove these
-                    armsWarpInfo.rightWarping = true;
-                }
+                //if (FORCEWARP)
+                //{
+                //    armsWarpInfo.leftWarping = true;//remove these
+                //    armsWarpInfo.rightWarping = true;
+                //}
 
                 armsWarpInfo.Solve();
             }

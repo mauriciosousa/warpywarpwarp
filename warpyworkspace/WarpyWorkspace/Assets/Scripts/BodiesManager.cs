@@ -49,8 +49,6 @@ public class BodiesManager : MonoBehaviour
     public bool FORCEIK = false;
     public bool FORCEWARP = false;
     public bool CALC_TARGET = false;
-    [Range(0, 1)]
-    public float lerpTime = 0.2f;
 
     public TableTriggerInteractionZone interactionZone;
 
@@ -92,6 +90,23 @@ public class BodiesManager : MonoBehaviour
     public Transform leftAnkle;
     public Transform leftFoot;
     public Transform LEGBONE;
+    [Space(5)]
+    public Transform rightIKShoulder;
+    public Transform rightIKElbow;
+    public Transform rightIKWrist;
+    public Transform rightIKHandTip;
+    [Space(5)]
+    public Transform leftIKShoulder;
+    public Transform leftIKElbow;
+    public Transform leftIKWrist;
+    public Transform leftIKHandTip;
+
+    private Vector3 _leftElbowLastPosition      = Vector3.positiveInfinity;
+    private Vector3 _leftWristLastPosition      = Vector3.positiveInfinity;
+    private Vector3 _leftHandTipLastPosition    = Vector3.positiveInfinity;
+    private Vector3 _rightElbowLastPosition     = Vector3.positiveInfinity;
+    private Vector3 _rightWristLastPosition     = Vector3.positiveInfinity;
+    private Vector3 _rightHandTipLastPosition   = Vector3.positiveInfinity;
 
     [Space(5)]
     [Header("Inverse Kinematics Targets:")]
@@ -100,6 +115,17 @@ public class BodiesManager : MonoBehaviour
     [Header("Hands Inside Interaction Area?")]
     public bool leftInside;
     public bool rightInside;
+
+    [Space(5)]
+    [Header("Lerp Fractions to match IK Joints")]
+    [Range(0, 1)]
+    public float targetLerpFrac = 0.2f;
+    [Range(0, 1)]
+    public float elbowLerpFrac = 0.2f;
+    [Range(0, 1)]
+    public float wristLerpFrac = 0.2f;
+    [Range(0, 1)]
+    public float handTipLerpFrac = 0.2f;
 
 
     void Start()
@@ -119,15 +145,6 @@ public class BodiesManager : MonoBehaviour
 
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.P))
-        //{
-        //    _disassembleHierarchy(humanGO);
-        //}
-
-        //if (Input.GetKeyDown(KeyCode.L))
-        //{
-        //    _assembleHumanHierarchy(humanGO);
-        //}
 
         if (_humans.Count > 0)
         {
@@ -176,29 +193,37 @@ public class BodiesManager : MonoBehaviour
                 armsWarpInfo.leftWarping = interactionZone.isHandInside(leftHandTip.position);
                 leftInside = armsWarpInfo.leftWarping;
                 if (CALC_TARGET) interactionZone.CalcTargetPosition(leftHandTipTarget, leftHandTip);
-                if (FORCEIK) ikLeftArm.Solve(armsWarpInfo.leftWarping, leftHandTipTarget.position, lerpTime);
 
+                ikLeftArm.Solve(armsWarpInfo.leftWarping, leftHandTipTarget.position, targetLerpFrac);
+                if (armsWarpInfo.leftWarping && head.localPosition.x != float.NaN)
+                {
+                    _applyLerpToArm(true);
+                }
+                else
+                {
+                    _leftElbowLastPosition = Vector3.positiveInfinity;
+                    _leftWristLastPosition = Vector3.positiveInfinity;
+                    _leftHandTipLastPosition = Vector3.positiveInfinity;
+                }
 
                 // RIGHT ARM IK
                 armsWarpInfo.rightWarping = interactionZone.isHandInside(rightHandTip.position);
                 rightInside = armsWarpInfo.rightWarping;
-                if (false)//armsWarpInfo.rightWarping)
+                if (CALC_TARGET) interactionZone.CalcTargetPosition(rightHandTipTarget, rightHandTip);
+
+                ikRightArm.Solve(armsWarpInfo.rightWarping, rightHandTipTarget.position, targetLerpFrac);
+                if (armsWarpInfo.rightWarping && head.localPosition.x != float.NaN)
                 {
-                    //interactionZone.CalcTargetPosition(rightHandTipTarget, rightHandTip);
-                    ikRightArm.Solve(true, rightHandTipTarget.position, lerpTime);
+                    _applyLerpToArm(false);
                 }
                 else
                 {
-                    ikRightArm.IsActive = false;
+                    _rightElbowLastPosition = Vector3.positiveInfinity;
+                    _rightWristLastPosition = Vector3.positiveInfinity;
+                    _rightHandTipLastPosition = Vector3.positiveInfinity;
                 }
 
                 _saveJointInfo(false);
-
-                //if (FORCEWARP)
-                //{
-                //    armsWarpInfo.leftWarping = true;//remove these
-                //    armsWarpInfo.rightWarping = true;
-                //}
 
                 armsWarpInfo.Solve();
             }
@@ -208,6 +233,81 @@ public class BodiesManager : MonoBehaviour
             }
         }
         _cleanDeadHumans();
+    }
+
+    private void _applyLerpToArm(bool leftArm)
+    {
+        Transform human = head.parent;
+        if (leftArm)
+        {
+            leftElbow.parent = human;
+            leftWrist.parent = human;
+            leftHand.parent = human;
+            leftHandTip.parent = human;
+
+            leftIKElbow.parent = human;
+            leftIKWrist.parent = human;
+            leftIKHandTip.parent = human;
+
+            if (_leftElbowLastPosition == Vector3.positiveInfinity)
+            {
+                _leftElbowLastPosition = leftElbow.localPosition;
+                _leftWristLastPosition = leftWrist.localPosition;
+                _leftHandTipLastPosition = leftHandTip.localPosition;
+            }
+
+            leftElbow.localPosition = Vector3.Lerp(_leftElbowLastPosition, leftIKElbow.localPosition, elbowLerpFrac);
+            leftWrist.localPosition = Vector3.Lerp(_leftWristLastPosition, leftIKWrist.localPosition, wristLerpFrac);
+            leftHandTip.localPosition = Vector3.Lerp(_leftHandTipLastPosition, leftIKHandTip.localPosition, handTipLerpFrac);
+
+            _leftElbowLastPosition = leftElbow.localPosition;
+            _leftWristLastPosition = leftWrist.localPosition;
+            _leftHandTipLastPosition = leftHandTip.localPosition;
+
+            leftHandTip.parent = leftHand;
+            leftHand.parent = leftWrist;
+            leftWrist.parent = leftElbow;
+            leftElbow.parent = leftShoulder;
+
+            leftIKHandTip.parent = leftIKWrist;
+            leftIKWrist.parent = leftIKElbow;
+            leftIKElbow.parent = leftIKShoulder;
+        }
+        else
+        {
+            rightElbow.parent = human;
+            rightWrist.parent = human;
+            rightHand.parent = human;
+            rightHandTip.parent = human;
+
+            rightIKElbow.parent = human;
+            rightIKWrist.parent = human;
+            rightIKHandTip.parent = human;
+
+            if (_rightElbowLastPosition == Vector3.positiveInfinity)
+            {
+                _rightElbowLastPosition = rightElbow.localPosition;
+                _rightWristLastPosition = rightWrist.localPosition;
+                _rightHandTipLastPosition = rightHandTip.localPosition;
+            }
+
+            rightElbow.localPosition = Vector3.Lerp(_rightElbowLastPosition, rightIKElbow.localPosition, elbowLerpFrac);
+            rightWrist.localPosition = Vector3.Lerp(_rightWristLastPosition, rightIKWrist.localPosition, wristLerpFrac);
+            rightHandTip.localPosition = Vector3.Lerp(_rightHandTipLastPosition, rightIKHandTip.localPosition, handTipLerpFrac);
+
+            _rightElbowLastPosition = rightElbow.localPosition;
+            _rightWristLastPosition = rightWrist.localPosition;
+            _rightHandTipLastPosition = rightHandTip.localPosition;
+
+            rightHandTip.parent = rightHand;
+            rightHand.parent = rightWrist;
+            rightWrist.parent = rightElbow;
+            rightElbow.parent = rightShoulder;
+
+            rightIKHandTip.parent = rightIKWrist;
+            rightIKWrist.parent = rightIKElbow;
+            rightIKElbow.parent = rightIKShoulder;
+        }
     }
 
     private void _disassembleHierarchy()
@@ -225,6 +325,19 @@ public class BodiesManager : MonoBehaviour
         leftWrist.parent = human;
         leftHand.parent = human;
         leftHandTip.parent = human;
+
+        if (!local)
+        {
+            rightIKShoulder.parent = human;
+            rightIKElbow.parent = human;
+            rightIKWrist.parent = human;
+            rightIKHandTip.parent = human;
+
+            leftIKShoulder.parent = human;
+            leftIKElbow.parent = human;
+            leftIKWrist.parent = human;
+            leftIKHandTip.parent = human;
+        }
     }
 
     private void _assembleHierarchy()
@@ -238,6 +351,17 @@ public class BodiesManager : MonoBehaviour
         leftHand.parent = leftWrist;
         leftWrist.parent = leftElbow;
         leftElbow.parent = leftShoulder;
+
+        if (!local)
+        {
+            rightIKHandTip.parent = rightIKWrist;
+            rightIKWrist.parent = rightIKElbow;
+            rightIKElbow.parent = rightIKShoulder;
+
+            leftIKHandTip.parent = leftIKWrist;
+            leftIKWrist.parent = leftIKElbow;
+            leftIKElbow.parent = leftIKShoulder;
+        }
     }
 
     public void setNewFrame(Body[] bodies)
@@ -531,6 +655,15 @@ public class BodiesManager : MonoBehaviour
             leftFoot.localPosition = human.body.Joints[BodyJointType.leftFoot];
             leftThumb.localPosition = human.body.Joints[BodyJointType.leftThumb];
 
+            rightIKShoulder.localPosition = rightShoulder.localPosition;
+            rightIKElbow.localPosition = rightElbow.localPosition;
+            rightIKWrist.localPosition = rightWrist.localPosition;
+            rightIKHandTip.localPosition = rightHandTip.localPosition;
+
+            leftIKShoulder.localPosition = leftShoulder.localPosition;
+            leftIKElbow.localPosition = leftElbow.localPosition;
+            leftIKWrist.localPosition = leftWrist.localPosition;
+            leftIKHandTip.localPosition = leftHandTip.localPosition;
         }
     }
 

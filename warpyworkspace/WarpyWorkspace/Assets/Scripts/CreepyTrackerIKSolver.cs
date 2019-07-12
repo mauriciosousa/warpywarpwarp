@@ -142,6 +142,7 @@ public class CreepyTrackerIKSolver : MonoBehaviour
             }
             link--;
         } while (tries++ < MAX_IK_TRIES && (curEnd - target).sqrMagnitude > IK_POS_THRESH);
+        print(tries);
     }
  
 	/// <summary>

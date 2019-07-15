@@ -30,9 +30,9 @@ public class VRHeadController : MonoBehaviour {
 
         if (_bodies.human != null)
         {
-            headPosition.Value = localHumanHead.position;
-            this.transform.position = headPosition.Value;
-            //this.transform.position = localHumanHead.position;
+            //headPosition.Value = localHumanHead.position;
+            //this.transform.position = headPosition.Value;
+            this.transform.position = localHumanHead.position;
         }
         else
         {

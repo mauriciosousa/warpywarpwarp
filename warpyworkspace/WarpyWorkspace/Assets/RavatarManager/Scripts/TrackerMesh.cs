@@ -47,6 +47,7 @@ public class TrackerMesh : MonoBehaviour
 
     private Transform _parent;
 
+    public bool local;
 
     public void Init (int trackerPort, int listenPort, Transform parent)
     {
@@ -124,7 +125,7 @@ public class TrackerMesh : MonoBehaviour
             cloudobj.AddComponent<PointCloudDepth>();
 
             PointCloudMesh cloud = cloudobj.GetComponent<PointCloudMesh>();
-            cloud.Init();
+            cloud.Init(local);
             _clouds.Add(id, cloud);
             _cloudGameObjects.Add(id, cloudobj);
         }
@@ -154,7 +155,7 @@ public class TrackerMesh : MonoBehaviour
             cloudobj.transform.localScale = new Vector3(-1, 1, 1);
             cloudobj.AddComponent<PointCloudMesh>();
             PointCloudMesh cloud = cloudobj.GetComponent<PointCloudMesh>();
-            cloud.Init();
+            cloud.Init(local);
             _clouds.Add(id, cloud);
             _cloudGameObjects.Add(id, cloudobj);
 

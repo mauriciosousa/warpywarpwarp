@@ -244,9 +244,12 @@ public class BodiesManager : MonoBehaviour
             {
                 armsWarpInfo.reset();
             }
-            else
+            
+            if (local)
             {
-                // local, 
+                armsWarpInfo.leftWarping = false;
+                armsWarpInfo.rightWarping = false;
+                armsWarpInfo.removeHead = true;
             }
         }
         _cleanDeadHumans();

@@ -22,15 +22,20 @@ public class PointCloudMesh : MonoBehaviour
     public int medianFilterSize = 2;
     public bool calculateNormals = true;
 
-    public void Init()
+    private bool _local;
+
+    public void Init(bool local)
     {
         _width = 512;
         _height = 424;
         _texScale = 1;
         _objs = null;
 
+        _local = local;
 
-        _mat = Resources.Load("Materials/meshmat") as Material;
+        string matDescription = local ? "Materials/localmat" : "Materials/remotemat";
+
+        _mat = Resources.Load(matDescription) as Material;
 
         _decoder = new RVLDecoder();
         _colorDecoder = new Decompressor();
@@ -258,8 +263,10 @@ public class PointCloudMesh : MonoBehaviour
         _colorTex.Apply();
         _depthTex.Apply();
 
-        BodiesManager b = GameObject.Find("RemoteBodiesManager").GetComponent<BodiesManager>();
+        BodiesManager b = GameObject.Find( _local ? "LocalBodiesManager" : "RemoteBodiesManager").GetComponent<BodiesManager>();
         IKWarpInfo wi = b.armsWarpInfo;
+
+
 
         try
         {
@@ -284,59 +291,62 @@ public class PointCloudMesh : MonoBehaviour
                 mr.material.SetFloat("_HeadSize", wi.headSize);
                 mr.material.SetFloat("_Y_HeadOffset", wi.Y_HeadOffset);
 
-                mr.material.SetInt("_LeftWarping", wi.leftWarping ? 1 : 0);
-                mr.material.SetInt("_RightWarping", wi.rightWarping ? 1 : 0);
-                //mr.material.SetFloat("_UpperArmDistance", wi.UpperArmDistance);
-                //mr.material.SetFloat("_ForearmDistance", wi.ForearmDistance);
-                //mr.material.SetFloat("_HandDistance", wi.HandDistance);
+                if (!_local)
+                {
+                    mr.material.SetInt("_LeftWarping", wi.leftWarping ? 1 : 0);
+                    mr.material.SetInt("_RightWarping", wi.rightWarping ? 1 : 0);
+                    //mr.material.SetFloat("_UpperArmDistance", wi.UpperArmDistance);
+                    //mr.material.SetFloat("_ForearmDistance", wi.ForearmDistance);
+                    //mr.material.SetFloat("_HandDistance", wi.HandDistance);
 
-                mr.material.SetInt("_Debug", wi.debug ? 1 : 0);
+                    mr.material.SetInt("_Debug", wi.debug ? 1 : 0);
 
-                mr.material.SetVector("_LEFT_OriginalShoulder", wi.LEFT_OriginalShoulder);
-                mr.material.SetVector("_LEFT_OriginalElbow", wi.LEFT_OriginalElbow);
-                mr.material.SetVector("_LEFT_OriginalWrist", wi.LEFT_OriginalWrist);
-                mr.material.SetVector("_LEFT_OriginalHandTip", wi.LEFT_OriginalHandTip);
+                    mr.material.SetVector("_LEFT_OriginalShoulder", wi.LEFT_OriginalShoulder);
+                    mr.material.SetVector("_LEFT_OriginalElbow", wi.LEFT_OriginalElbow);
+                    mr.material.SetVector("_LEFT_OriginalWrist", wi.LEFT_OriginalWrist);
+                    mr.material.SetVector("_LEFT_OriginalHandTip", wi.LEFT_OriginalHandTip);
 
-                mr.material.SetVector("_RIGHT_OriginalShoulder", wi.RIGHT_OriginalShoulder);
-                mr.material.SetVector("_RIGHT_OriginalElbow", wi.RIGHT_OriginalElbow);
-                mr.material.SetVector("_RIGHT_OriginalWrist", wi.RIGHT_OriginalWrist);
-                mr.material.SetVector("_RIGHT_OriginalHandTip", wi.RIGHT_OriginalHandTip);
+                    mr.material.SetVector("_RIGHT_OriginalShoulder", wi.RIGHT_OriginalShoulder);
+                    mr.material.SetVector("_RIGHT_OriginalElbow", wi.RIGHT_OriginalElbow);
+                    mr.material.SetVector("_RIGHT_OriginalWrist", wi.RIGHT_OriginalWrist);
+                    mr.material.SetVector("_RIGHT_OriginalHandTip", wi.RIGHT_OriginalHandTip);
 
-                mr.material.SetMatrix("_LEFT_UpperArmMatrix", wi.LEFT_UpperArmMatrix);
-                mr.material.SetMatrix("_LEFT_ForearmMatrix", wi.LEFT_ForearmMatrix);
-                mr.material.SetMatrix("_LEFT_HandMatrix", wi.LEFT_HandMatrix);
+                    mr.material.SetMatrix("_LEFT_UpperArmMatrix", wi.LEFT_UpperArmMatrix);
+                    mr.material.SetMatrix("_LEFT_ForearmMatrix", wi.LEFT_ForearmMatrix);
+                    mr.material.SetMatrix("_LEFT_HandMatrix", wi.LEFT_HandMatrix);
 
-                mr.material.SetMatrix("_RIGHT_UpperArmMatrix", wi.RIGHT_UpperArmMatrix);
-                mr.material.SetMatrix("_RIGHT_ForearmMatrix", wi.RIGHT_ForearmMatrix);
-                mr.material.SetMatrix("_RIGHT_HandMatrix", wi.RIGHT_HandMatrix);
+                    mr.material.SetMatrix("_RIGHT_UpperArmMatrix", wi.RIGHT_UpperArmMatrix);
+                    mr.material.SetMatrix("_RIGHT_ForearmMatrix", wi.RIGHT_ForearmMatrix);
+                    mr.material.SetMatrix("_RIGHT_HandMatrix", wi.RIGHT_HandMatrix);
 
-                //////// BODY
-                mr.material.SetVector("head", b.head.position);
-                mr.material.SetVector("neck", b.head.position);
-                mr.material.SetVector("spineShoulder", b.spineShoulder.position);
-                mr.material.SetVector("spineMid", b.spineMid.position);
-                mr.material.SetVector("spineBase", b.spineBase.position);
-                mr.material.SetVector("leftShoulder", wi.LEFT_OriginalShoulder);
-                mr.material.SetVector("leftElbow", wi.LEFT_OriginalElbow);
-                mr.material.SetVector("leftWrist", wi.LEFT_OriginalWrist);
-                mr.material.SetVector("leftHand",       b.leftHand.position);
-                mr.material.SetVector("leftThumb",      b.leftThumb.position);
-                mr.material.SetVector("leftHandTip",    wi.LEFT_OriginalHandTip);
-                mr.material.SetVector("leftHip",        b.leftHip.position);
-                mr.material.SetVector("leftKnee",       b.leftKnee.position);
-                mr.material.SetVector("leftAnkle",      b.leftAnkle.position);
-                mr.material.SetVector("leftFoot",       b.leftFoot.position);
-                mr.material.SetVector("rightShoulder",  wi.RIGHT_OriginalShoulder);
-                mr.material.SetVector("rightElbow",     wi.RIGHT_OriginalElbow);
-                mr.material.SetVector("rightWrist",     wi.RIGHT_OriginalWrist);
-                mr.material.SetVector("rightHand",      b.rightHand.position);
-                mr.material.SetVector("rightThumb",     b.rightThumb.position);
-                mr.material.SetVector("rightHandTip",   wi.RIGHT_OriginalHandTip);
-                mr.material.SetVector("rightHip",       b.rightHip.position);
-                mr.material.SetVector("rightKnee",      b.rightKnee.position);
-                mr.material.SetVector("rightAnkle",     b.rightAnkle.position);
-                mr.material.SetVector("rightFoot",      b.rightFoot.position);
-                mr.material.SetVector("LEGBONE", b.LEGBONE.position);
+                    //////// BODY
+                    mr.material.SetVector("head", b.head.position);
+                    mr.material.SetVector("neck", b.head.position);
+                    mr.material.SetVector("spineShoulder", b.spineShoulder.position);
+                    mr.material.SetVector("spineMid", b.spineMid.position);
+                    mr.material.SetVector("spineBase", b.spineBase.position);
+                    mr.material.SetVector("leftShoulder", wi.LEFT_OriginalShoulder);
+                    mr.material.SetVector("leftElbow", wi.LEFT_OriginalElbow);
+                    mr.material.SetVector("leftWrist", wi.LEFT_OriginalWrist);
+                    mr.material.SetVector("leftHand", b.leftHand.position);
+                    mr.material.SetVector("leftThumb", b.leftThumb.position);
+                    mr.material.SetVector("leftHandTip", wi.LEFT_OriginalHandTip);
+                    mr.material.SetVector("leftHip", b.leftHip.position);
+                    mr.material.SetVector("leftKnee", b.leftKnee.position);
+                    mr.material.SetVector("leftAnkle", b.leftAnkle.position);
+                    mr.material.SetVector("leftFoot", b.leftFoot.position);
+                    mr.material.SetVector("rightShoulder", wi.RIGHT_OriginalShoulder);
+                    mr.material.SetVector("rightElbow", wi.RIGHT_OriginalElbow);
+                    mr.material.SetVector("rightWrist", wi.RIGHT_OriginalWrist);
+                    mr.material.SetVector("rightHand", b.rightHand.position);
+                    mr.material.SetVector("rightThumb", b.rightThumb.position);
+                    mr.material.SetVector("rightHandTip", wi.RIGHT_OriginalHandTip);
+                    mr.material.SetVector("rightHip", b.rightHip.position);
+                    mr.material.SetVector("rightKnee", b.rightKnee.position);
+                    mr.material.SetVector("rightAnkle", b.rightAnkle.position);
+                    mr.material.SetVector("rightFoot", b.rightFoot.position);
+                    mr.material.SetVector("LEGBONE", b.LEGBONE.position);
+                }
             }
         }
         catch

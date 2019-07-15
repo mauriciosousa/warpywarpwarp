@@ -279,6 +279,11 @@ public class PointCloudMesh : MonoBehaviour
 
                 //mr.material.SetInt("_Warping",  0);
 
+                mr.material.SetInt("_RemoveHead", wi.removeHead ? 1 : 0);
+                mr.material.SetVector("_VRHead", wi.VRHead);
+                mr.material.SetFloat("_HeadSize", wi.headSize);
+                mr.material.SetFloat("_Y_HeadOffset", wi.Y_HeadOffset);
+
                 mr.material.SetInt("_LeftWarping", wi.leftWarping ? 1 : 0);
                 mr.material.SetInt("_RightWarping", wi.rightWarping ? 1 : 0);
                 //mr.material.SetFloat("_UpperArmDistance", wi.UpperArmDistance);

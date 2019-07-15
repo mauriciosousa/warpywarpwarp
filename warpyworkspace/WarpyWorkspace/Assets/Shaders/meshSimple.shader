@@ -58,8 +58,15 @@ Shader "Custom/MeshSimple"
 				float _sigmaS;
 				float _ShaderDistance;
 
-				// VARS PARA DISTORCER OS BRACITOS
 
+				// VARS TO REMOVE HEAD
+
+				int _RemoveHead;
+				float3 _VRHead;
+				float _HeadSize;
+				float _Y_HeadOffset;
+
+				// VARS PARA DISTORCER OS BRACITOS
 
 				int _LeftWarping;
 				int _RightWarping;
@@ -301,10 +308,24 @@ Shader "Custom/MeshSimple"
 					pos.y =  pos.z*(verty-  211.5)/351.001462;
 					pos.w = 1;	
 					
-					// WARPS
+					
 
 					float4 worldPos = mul(unity_ObjectToWorld, pos);
 
+
+					if (_RemoveHead == 1)
+					{
+						_VRHead.y += _Y_HeadOffset;
+						if (distance(worldPos, float4(_VRHead, 1.0f)) < _HeadSize)
+						{	
+							c.a = 0;
+							//c.r = 1; c.g = 0; c.b = 0;
+						}
+					}
+
+
+
+					// WARPS
 					float4 A;
 					float4 B;
 					int i;
@@ -448,6 +469,7 @@ Shader "Custom/MeshSimple"
 					// FIND NEAREST BONE
 
 
+					
 
 					double d = 100000;
 					int bone = -1;

@@ -41,6 +41,11 @@ public class IKWarpInfo {
     public bool leftWarping;
     public bool rightWarping;
 
+    public bool removeHead = false;
+    public float headSize = 0.1f;
+    public Vector3 VRHead;
+    public float Y_HeadOffset = 0.1f;
+
     public bool debug;
 
     public IKWarpInfo()

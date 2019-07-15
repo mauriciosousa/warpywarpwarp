@@ -116,6 +116,8 @@ public class BodiesManager : MonoBehaviour
     public bool leftInside;
     public bool rightInside;
 
+
+
     [Space(5)]
     [Header("Lerp Fractions to match IK Joints")]
     [Range(0, 1)]
@@ -127,6 +129,13 @@ public class BodiesManager : MonoBehaviour
     [Range(0, 1)]
     public float handTipLerpFrac = 0.2f;
 
+    [Space(5)]
+    [Header("Remove Head Settings:")]
+    public bool removeHead = false;
+    [Range(0.01f, 0.2f)]
+    public float Y_HeadOffset = 0.1f;
+    [Range(0.01f, 0.5f)]
+    public float HeadSize = 0.25f;
 
     void Start()
     {
@@ -179,6 +188,10 @@ public class BodiesManager : MonoBehaviour
             _updateHumanJoints(human.body.Joints);
             _assembleHierarchy();
 
+            armsWarpInfo.VRHead = head.position;
+            armsWarpInfo.headSize = HeadSize;
+            armsWarpInfo.removeHead = removeHead;
+            armsWarpInfo.Y_HeadOffset = Y_HeadOffset;
 
             if (!local && doArmWarping)
             {
@@ -197,7 +210,7 @@ public class BodiesManager : MonoBehaviour
                 ikLeftArm.Solve(armsWarpInfo.leftWarping, leftHandTipTarget.position, targetLerpFrac);
                 if (armsWarpInfo.leftWarping && head.localPosition.x != float.NaN)
                 {
-                    _applyLerpToArm(true);
+                    try { _applyLerpToArm(true); } catch { /*lol*/ }
                 }
                 else
                 {
@@ -214,7 +227,7 @@ public class BodiesManager : MonoBehaviour
                 ikRightArm.Solve(armsWarpInfo.rightWarping, rightHandTipTarget.position, targetLerpFrac);
                 if (armsWarpInfo.rightWarping && head.localPosition.x != float.NaN)
                 {
-                    _applyLerpToArm(false);
+                    try { _applyLerpToArm(false); } catch { /*lol*/ }
                 }
                 else
                 {
@@ -230,6 +243,10 @@ public class BodiesManager : MonoBehaviour
             else if (!local && doArmWarping)
             {
                 armsWarpInfo.reset();
+            }
+            else
+            {
+                // local, 
             }
         }
         _cleanDeadHumans();

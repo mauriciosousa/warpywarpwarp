@@ -7,11 +7,13 @@ public class VRHeadController : MonoBehaviour {
     public BodiesManager _bodies;
     public Transform localHumanHead;
 
-    private AdaptiveDoubleExponentialFilterVector3 headPosition;
+    //private AdaptiveDoubleExponentialFilterVector3 headPosition;
+    private KalmanFilterVector3 headPosition;
 
     void Start()
     {
-        headPosition = new AdaptiveDoubleExponentialFilterVector3();
+        //headPosition = new AdaptiveDoubleExponentialFilterVector3();
+        headPosition = new KalmanFilterVector3();
     }
 
     void Update()
@@ -30,9 +32,8 @@ public class VRHeadController : MonoBehaviour {
 
         if (_bodies.human != null)
         {
-            //headPosition.Value = localHumanHead.position;
-            //this.transform.position = headPosition.Value;
-            this.transform.position = localHumanHead.position;
+            headPosition.Value = localHumanHead.position;
+            this.transform.position = headPosition.Value;
         }
         else
         {

@@ -170,6 +170,14 @@ public class EvaluationProceadure : MonoBehaviour {
         }
 	}
 
+    [Space(5)]
+    [Header("Local and Remote Joints for logging:")]
+    public Transform localHuman_leftHandTip;
+    public Transform localHuman_rightHandTip;
+    public Transform localHuman_spineBase;
+    public Transform remoteHuman_leftHandTip;
+    public Transform remoteHuman_rightHandTip;
+    public Transform remoteHuman_spineBase;
     public float angle = 0f;
     void FixedUpdate()
     {
@@ -185,7 +193,7 @@ public class EvaluationProceadure : MonoBehaviour {
 
                 if (_evalDataFile != null)
                 {
-                    _evalDataFile.writeLine(proxemics.distance, proxemics.distanceClassification, proxemics.isFocusedOnWorkspace);
+                    _evalDataFile.writeLine(proxemics.distance, proxemics.distanceClassification, localHuman_leftHandTip.position, localHuman_rightHandTip.position, localHuman_spineBase.position, remoteHuman_leftHandTip.position, remoteHuman_rightHandTip.position, remoteHuman_spineBase.position);
                 }
             }
 
@@ -301,7 +309,7 @@ public class EvaluationProceadure : MonoBehaviour {
             pc_inside = 0;
             pc_whole = 0;
 
-            _evalDataFile = new EvaluationData(_resultsFolder + Path.DirectorySeparatorChar + "Task_" + T + ".txt");
+            _evalDataFile = new EvaluationData(_resultsFolder + Path.DirectorySeparatorChar + "Task_" + T + "_" + _formation + ".txt");
         }
 
         _angleData = new WorkspaceAngleData(_resultsFolder + Path.DirectorySeparatorChar + "Angle_T" + T + "_participant_" + (_location == SetupLocation.LEFT ? _leftID : _rightID) + "-" + role + "-" + _formation + ".txt");
@@ -331,7 +339,10 @@ public class EvaluationProceadure : MonoBehaviour {
             if (float.IsNaN(insidePercentage)) insidePercentage = 0;
             print(" percentage inside: " + insidePercentage);
 
-            _resultsFile.writeLine(_leftID, _rightID, _getRole(_location), (T-1), _test, _getQuadrant(_instructorBall.localPosition), errorDistance, insidePercentage, _formation);
+            //_resultsFile.writeLine(_leftID, _rightID, _getRole(_location), (T-1), _test, _getQuadrant(_instructorBall.localPosition), errorDistance, insidePercentage, _formation, workspace.transform.position);
+
+            _resultsFile.writeLine(_leftID, _rightID, _getRole(_location), (T - 1), _test, _getQuadrant(_instructorBall.localPosition), timeSpan, errorDistance, insidePercentage, _formation, workspace.transform.position);
+
             _evalDataFile.flush();
             _evalDataFile = null;
         }
@@ -438,9 +449,15 @@ public class MainResultsFile
         header += "task" + _sep;//
         header += "test" + _sep;//)
         header += "ballQuadrant" + _sep;
+        header += "timespan" + _sep;
         header += "errorDistance" + _sep;
         header += "%inside" + _sep;
         header += "condition" + _sep;
+
+        header += "workspacePosition_X" + _sep;
+        header += "workspacePosition_Y" + _sep;
+        header += "workspacePosition_Z" + _sep;
+
 
         _lines = new List<string>();
         //_writeLine(header);
@@ -453,7 +470,7 @@ public class MainResultsFile
         File.AppendAllText(_file, line + Environment.NewLine);
     }
 
-    public void writeLine(int leftID, int rightID, Role leftRole, int task, Test test, BallQuadrant quadrant, float errorDistance, float percentage, Formation condition)
+    public void writeLine(int leftID, int rightID, Role leftRole, int task, Test test, BallQuadrant quadrant, TimeSpan timespan, float errorDistance, float percentage, Formation condition, Vector3 workspacePosition)
     {
         string line = "";
 
@@ -464,9 +481,13 @@ public class MainResultsFile
         line += task + _sep;
         line += test + _sep;
         line += quadrant.ToString() + _sep;
+        line += timespan.TotalMilliseconds.ToString() + _sep;
         line += errorDistance + _sep;
         line += percentage + _sep;
         line += condition.ToString() + _sep;
+        line += workspacePosition.x + _sep;
+        line += workspacePosition.y + _sep;
+        line += workspacePosition.z + _sep;
 
         _lines.Add(line);
         //_writeLine(line);
@@ -493,7 +514,26 @@ public class EvaluationData
         header += "Timestamp" + _sep;
         header += "Distance" + _sep;
         header += "ProxemicClassification" + _sep;
-        header += "FocusOnWorkspace" + _sep;
+
+        header += "LEFTHUMAN_LHandTip_X" + _sep;
+        header += "LEFTHUMAN_LHandTip_Y" + _sep;
+        header += "LEFTHUMAN_LHandTip_Z" + _sep;
+        header += "LEFTHUMAN_RHandTip_X" + _sep;
+        header += "LEFTHUMAN_RHandTip_Y" + _sep;
+        header += "LEFTHUMAN_RHandTip_Z" + _sep;
+        header += "LEFTHUMAN_SPINEBASE_X" + _sep;
+        header += "LEFTHUMAN_SPINEBASE_Y" + _sep;
+        header += "LEFTHUMAN_SPINEBASE_Z" + _sep;
+
+        header += "RIGHTHUMAN_LHandTip_X" + _sep;
+        header += "RIGHTHUMAN_LHandTip_Y" + _sep;
+        header += "RIGHTHUMAN_LHandTip_Z" + _sep;
+        header += "RIGHTHUMAN_RHandTip_X" + _sep;
+        header += "RIGHTHUMAN_RHandTip_Y" + _sep;
+        header += "RIGHTHUMAN_RHandTip_Z" + _sep;
+        header += "RIGHTHUMAN_SPINEBASE_X" + _sep;
+        header += "RIGHTHUMAN_SPINEBASE_Y" + _sep;
+        header += "RIGHTHUMAN_SPINEBASE_Z" + _sep;
 
         _lines = new List<string>();
         _lines.Add(header);
@@ -506,14 +546,38 @@ public class EvaluationData
         File.AppendAllText(_file, line + Environment.NewLine);
     }
 
-    public void writeLine(float distance, ProxemicDistances proxemicClassification, bool focusOnWorkspace)
+    public void writeLine(float distance, ProxemicDistances proxemicClassification, Vector3 localHuman_leftHandTip, Vector3 localHuman_rightHandTip, Vector3 localHuman_spineBase, Vector3 remoteHuman_leftHandTip, Vector3 remoteHuman_rightHandTip, Vector3 remoteHuman_spineBase)
     {
         string line = "";
 
         line += DateTime.Now.ToString("yyyy/MM/dd-HH:mm:ss") + _sep;
         line += distance + _sep;
         line += proxemicClassification.ToString() + _sep;
-        line += focusOnWorkspace + _sep;
+
+
+        line += localHuman_leftHandTip.x + _sep;
+        line += localHuman_leftHandTip.y + _sep;
+        line += localHuman_leftHandTip.z + _sep;
+
+        line += localHuman_rightHandTip.x + _sep;
+        line += localHuman_rightHandTip.y + _sep;
+        line += localHuman_rightHandTip.z + _sep;
+
+        line += localHuman_spineBase.x + _sep;
+        line += localHuman_spineBase.y + _sep;
+        line += localHuman_spineBase.z + _sep;
+
+        line += remoteHuman_leftHandTip.x + _sep;
+        line += remoteHuman_leftHandTip.y + _sep;
+        line += remoteHuman_leftHandTip.z + _sep;
+
+        line += remoteHuman_rightHandTip.x + _sep;
+        line += remoteHuman_rightHandTip.y + _sep;
+        line += remoteHuman_rightHandTip.z + _sep;
+
+        line += remoteHuman_spineBase.x + _sep;
+        line += remoteHuman_spineBase.y + _sep;
+        line += remoteHuman_spineBase.z + _sep;
 
         _lines.Add(line);
         //_writeLine(line);

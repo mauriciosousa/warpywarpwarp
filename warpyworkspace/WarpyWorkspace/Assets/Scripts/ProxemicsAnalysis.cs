@@ -25,12 +25,9 @@ public class ProxemicsAnalysis : MonoBehaviour {
 
     public Transform VRHead;
 
-    public bool isFocusedOnWorkspace;
-
     public List<Collider> colliders;
 
     void Start () {
-        isFocusedOnWorkspace = false;
 	}
 	
 	
@@ -46,18 +43,5 @@ public class ProxemicsAnalysis : MonoBehaviour {
         else if (distance > 0.46f && distance <= 1.2f) distanceClassification = ProxemicDistances.Personal;
         else if (distance > 1.2f && distance <= 3.7) distanceClassification = ProxemicDistances.Social;
         else distanceClassification = ProxemicDistances.Public;
-
-        //Debug.DrawRay(VRHead.position, Camera.main.transform.forward, Color.red);
-        //RaycastHit hit;
-
-        //isFocusedOnWorkspace = false;
-        //for (int i = 0; i < colliders.Count; i++)
-        //{
-        //    if (colliders[i].Raycast(new Ray(VRHead.position, Camera.main.transform.forward), out hit, float.PositiveInfinity))
-        //    {
-        //        isFocusedOnWorkspace = true;
-        //        break;
-        //    }
-        //}
     }
 }

@@ -49,6 +49,7 @@ public class BodiesManager : MonoBehaviour
     public bool FORCEIK = false;
     public bool FORCEWARP = false;
     public bool CALC_TARGET = false;
+    public EvaluationProceadure evaluation;
 
     public TableTriggerInteractionZone interactionZone;
 
@@ -193,7 +194,7 @@ public class BodiesManager : MonoBehaviour
             armsWarpInfo.removeHead = removeHead;
             armsWarpInfo.Y_HeadOffset = Y_HeadOffset;
 
-            if (!local && doArmWarping)
+            if (!local && doArmWarping)// && evaluation.evalState == EvalState.SESSION)
             {
 
                 LEGBONE.position = spineBase.position + (-transform.up);

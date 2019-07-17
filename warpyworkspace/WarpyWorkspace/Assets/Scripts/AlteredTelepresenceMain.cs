@@ -74,6 +74,8 @@ public class AlteredTelepresenceMain : MonoBehaviour
     public EvaluationProceadure evaluationProceadure;
     public AlteredTelepresenceNetwork alteredTelepresenceNetwork;
 
+    public Transform WALLS;
+
     void Start()
     {
         Application.runInBackground = true;
@@ -170,6 +172,9 @@ public class AlteredTelepresenceMain : MonoBehaviour
             _configureWorkspace();
             alteredTelepresenceNetwork.Init();
             evaluationProceadure.Init(setupLocation, formation, _leftID, _rightID, _test);
+
+            WALLS.parent.gameObject.SetActive(true);
+            WALLS.position = localWorkspaceOrigin.position;
             _everythingIsConfigured = true;
         }
 
@@ -400,6 +405,8 @@ public class AlteredTelepresenceMain : MonoBehaviour
             // mirror remote
             //remoteWorkspaceOrigin.transform.localScale = new Vector3(-1f, 1f, 1f);
         }
+
+
 
 
     }

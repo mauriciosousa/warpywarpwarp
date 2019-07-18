@@ -1,5 +1,6 @@
 last.run=2019-06-19-17:05:53
 setup.type=LEFT
+//start.formation=SIDE_TO_SIDE
 start.formation=FACE_TO_FACE
 left.id=1
 right.id=2

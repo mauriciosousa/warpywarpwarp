@@ -44,11 +44,10 @@ public class BodiesManager : MonoBehaviour
 
     [Space(20)]
     [Header("Body Warping Settings:")]
+    public bool DISABLEWARP = false;
+    public bool DISABLE_CALC_TARGET = false;
     public bool doArmWarping;
     public bool DebugBonesPC = false;
-    public bool FORCEIK = false;
-    public bool FORCEWARP = false;
-    public bool CALC_TARGET = false;
     public EvaluationProceadure evaluation;
 
     public TableTriggerInteractionZone interactionZone;
@@ -102,12 +101,12 @@ public class BodiesManager : MonoBehaviour
     public Transform leftIKWrist;
     public Transform leftIKHandTip;
 
-    private Vector3 _leftElbowLastPosition      = Vector3.positiveInfinity;
-    private Vector3 _leftWristLastPosition      = Vector3.positiveInfinity;
-    private Vector3 _leftHandTipLastPosition    = Vector3.positiveInfinity;
-    private Vector3 _rightElbowLastPosition     = Vector3.positiveInfinity;
-    private Vector3 _rightWristLastPosition     = Vector3.positiveInfinity;
-    private Vector3 _rightHandTipLastPosition   = Vector3.positiveInfinity;
+    private Vector3 _leftElbowLastPosition      = Vector3.zero;
+    private Vector3 _leftWristLastPosition      = Vector3.zero;
+    private Vector3 _leftHandTipLastPosition    = Vector3.zero;
+    private Vector3 _rightElbowLastPosition     = Vector3.zero;
+    private Vector3 _rightWristLastPosition     = Vector3.zero;
+    private Vector3 _rightHandTipLastPosition   = Vector3.zero;
 
     [Space(5)]
     [Header("Inverse Kinematics Targets:")]
@@ -158,26 +157,66 @@ public class BodiesManager : MonoBehaviour
 
         if (_humans.Count > 0)
         {
-            if (human != null && _humanLocked && _humans.ContainsKey(human.id))
+            //if (human != null && _humanLocked && _humans.ContainsKey(human.id))
+            //{
+            //    human = _humans[human.id];
+            //}
+            //else
+            //{
+            //    _humanLocked = false;
+            //    Human newHuman = null;
+            //    foreach (Human h in _humans.Values)
+            //    {
+            //        if (newHuman == null)
+            //        {
+            //            newHuman = h;
+            //        }
+            //        else
+            //        {
+            //            if (CenterObject.gameObject != null && Vector3.Distance(h.body.Joints[BodyJointType.head], CenterObject.position) < Vector3.Distance(newHuman.body.Joints[BodyJointType.head], CenterObject.position))
+            //            {
+            //                newHuman = h;
+            //            }
+            //        }
+            //    }
+            //    human = newHuman;
+            //}
+
+
+            if (human != null && _humans.ContainsKey(human.id))
             {
                 human = _humans[human.id];
             }
             else
             {
-                _humanLocked = false;
+                //Human newHuman = null;
+                //foreach (Human h in _humans.Values)
+                //{
+                //    if (newHuman == null)
+                //    {
+                //        newHuman = h;
+                //    }
+                //    else
+                //    {
+                //        if (CenterObject.gameObject != null && Vector3.Distance(h.body.Joints[BodyJointType.head], CenterObject.position) < Vector3.Distance(newHuman.body.Joints[BodyJointType.head], CenterObject.position))
+                //        {
+                //            newHuman = h;
+                //        }
+                //    }
+                //}
+                //human = newHuman;
+
                 Human newHuman = null;
+
+                float distance = float.PositiveInfinity;
                 foreach (Human h in _humans.Values)
                 {
-                    if (newHuman == null)
+                    float d = Vector3.Distance(h.body.Joints[BodyJointType.head], CenterObject.position);
+
+                    if (newHuman == null || d < distance)
                     {
                         newHuman = h;
-                    }
-                    else
-                    {
-                        if (CenterObject.gameObject != null && Vector3.Distance(h.body.Joints[BodyJointType.head], CenterObject.position) < Vector3.Distance(newHuman.body.Joints[BodyJointType.head], CenterObject.position))
-                        {
-                            newHuman = h;
-                        }
+                        distance = d;
                     }
                 }
                 human = newHuman;
@@ -193,8 +232,8 @@ public class BodiesManager : MonoBehaviour
             armsWarpInfo.headSize = HeadSize;
             armsWarpInfo.removeHead = removeHead;
             armsWarpInfo.Y_HeadOffset = Y_HeadOffset;
-
-            if (!local && doArmWarping)// && evaluation.evalState == EvalState.SESSION)
+            
+            if (!local && !DISABLEWARP && doArmWarping)// && evaluation.evalState == EvalState.SESSION)
             {
 
                 LEGBONE.position = spineBase.position + (-transform.up);
@@ -206,35 +245,35 @@ public class BodiesManager : MonoBehaviour
                 // LEFT ARM IK
                 armsWarpInfo.leftWarping = interactionZone.isHandInside(leftHandTip.position);
                 leftInside = armsWarpInfo.leftWarping;
-                if (CALC_TARGET) interactionZone.CalcTargetPosition(leftHandTipTarget, leftHandTip);
+                if (!DISABLE_CALC_TARGET && leftInside) interactionZone.CalcTargetPosition(leftHandTipTarget, leftHandTip);
 
                 ikLeftArm.Solve(armsWarpInfo.leftWarping, leftHandTipTarget.position, targetLerpFrac);
-                if (armsWarpInfo.leftWarping && head.localPosition.x != float.NaN)
+                if (armsWarpInfo.leftWarping && leftHandTip.localPosition.x != float.NaN)
                 {
                     try { _applyLerpToArm(true); } catch { /*lol*/ }
                 }
                 else
                 {
-                    _leftElbowLastPosition = Vector3.positiveInfinity;
-                    _leftWristLastPosition = Vector3.positiveInfinity;
-                    _leftHandTipLastPosition = Vector3.positiveInfinity;
+                    _leftElbowLastPosition = Vector3.zero;
+                    _leftWristLastPosition = Vector3.zero;
+                    _leftHandTipLastPosition = Vector3.zero;
                 }
 
                 // RIGHT ARM IK
                 armsWarpInfo.rightWarping = interactionZone.isHandInside(rightHandTip.position);
                 rightInside = armsWarpInfo.rightWarping;
-                if (CALC_TARGET) interactionZone.CalcTargetPosition(rightHandTipTarget, rightHandTip);
+                if (!DISABLE_CALC_TARGET && rightInside) interactionZone.CalcTargetPosition(rightHandTipTarget, rightHandTip);
 
                 ikRightArm.Solve(armsWarpInfo.rightWarping, rightHandTipTarget.position, targetLerpFrac);
-                if (armsWarpInfo.rightWarping && head.localPosition.x != float.NaN)
+                if (armsWarpInfo.rightWarping && rightHandTip.localPosition.x != float.NaN)
                 {
                     try { _applyLerpToArm(false); } catch { /*lol*/ }
                 }
                 else
                 {
-                    _rightElbowLastPosition = Vector3.positiveInfinity;
-                    _rightWristLastPosition = Vector3.positiveInfinity;
-                    _rightHandTipLastPosition = Vector3.positiveInfinity;
+                    _rightElbowLastPosition = Vector3.zero;
+                    _rightWristLastPosition = Vector3.zero;
+                    _rightHandTipLastPosition = Vector3.zero;
                 }
 
                 _saveJointInfo(false);
@@ -270,7 +309,7 @@ public class BodiesManager : MonoBehaviour
             leftIKWrist.parent = human;
             leftIKHandTip.parent = human;
 
-            if (_leftElbowLastPosition == Vector3.positiveInfinity)
+            if (_leftElbowLastPosition == Vector3.zero)
             {
                 _leftElbowLastPosition = leftElbow.localPosition;
                 _leftWristLastPosition = leftWrist.localPosition;
@@ -305,7 +344,7 @@ public class BodiesManager : MonoBehaviour
             rightIKWrist.parent = human;
             rightIKHandTip.parent = human;
 
-            if (_rightElbowLastPosition == Vector3.positiveInfinity)
+            if (_rightElbowLastPosition == Vector3.zero)
             {
                 _rightElbowLastPosition = rightElbow.localPosition;
                 _rightWristLastPosition = rightWrist.localPosition;

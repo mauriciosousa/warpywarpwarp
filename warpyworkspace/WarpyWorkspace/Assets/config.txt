@@ -13,7 +13,7 @@ eyes.localPosition=-0.04087834:-0.1511804:-0.07863502
 eyes.localRotation=0:0:0:1
 
 __SETUP ON THE LEFT__
-left.setup.address=192.168.0.102
+left.setup.address=192.168.0.108
 left.tracker.listen.port=5001
 left.tracker.broadcast.port=5002
 left.tracker.surface.request.port=5001
@@ -31,7 +31,7 @@ left.eyes.localPosition=0:0:0
 left.eyes.localRotation=0:0:0:0
 
 __SETUP ON THE RIGHT__
-right.setup.address=192.168.0.110
+right.setup.address=192.168.0.106
 right.tracker.listen.port=5101
 right.tracker.broadcast.port=5102
 right.tracker.surface.request.port=5101

@@ -8775,6 +8775,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bodies: {fileID: 1429241492}
   localHumanHead: {fileID: 1569033539}
+  filter: 2
+  freq: 10
+  mincutoff: 1
+  beta: 0.001
+  dcutoff: 1
 --- !u!1 &1308145430
 GameObject:
   m_ObjectHideFlags: 0
@@ -12802,7 +12807,7 @@ Light:
   serializedVersion: 8
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 5
+  m_Intensity: 10
   m_Range: 10
   m_SpotAngle: 79.08225
   m_CookieSize: 10

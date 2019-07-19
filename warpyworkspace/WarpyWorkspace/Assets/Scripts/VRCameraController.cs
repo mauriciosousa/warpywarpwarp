@@ -14,8 +14,9 @@ public class VRCameraController : MonoBehaviour {
     void LateUpdate()
     {
 
-        this.transform.localPosition = -childGO.transform.localPosition + (main.setupLocation == SetupLocation.LEFT ? threshold : - threshold);
-        
+        //this.transform.localPosition = -childGO.transform.localPosition + (main.setupLocation == SetupLocation.LEFT ? threshold : - threshold);
+        this.transform.localPosition = -childGO.transform.localPosition + threshold;
+
         /*new Vector3((-UnityEngine.XR.InputTracking.GetLocalPosition(UnityEngine.XR.XRNode.CenterEye).x),
                  (-UnityEngine.XR.InputTracking.GetLocalPosition(UnityEngine.XR.XRNode.CenterEye).y),
                  (-UnityEngine.XR.InputTracking.GetLocalPosition(UnityEngine.XR.XRNode.CenterEye).z));*/

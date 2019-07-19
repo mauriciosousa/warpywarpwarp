@@ -652,9 +652,12 @@ public class BodiesManager : MonoBehaviour
         if (human != null)
         {
             UnityEngine.XR.InputTracking.Recenter();
+
+//            transform.rotation = Quaternion.Inverse(UnityEngine.XR.InputTracking.GetLocalRotation(UnityEngine.XR.XRNode.CenterEye));
+
             if (location == SetupLocation.RIGHT)
             {
-                headPivot.transform.forward = -headPivot.transform.forward;
+                headPivot.transform.parent.forward = -headPivot.transform.parent.forward;
             }
 
 

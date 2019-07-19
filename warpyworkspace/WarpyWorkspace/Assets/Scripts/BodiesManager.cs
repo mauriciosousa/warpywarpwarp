@@ -68,16 +68,24 @@ public class BodiesManager : MonoBehaviour
     [Space(5)]
     public Transform rightShoulder;
     public Transform rightElbow;
+    private OneEuroFilter<Vector3> _rightElbowFilter;
     public Transform rightWrist;
+    private OneEuroFilter<Vector3> _rightWristFilter;
     public Transform rightHand;
+    private OneEuroFilter<Vector3> _rightHandFilter;
     public Transform rightHandTip;
+    private OneEuroFilter<Vector3> _rightHandTipFilter;
     public Transform rightThumb;
     [Space(5)]
     public Transform leftShoulder;
     public Transform leftElbow;
+    private OneEuroFilter<Vector3> _leftElbowFilter;
     public Transform leftWrist;
+    private OneEuroFilter<Vector3> _leftWristFilter;
     public Transform leftHand;
+    private OneEuroFilter<Vector3> _leftHandFilter;
     public Transform leftHandTip;
+    private OneEuroFilter<Vector3> _leftHandTipFilter;
     public Transform leftThumb;
     [Space(5)]
     public Transform rightHip;
@@ -137,19 +145,30 @@ public class BodiesManager : MonoBehaviour
     [Range(0.01f, 0.5f)]
     public float HeadSize = 0.25f;
 
+    [Space(5)]
+    [Header("OneEuroFilter Params:")]
+    public bool filterActive = false;
+    public float freq = 1.0f;
+    public float mincutoff = 1.0f;
+    public float beta = 0.001f;
+    public float dcutoff = 1.0f;
+
     void Start()
     {
         _humans = new Dictionary<string, Human>();
-        //_listOfChildren = new List<Transform>();
-        //_bodyTrans = new Dictionary<BodyJointType, Transform>();
-        //_populateBodyTrans(humanGO);
-        //_disassembleHierarchy(humanGO);
-        //_associateHumanToJoints();
 
         _assembleHierarchy();
-        //ikLeftArm.IsActive = doArmWarping;
-        //ikRightArm.IsActive = doArmWarping;
+
         armsWarpInfo = new IKWarpInfo();
+
+        _rightElbowFilter = new OneEuroFilter<Vector3>(freq, mincutoff, beta, dcutoff);
+        _rightWristFilter = new OneEuroFilter<Vector3>(freq, mincutoff, beta, dcutoff);
+        _rightHandFilter = new OneEuroFilter<Vector3>(freq, mincutoff, beta, dcutoff);
+        _rightHandTipFilter = new OneEuroFilter<Vector3>(freq, mincutoff, beta, dcutoff);
+        _leftElbowFilter = new OneEuroFilter<Vector3>(freq, mincutoff, beta, dcutoff);
+        _leftWristFilter = new OneEuroFilter<Vector3>(freq, mincutoff, beta, dcutoff);
+        _leftHandFilter = new OneEuroFilter<Vector3>(freq, mincutoff, beta, dcutoff);
+        _leftHandTipFilter = new OneEuroFilter<Vector3>(freq, mincutoff, beta, dcutoff);
     }
 
     void Update()
@@ -157,6 +176,8 @@ public class BodiesManager : MonoBehaviour
 
         if (_humans.Count > 0)
         {
+            _updateFilterParams();
+
             //if (human != null && _humanLocked && _humans.ContainsKey(human.id))
             //{
             //    human = _humans[human.id];
@@ -293,6 +314,18 @@ public class BodiesManager : MonoBehaviour
             }
         }
         _cleanDeadHumans();
+    }
+
+    private void _updateFilterParams()
+    {
+        _rightElbowFilter.UpdateParams(freq, mincutoff, beta, dcutoff);
+        _rightWristFilter.UpdateParams(freq, mincutoff, beta, dcutoff);
+        _rightHandFilter.UpdateParams(freq, mincutoff, beta, dcutoff);
+        _rightHandTipFilter.UpdateParams(freq, mincutoff, beta, dcutoff);
+        _leftElbowFilter.UpdateParams(freq, mincutoff, beta, dcutoff);
+        _leftWristFilter.UpdateParams(freq, mincutoff, beta, dcutoff);
+        _leftHandFilter.UpdateParams(freq, mincutoff, beta, dcutoff);
+        _leftHandTipFilter.UpdateParams(freq, mincutoff, beta, dcutoff);
     }
 
     private void _applyLerpToArm(bool leftArm)
@@ -686,16 +719,16 @@ public class BodiesManager : MonoBehaviour
         head.localPosition = human.body.Joints[BodyJointType.head];
 
         rightShoulder.localPosition =   human.body.Joints[BodyJointType.rightShoulder];
-        rightElbow.localPosition =      human.body.Joints[BodyJointType.rightElbow];
-        rightWrist.localPosition =      human.body.Joints[BodyJointType.rightWrist];
-        rightHand.localPosition =       human.body.Joints[BodyJointType.rightHand];
-        rightHandTip.localPosition =    human.body.Joints[BodyJointType.rightHandTip];
+        rightElbow.localPosition =      filterActive ? _rightElbowFilter.Filter(human.body.Joints[BodyJointType.rightElbow]) : human.body.Joints[BodyJointType.rightElbow];
+        rightWrist.localPosition =      filterActive ? _rightWristFilter.Filter(human.body.Joints[BodyJointType.rightWrist]) : human.body.Joints[BodyJointType.rightWrist];
+        rightHand.localPosition =       filterActive ? _rightHandFilter.Filter(human.body.Joints[BodyJointType.rightHand]) : human.body.Joints[BodyJointType.rightHand];
+        rightHandTip.localPosition =    filterActive ? _rightHandTipFilter.Filter(human.body.Joints[BodyJointType.rightHandTip]) : human.body.Joints[BodyJointType.rightHandTip];
 
-        leftShoulder.localPosition =    human.body.Joints[BodyJointType.leftShoulder];
-        leftElbow.localPosition =       human.body.Joints[BodyJointType.leftElbow];
-        leftWrist.localPosition =       human.body.Joints[BodyJointType.leftWrist];
-        leftHand.localPosition =        human.body.Joints[BodyJointType.leftHand];
-        leftHandTip.localPosition =     human.body.Joints[BodyJointType.leftHandTip];
+        leftShoulder.localPosition = human.body.Joints[BodyJointType.leftShoulder];
+        leftElbow.localPosition = filterActive ? _leftElbowFilter.Filter(human.body.Joints[BodyJointType.leftElbow]) : human.body.Joints[BodyJointType.leftElbow];
+        leftWrist.localPosition = filterActive ? _leftWristFilter.Filter(human.body.Joints[BodyJointType.leftWrist]) : human.body.Joints[BodyJointType.leftWrist];
+        leftHand.localPosition = filterActive ? _leftHandFilter.Filter(human.body.Joints[BodyJointType.leftHand]) : human.body.Joints[BodyJointType.leftHand];
+        leftHandTip.localPosition = filterActive ? _leftHandTipFilter.Filter(human.body.Joints[BodyJointType.leftHandTip]) : human.body.Joints[BodyJointType.leftHandTip];
 
         if (!local)
         {

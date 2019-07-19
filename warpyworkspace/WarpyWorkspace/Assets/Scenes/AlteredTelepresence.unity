@@ -975,6 +975,11 @@ MonoBehaviour:
   removeHead: 0
   Y_HeadOffset: 0.11
   HeadSize: 0.25
+  filterActive: 1
+  freq: 1
+  mincutoff: 0.001
+  beta: 20
+  dcutoff: 1
   headPivot: {fileID: 0}
 --- !u!4 &87961181
 Transform:
@@ -1365,7 +1370,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &138159392
 Transform:
   m_ObjectHideFlags: 0
@@ -8170,7 +8175,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1208182464}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -9854,6 +9859,11 @@ MonoBehaviour:
   removeHead: 1
   Y_HeadOffset: 0.11
   HeadSize: 0.3
+  filterActive: 1
+  freq: 1
+  mincutoff: 0.001
+  beta: 20
+  dcutoff: 1
   headPivot: {fileID: 2083511713}
 --- !u!114 &1429241493
 MonoBehaviour:
@@ -13486,7 +13496,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2091990145}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1

@@ -23,7 +23,7 @@ public class VRHeadController : MonoBehaviour {
     private OneEuroFilter<Vector3> headPosition_1EURO;
 
     [Space(5)]
-    [Header("OneEuroFilter Frequency:")]
+    [Header("OneEuroFilter Params:")]
     public float freq = 100.0f;
     public float mincutoff = 1.0f;
     public float beta = 0.001f;

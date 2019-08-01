@@ -293,11 +293,10 @@ public class PointCloudMesh : MonoBehaviour
 
                 if (!_local)
                 {
-                    mr.material.SetInt("_LeftWarping", wi.leftWarping ? 1 : 0);
-                    mr.material.SetInt("_RightWarping", wi.rightWarping ? 1 : 0);
-                    //mr.material.SetFloat("_UpperArmDistance", wi.UpperArmDistance);
-                    //mr.material.SetFloat("_ForearmDistance", wi.ForearmDistance);
-                    //mr.material.SetFloat("_HandDistance", wi.HandDistance);
+                    //mr.material.SetInt("_LeftWarping", wi.leftWarping ? 1 : 0);
+                    //mr.material.SetInt("_RightWarping", wi.rightWarping ? 1 : 0);
+                    mr.material.SetInt("_LeftWarping", 1);
+                    mr.material.SetInt("_RightWarping", 1);
 
                     mr.material.SetInt("_Debug", wi.debug ? 1 : 0);
 

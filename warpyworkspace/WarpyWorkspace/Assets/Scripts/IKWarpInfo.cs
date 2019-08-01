@@ -6,6 +6,13 @@ using UnityEngine;
 
 public class IKWarpInfo {
 
+    public Transform LeftElbow;
+    public Transform LeftWrist;
+    public Transform LeftHandTip;
+    public Transform RightElbow;
+    public Transform RightWrist;
+    public Transform RightHandTip;
+
     public Vector3 LEFT_OriginalShoulder;
     public Vector3 LEFT_OriginalElbow;
     public Vector3 LEFT_OriginalWrist;
@@ -60,11 +67,11 @@ public class IKWarpInfo {
 
     public void Solve()
     {
-        if (!leftWarping && !rightWarping)
+        /*if (!leftWarping && !rightWarping)
         {
             _reset();
             return;
-        }
+        }*/
 
         Vector3 shoulder;
         Vector3 elbow;
@@ -109,6 +116,36 @@ public class IKWarpInfo {
             // Wrist -> HandTip
             LEFT_HandMatrix = _calcM(wrist, oldVector_hand, newVector_hand);
         }
+        else
+        {
+            // LEFT ARM
+            shoulder = LEFT_OriginalShoulder;
+            elbow = LEFT_OriginalElbow;
+            wrist = LEFT_OriginalWrist;
+            handTip = LEFT_OriginalHandTip;
+
+            oldVector_upper = LEFT_OriginalElbow - LEFT_OriginalShoulder;
+            newVector_upper = LeftElbow.position - LEFT_OriginalShoulder;
+            // Shoulder -> Elbow
+            LEFT_UpperArmMatrix = _calcM(shoulder, oldVector_upper, newVector_upper);
+
+            elbow = LEFT_UpperArmMatrix.MultiplyPoint(elbow);
+            wrist = LEFT_UpperArmMatrix.MultiplyPoint(wrist);
+            oldVector_forearm = wrist - elbow;
+            newVector_forearm = LeftWrist.position - LeftElbow.position;
+            // Elbow -> Wrist
+
+            LEFT_ForearmMatrix = _calcM(elbow, oldVector_forearm, newVector_forearm);
+
+            wrist = LEFT_ForearmMatrix.MultiplyPoint(wrist);
+            handTip = LEFT_UpperArmMatrix.MultiplyPoint(handTip);
+            handTip = LEFT_ForearmMatrix.MultiplyPoint(handTip);
+
+            oldVector_hand = handTip - wrist;
+            newVector_hand = LeftHandTip.position - LeftWrist.position;
+            // Wrist -> HandTip
+            LEFT_HandMatrix = _calcM(wrist, oldVector_hand, newVector_hand);
+        }
 
         if (rightWarping)
         {
@@ -137,6 +174,36 @@ public class IKWarpInfo {
 
             oldVector_hand = handTip - wrist;
             newVector_hand = RIGHT_IKHandTip - RIGHT_IKWrist;
+            // Wrist -> HandTip
+            RIGHT_HandMatrix = _calcM(wrist, oldVector_hand, newVector_hand);
+        }
+        else
+        {
+            //  ARM
+            shoulder = RIGHT_OriginalShoulder;
+            elbow = RIGHT_OriginalElbow;
+            wrist = RIGHT_OriginalWrist;
+            handTip = RIGHT_OriginalHandTip;
+
+            oldVector_upper = RIGHT_OriginalElbow - RIGHT_OriginalShoulder;
+            newVector_upper = RightElbow.position - RIGHT_OriginalShoulder;
+            // Shoulder -> Elbow
+            RIGHT_UpperArmMatrix = _calcM(shoulder, oldVector_upper, newVector_upper);
+
+            elbow = RIGHT_UpperArmMatrix.MultiplyPoint(elbow);
+            wrist = RIGHT_UpperArmMatrix.MultiplyPoint(wrist);
+            oldVector_forearm = wrist - elbow;
+            newVector_forearm = RightWrist.position - RightElbow.position;
+            // Elbow -> Wrist
+
+            RIGHT_ForearmMatrix = _calcM(elbow, oldVector_forearm, newVector_forearm);
+
+            wrist = RIGHT_ForearmMatrix.MultiplyPoint(wrist);
+            handTip = RIGHT_UpperArmMatrix.MultiplyPoint(handTip);
+            handTip = RIGHT_ForearmMatrix.MultiplyPoint(handTip);
+
+            oldVector_hand = handTip - wrist;
+            newVector_hand = RightHandTip.position - RightWrist.position;
             // Wrist -> HandTip
             RIGHT_HandMatrix = _calcM(wrist, oldVector_hand, newVector_hand);
         }

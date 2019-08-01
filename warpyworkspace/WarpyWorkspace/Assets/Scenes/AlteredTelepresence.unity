@@ -20,11 +20,11 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 0.9411765, g: 0.9411765, b: 0.9411765, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
+  m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: 0.5
@@ -251,7 +251,7 @@ Light:
   serializedVersion: 8
   m_Type: 1
   m_Color: {r: 1, g: 0.98816353, b: 0.9558824, a: 1}
-  m_Intensity: 0.73
+  m_Intensity: 0.18
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
@@ -465,7 +465,7 @@ MonoBehaviour:
   remoteCreepyTrackerOriginPivot: {fileID: 0}
   leftVRCameraRig_RigidBody: {fileID: 1857275780}
   rightVRCameraRig_RigidBody: {fileID: 1590903710}
-  startLocalRavatar: 1
+  startLocalRavatar: 0
   startRemoteRavatar: 1
   evaluationProceadure: {fileID: 540901944}
   alteredTelepresenceNetwork: {fileID: 540901945}
@@ -6759,7 +6759,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 740451e72e7db474981d7d5f98a486bb, type: 2}
+  - {fileID: 2100000, guid: 1915291d0097f3d4f8c839c61f3dd53f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -161,6 +161,13 @@ public class BodiesManager : MonoBehaviour
 
         armsWarpInfo = new IKWarpInfo();
 
+        armsWarpInfo.LeftElbow =    leftElbow;
+        armsWarpInfo.LeftWrist =    leftWrist;
+        armsWarpInfo.LeftHandTip =  leftHandTip;
+        armsWarpInfo.RightElbow =   rightElbow;
+        armsWarpInfo.RightWrist =   rightWrist;
+        armsWarpInfo.RightHandTip = rightHandTip;
+
         _rightElbowFilter = new OneEuroFilter<Vector3>(freq, mincutoff, beta, dcutoff);
         _rightWristFilter = new OneEuroFilter<Vector3>(freq, mincutoff, beta, dcutoff);
         _rightHandFilter = new OneEuroFilter<Vector3>(freq, mincutoff, beta, dcutoff);
@@ -256,7 +263,6 @@ public class BodiesManager : MonoBehaviour
             
             if (!local && !DISABLEWARP && doArmWarping)// && evaluation.evalState == EvalState.SESSION)
             {
-
                 LEGBONE.position = spineBase.position + (-transform.up);
 
                 armsWarpInfo.debug = DebugBonesPC;
@@ -275,9 +281,11 @@ public class BodiesManager : MonoBehaviour
                 }
                 else
                 {
-                    _leftElbowLastPosition = Vector3.zero;
-                    _leftWristLastPosition = Vector3.zero;
-                    _leftHandTipLastPosition = Vector3.zero;
+                    _applyNonIKLerpToArm(true);
+
+                    //_leftElbowLastPosition = Vector3.zero;
+                    //_leftWristLastPosition = Vector3.zero;
+                    //_leftHandTipLastPosition = Vector3.zero;
                 }
 
                 // RIGHT ARM IK
@@ -292,9 +300,11 @@ public class BodiesManager : MonoBehaviour
                 }
                 else
                 {
-                    _rightElbowLastPosition = Vector3.zero;
-                    _rightWristLastPosition = Vector3.zero;
-                    _rightHandTipLastPosition = Vector3.zero;
+                    _applyNonIKLerpToArm(false);
+
+                    //_rightElbowLastPosition = Vector3.zero;
+                    //_rightWristLastPosition = Vector3.zero;
+                    //_rightHandTipLastPosition = Vector3.zero;
                 }
 
                 _saveJointInfo(false);
@@ -400,6 +410,51 @@ public class BodiesManager : MonoBehaviour
             rightIKHandTip.parent = rightIKWrist;
             rightIKWrist.parent = rightIKElbow;
             rightIKElbow.parent = rightIKShoulder;
+        }
+    }
+
+    private void _applyNonIKLerpToArm(bool leftArm)
+    {
+        Transform human = head.parent;
+        if (leftArm)
+        {
+            leftElbow.parent = human;
+            leftWrist.parent = human;
+            leftHand.parent = human;
+            leftHandTip.parent = human;
+
+            leftElbow.localPosition = Vector3.Lerp(_leftElbowLastPosition, leftElbow.localPosition, elbowLerpFrac);
+            leftWrist.localPosition = Vector3.Lerp(_leftWristLastPosition, leftWrist.localPosition, wristLerpFrac);
+            leftHandTip.localPosition = Vector3.Lerp(_leftHandTipLastPosition, leftHandTip.localPosition, handTipLerpFrac);
+
+            _leftElbowLastPosition = leftElbow.localPosition;
+            _leftWristLastPosition = leftWrist.localPosition;
+            _leftHandTipLastPosition = leftHandTip.localPosition;
+
+            leftHandTip.parent = leftHand;
+            leftHand.parent = leftWrist;
+            leftWrist.parent = leftElbow;
+            leftElbow.parent = leftShoulder;
+        }
+        else
+        {
+            rightElbow.parent = human;
+            rightWrist.parent = human;
+            rightHand.parent = human;
+            rightHandTip.parent = human;
+
+            rightElbow.localPosition = Vector3.Lerp(_rightElbowLastPosition, rightElbow.localPosition, elbowLerpFrac);
+            rightWrist.localPosition = Vector3.Lerp(_rightWristLastPosition, rightWrist.localPosition, wristLerpFrac);
+            rightHandTip.localPosition = Vector3.Lerp(_rightHandTipLastPosition, rightHandTip.localPosition, handTipLerpFrac);
+
+            _rightElbowLastPosition = rightElbow.localPosition;
+            _rightWristLastPosition = rightWrist.localPosition;
+            _rightHandTipLastPosition = rightHandTip.localPosition;
+
+            rightHandTip.parent = rightHand;
+            rightHand.parent = rightWrist;
+            rightWrist.parent = rightElbow;
+            rightElbow.parent = rightShoulder;
         }
     }
 

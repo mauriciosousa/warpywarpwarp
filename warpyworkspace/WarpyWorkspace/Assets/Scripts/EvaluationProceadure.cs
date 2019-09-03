@@ -18,7 +18,7 @@ public enum EvalState
 
 public enum Test
 {
-    A, B
+    A, B, C
 }
 
 public enum BallQuadrant
@@ -28,7 +28,8 @@ public enum BallQuadrant
 
 public class EvaluationProceadure : MonoBehaviour {
 
-    public GameObject workspace;
+    public GameObject workspaceModel;
+    public Transform localWorkspaceOrigin;
     private AlteredTelepresenceNetwork _network;
 
     private SetupLocation _location;
@@ -59,6 +60,7 @@ public class EvaluationProceadure : MonoBehaviour {
     public Transform balls;
     public List<GameObject> ABalls;
     public List<GameObject> BBalls;
+    public List<GameObject> CBalls;
 
     public ProxemicsAnalysis proxemics;
     private float pc_whole = 0;
@@ -79,6 +81,7 @@ public class EvaluationProceadure : MonoBehaviour {
 
         ABalls = new List<GameObject>();
         BBalls = new List<GameObject>();
+        CBalls = new List<GameObject>();
 
         foreach (Transform child in balls)
         {
@@ -86,14 +89,19 @@ public class EvaluationProceadure : MonoBehaviour {
             {
                 ABalls.Add(child.gameObject);
             }
-            else
+            else if (child.name[0] == 'B')
             {
                 BBalls.Add(child.gameObject);
 
             }
+            else
+            {
+                CBalls.Add(child.gameObject);
+
+            }
         }
 
-        workspace.SetActive(false);
+        workspaceModel.SetActive(false);
     }
 
     public void Init(SetupLocation location, Formation formation, int leftID, int rightID, Test test)
@@ -199,7 +207,7 @@ public class EvaluationProceadure : MonoBehaviour {
 
             if (evalState == EvalState.SESSION && _angleData != null)
             {
-                Vector3 headToWorkspace = (workspace.transform.position - Camera.main.transform.position);
+                Vector3 headToWorkspace = (workspaceModel.transform.position - Camera.main.transform.position);
                 headToWorkspace = _ipisiloneAZeroENormaliz(headToWorkspace);
 
                 Vector3 headRotation = (Camera.main.transform.rotation.eulerAngles);
@@ -281,7 +289,14 @@ public class EvaluationProceadure : MonoBehaviour {
     {
         print("" + role + " " + _location);
 
-        workspace.SetActive(true);
+        //WorkspaceModel.rotation = Quaternion.LookRotation(-localWorkspaceOrigin.transform.forward, localWorkspaceOrigin.transform.up);
+        if (role == Role.MANIPULATOR && _formation == Formation.REAL_LIFE)
+        {
+            workspaceModel.transform.rotation = Quaternion.LookRotation(-localWorkspaceOrigin.transform.forward, localWorkspaceOrigin.transform.up);
+        }
+
+        workspaceModel.SetActive(true);
+        
 
         evalState = EvalState.SESSION;
 
@@ -324,7 +339,7 @@ public class EvaluationProceadure : MonoBehaviour {
         _instructorBall.gameObject.GetComponent<Renderer>().enabled = false;
         arrow.GetComponent<SlowRotation>().active = false;
 
-        workspace.SetActive(false);
+        workspaceModel.SetActive(false);
 
 
         if (_location == SetupLocation.LEFT)
@@ -341,7 +356,7 @@ public class EvaluationProceadure : MonoBehaviour {
 
             //_resultsFile.writeLine(_leftID, _rightID, _getRole(_location), (T-1), _test, _getQuadrant(_instructorBall.localPosition), errorDistance, insidePercentage, _formation, workspace.transform.position);
 
-            _resultsFile.writeLine(_leftID, _rightID, _getRole(_location), (T - 1), _test, _getQuadrant(_instructorBall.localPosition), timeSpan, errorDistance, insidePercentage, _formation, workspace.transform.position);
+            _resultsFile.writeLine(_leftID, _rightID, _getRole(_location), (T - 1), _test, _getQuadrant(_instructorBall.localPosition), timeSpan, errorDistance, insidePercentage, _formation, workspaceModel.transform.position);
 
             _evalDataFile.flush();
             _evalDataFile = null;
@@ -379,7 +394,14 @@ public class EvaluationProceadure : MonoBehaviour {
 
     private Transform _getInstructorBall(Test test, int t)
     {
-        List<GameObject> list = test == Test.A ? ABalls : BBalls;
+        List<GameObject> list;
+        if (test == Test.A)
+            list = ABalls;
+        else if (test == Test.B)
+            list = BBalls;
+        else
+            list = CBalls;
+
         return list[t - 1].transform;
     }
 

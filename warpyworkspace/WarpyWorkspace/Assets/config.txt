@@ -5,7 +5,7 @@ setup.type=LEFT
 start.formation=REAL_LIFE
 left.id=1
 right.id=2
-test=A
+test=C
 
 
 rpc.port=5000

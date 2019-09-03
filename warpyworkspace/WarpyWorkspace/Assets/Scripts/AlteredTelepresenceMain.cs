@@ -386,6 +386,8 @@ public class AlteredTelepresenceMain : MonoBehaviour
         _localSurface = s;
     }
 
+
+    public Transform WorkspaceModel;
     private void _configureWorkspace()
     {
         
@@ -404,7 +406,7 @@ public class AlteredTelepresenceMain : MonoBehaviour
 
         if (formation == Formation.REAL_LIFE && setupLocation == SetupLocation.LEFT)
         {
-            localWorkspaceOrigin.transform.rotation = Quaternion.LookRotation(-localWorkspaceOrigin.transform.forward, localWorkspaceOrigin.transform.up);
+            //WorkspaceModel.rotation = Quaternion.LookRotation(-localWorkspaceOrigin.transform.forward, localWorkspaceOrigin.transform.up);
             //remoteWorkspaceOrigin.transform.rotation = Quaternion.LookRotation(localWorkspaceOrigin.transform.forward, localWorkspaceOrigin.transform.up);
         }
 

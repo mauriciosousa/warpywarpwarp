@@ -304,7 +304,7 @@ public class EvaluationProceadure : MonoBehaviour {
 
         startArrow.GetComponent<SlowRotation>().active = false;
 
-        cursor.transform.localPosition = Vector3.zero;
+        cursor.transform.position = Vector3.negativeInfinity;
 
         if (role == Role.MANIPULATOR)
         {
@@ -313,6 +313,10 @@ public class EvaluationProceadure : MonoBehaviour {
         else
         {
             _instructorBall.gameObject.GetComponent<Renderer>().enabled = true;
+            if (_formation == Formation.REAL_LIFE)
+            {
+                arrow.localPosition = new Vector3(-_instructorBall.localPosition.x, 0.5f, -_instructorBall.localPosition.z);
+            }
             arrow.localPosition = new Vector3(_instructorBall.localPosition.x, 0.5f, _instructorBall.localPosition.z);
             arrow.GetComponent<SlowRotation>().active = true;
         }

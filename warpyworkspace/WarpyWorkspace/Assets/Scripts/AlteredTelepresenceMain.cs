@@ -12,7 +12,8 @@ public enum SetupLocation
 public enum Formation
 {
     SIDE_TO_SIDE,
-    FACE_TO_FACE
+    FACE_TO_FACE,
+    REAL_LIFE
 }
 
 public class AlteredTelepresenceMain : MonoBehaviour
@@ -400,10 +401,11 @@ public class AlteredTelepresenceMain : MonoBehaviour
         {
             remoteWorkspaceOrigin.transform.rotation = Quaternion.LookRotation(localWorkspaceOrigin.transform.forward, localWorkspaceOrigin.transform.up);
         }
-        else
+
+        if (formation == Formation.REAL_LIFE && setupLocation == SetupLocation.LEFT)
         {
-            // mirror remote
-            //remoteWorkspaceOrigin.transform.localScale = new Vector3(-1f, 1f, 1f);
+            localWorkspaceOrigin.transform.rotation = Quaternion.LookRotation(-localWorkspaceOrigin.transform.forward, localWorkspaceOrigin.transform.up);
+            //remoteWorkspaceOrigin.transform.rotation = Quaternion.LookRotation(localWorkspaceOrigin.transform.forward, localWorkspaceOrigin.transform.up);
         }
 
 

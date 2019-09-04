@@ -414,7 +414,11 @@ public class EvaluationProceadure : MonoBehaviour {
 
         if (!ACABOU)
         {
+
             GUI.Label(new Rect(left, top, 100, 35), "" + _network.networkPeerType + ", Connected = " + _network.Connected + ", " + (_network.Peers == 1 ? "1 Client" : "" + _network.Peers + " Clients"), style);
+
+            top += 40;
+            GUI.Label(new Rect(left, top, 100, 35), "" + _formation, style);
 
             if (_evaluationStarted)
             {

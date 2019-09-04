@@ -298,7 +298,7 @@ public class EvaluationProceadure : MonoBehaviour {
         workspaceModel.SetActive(true);
 
 
-        cursor.transform.position = new Vector3(workspaceModel.transform.position.x, workspaceModel.transform.position.y - 10f, workspaceModel.transform.position.z);
+        cursor.transform.localPosition = Vector3.zero;
 
 
         evalState = EvalState.SESSION;

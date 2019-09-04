@@ -315,7 +315,7 @@ public class EvaluationProceadure : MonoBehaviour {
         else
         {
             InstructorBall.gameObject.GetComponent<Renderer>().enabled = true;
-            arrow.position = new Vector3(InstructorBall.position.x, 0.5f, InstructorBall.position.z);
+            arrow.position = new Vector3(InstructorBall.position.x, workspaceModel.transform.position.y + 0.5f, InstructorBall.position.z);
             arrow.GetComponent<SlowRotation>().active = true;
         }
 

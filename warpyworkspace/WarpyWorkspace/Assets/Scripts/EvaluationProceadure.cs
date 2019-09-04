@@ -304,7 +304,14 @@ public class EvaluationProceadure : MonoBehaviour {
 
         startArrow.GetComponent<SlowRotation>().active = false;
 
-        cursor.transform.position = new Vector3(workspaceModel.transform.position.x, workspaceModel.transform.position.y - 1f, workspaceModel.transform.position.z);
+        if (role == Role.INSTRUCTOR && _formation == Formation.REAL_LIFE && _location == SetupLocation.RIGHT)
+        {
+            cursor.transform.position = new Vector3(-workspaceModel.transform.position.x, workspaceModel.transform.position.y - 1f, -workspaceModel.transform.position.z);
+        }
+        else
+        {
+            cursor.transform.position = new Vector3(workspaceModel.transform.position.x, workspaceModel.transform.position.y - 1f, workspaceModel.transform.position.z);
+        }
 
         if (role == Role.MANIPULATOR)
         {

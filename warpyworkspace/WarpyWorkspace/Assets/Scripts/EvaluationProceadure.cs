@@ -282,7 +282,7 @@ public class EvaluationProceadure : MonoBehaviour {
         }
     }
 
-    private Transform _instructorBall;
+    public Transform InstructorBall;
     private EvaluationData _evalDataFile;
     private WorkspaceAngleData _angleData;
     public void StartTask(int t)
@@ -300,7 +300,7 @@ public class EvaluationProceadure : MonoBehaviour {
 
         evalState = EvalState.SESSION;
 
-        _instructorBall = _getInstructorBall(_test, t);
+        InstructorBall = _getInstructorBall(_test, t);
 
         startArrow.GetComponent<SlowRotation>().active = false;
 
@@ -314,8 +314,8 @@ public class EvaluationProceadure : MonoBehaviour {
         }
         else
         {
-            _instructorBall.gameObject.GetComponent<Renderer>().enabled = true;
-            arrow.localPosition = new Vector3(_instructorBall.localPosition.x, 0.5f, _instructorBall.localPosition.z);
+            InstructorBall.gameObject.GetComponent<Renderer>().enabled = true;
+            arrow.position = new Vector3(InstructorBall.position.x, 0.5f, InstructorBall.position.z);
             arrow.GetComponent<SlowRotation>().active = true;
         }
 
@@ -338,7 +338,7 @@ public class EvaluationProceadure : MonoBehaviour {
         evalState = EvalState.PAUSE;
         T += 1;
         cursor.canDo = false;
-        _instructorBall.gameObject.GetComponent<Renderer>().enabled = false;
+        InstructorBall.gameObject.GetComponent<Renderer>().enabled = false;
         arrow.GetComponent<SlowRotation>().active = false;
 
         workspaceModel.SetActive(false);
@@ -349,7 +349,7 @@ public class EvaluationProceadure : MonoBehaviour {
             TimeSpan timeSpan = DateTime.Now - _startTime;
             print("  TASK " + (T-1) + " ended.... with " + timeSpan.TotalMilliseconds.ToString() + "ms");
 
-            float errorDistance = Vector3.Distance(_instructorBall.position, cursor.transform.position);
+            float errorDistance = Vector3.Distance(InstructorBall.position, cursor.transform.position);
             print(" Error Distance: " + errorDistance);
 
             float insidePercentage = (pc_inside * 100) / pc_whole;
@@ -358,7 +358,7 @@ public class EvaluationProceadure : MonoBehaviour {
 
             //_resultsFile.writeLine(_leftID, _rightID, _getRole(_location), (T-1), _test, _getQuadrant(_instructorBall.localPosition), errorDistance, insidePercentage, _formation, workspace.transform.position);
 
-            _resultsFile.writeLine(_leftID, _rightID, _getRole(_location), (T - 1), _test, _getQuadrant(_instructorBall.localPosition), timeSpan, errorDistance, insidePercentage, _formation, workspaceModel.transform.position);
+            _resultsFile.writeLine(_leftID, _rightID, _getRole(_location), (T - 1), _test, _getQuadrant(InstructorBall.localPosition), timeSpan, errorDistance, insidePercentage, _formation, workspaceModel.transform.position);
 
             _evalDataFile.flush();
             _evalDataFile = null;
@@ -366,7 +366,7 @@ public class EvaluationProceadure : MonoBehaviour {
 
         _angleData.flush();
         _angleData = null;
-        _instructorBall = null;
+        InstructorBall = null;
         cursor.transform.localPosition = Vector3.zero;
 
         if (T > 16)

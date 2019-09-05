@@ -294,6 +294,10 @@ public class EvaluationProceadure : MonoBehaviour {
         {
             workspaceModel.transform.rotation = Quaternion.LookRotation(-localWorkspaceOrigin.transform.forward, localWorkspaceOrigin.transform.up);
         }
+        else
+        {
+            workspaceModel.transform.rotation = Quaternion.LookRotation(localWorkspaceOrigin.transform.forward, localWorkspaceOrigin.transform.up);
+        }
 
         workspaceModel.SetActive(true);
 

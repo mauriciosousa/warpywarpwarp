@@ -45,7 +45,7 @@ public class AlteredTelepresenceMain : MonoBehaviour
 
     public Transform localCreepyTrackerOrigin;
     public Transform remoteCreepyTrackerOrigin;
-    public Transform remoteCreepyTrackerOriginPivot;
+    //public Transform remoteCreepyTrackerOriginPivot;
 
     private string localTrackerAddress;
     private string remoteTrackerAddress;
@@ -146,6 +146,8 @@ public class AlteredTelepresenceMain : MonoBehaviour
         //VRCameraRig.transform.position = t.position;
         ////VRCameraRig.transform.rotation = t.rotation;
 
+
+
         if (!_everythingIsConfigured && _localSurface != null && _remoteSurface != null)
         {
             print("local and remote surfaces");
@@ -169,6 +171,12 @@ public class AlteredTelepresenceMain : MonoBehaviour
                 localCreepyTrackerOrigin
                 );
             }
+
+
+
+            /////////// Martelada Grande
+            _loadFinalCalibration();
+            ///////////
 
             _configureWorkspace();
             alteredTelepresenceNetwork.Init();
@@ -255,12 +263,12 @@ public class AlteredTelepresenceMain : MonoBehaviour
         Vector3 deltapos = _getPositionFromConfig(ConfigProperties.load(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.position"));
         Quaternion deltarot = _getRotationFromConfig(ConfigProperties.load(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.rotation"));
 
-        remoteCreepyTrackerOriginPivot = new GameObject("RemoteCreepyTrackerOriginPivot").transform;
-        remoteCreepyTrackerOriginPivot.position = Vector3.zero;
-        remoteCreepyTrackerOriginPivot.rotation = Quaternion.identity;
-        remoteCreepyTrackerOrigin.parent = remoteCreepyTrackerOriginPivot;
-        remoteCreepyTrackerOriginPivot.position = deltapos;
-        remoteCreepyTrackerOriginPivot.rotation = deltarot;
+        //remoteCreepyTrackerOriginPivot = new GameObject("RemoteCreepyTrackerOriginPivot").transform;
+        //remoteCreepyTrackerOriginPivot.position = Vector3.zero;
+        //remoteCreepyTrackerOriginPivot.rotation = Quaternion.identity;
+        //remoteCreepyTrackerOrigin.parent = remoteCreepyTrackerOriginPivot;
+        //remoteCreepyTrackerOriginPivot.position = deltapos;
+        //remoteCreepyTrackerOriginPivot.rotation = deltarot;
 
     }
 
@@ -323,11 +331,11 @@ public class AlteredTelepresenceMain : MonoBehaviour
 
     private void _saveRemoteCreepyTrackerPivot()
     {
-        string p = _gameObjectPositionToString(remoteCreepyTrackerOriginPivot.position);
-        string r = _gameObjectRotationToString(remoteCreepyTrackerOriginPivot.rotation);
-        ConfigProperties.save(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.position", p);
-        ConfigProperties.save(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.rotation", r);
-        print("REMOTE CT PIVOT SAVED");
+        //string p = _gameObjectPositionToString(remoteCreepyTrackerOriginPivot.position);
+        //string r = _gameObjectRotationToString(remoteCreepyTrackerOriginPivot.rotation);
+        //ConfigProperties.save(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.position", p);
+        //ConfigProperties.save(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.rotation", r);
+        //print("REMOTE CT PIVOT SAVED");
     }
 
 
@@ -392,16 +400,17 @@ public class AlteredTelepresenceMain : MonoBehaviour
     {
         
         Debug.Log("DOING A WORKSPACE");
-        remoteCreepyTrackerOriginPivot.transform.parent = remoteWorkspaceOrigin.transform;
-        //remoteCreepyTrackerOrigin.parent = remoteWorkspaceOrigin.transform;
+        remoteWorkspaceOrigin.position = localWorkspaceOrigin.position;
+        remoteWorkspaceOrigin.rotation = localWorkspaceOrigin.rotation;
+        remoteCreepyTrackerOrigin.transform.parent = remoteWorkspaceOrigin.transform;
 
         
-        remoteWorkspaceOrigin.transform.position = localWorkspaceOrigin.transform.position;
+        //remoteWorkspaceOrigin.transform.position = localWorkspaceOrigin.transform.position;
         //remoteWorkspaceOrigin.transform.rotation = localWorkspaceOrigin.transform.rotation;
 
         if (formation == Formation.SIDE_TO_SIDE)
         {
-            remoteWorkspaceOrigin.transform.rotation = Quaternion.LookRotation(localWorkspaceOrigin.transform.forward, localWorkspaceOrigin.transform.up);
+            remoteWorkspaceOrigin.transform.rotation = Quaternion.LookRotation(-localWorkspaceOrigin.transform.forward, localWorkspaceOrigin.transform.up);
         }
 
         if (formation == Formation.REAL_LIFE && setupLocation == SetupLocation.LEFT)
@@ -446,6 +455,13 @@ public class AlteredTelepresenceMain : MonoBehaviour
             {
                 _calibrateHuman();
             }
+
+            top += lineSkip;
+
+            if (GUI.Button(new Rect(left, top, 200, lineSkip - 10), "SAVE FINAL CALIBRATION"))
+            {
+                _saveFinalCalibration();
+            }
         }
 
         if (setupLocation == SetupLocation.LEFT && !evaluationProceadure.EvaluationStarted)
@@ -460,6 +476,23 @@ public class AlteredTelepresenceMain : MonoBehaviour
         }
     }
 
+    private void _saveFinalCalibration()
+    {
+        //ConfigProperties.save(ConfigFile, _localPrefix + ".remoteCreepyTrackerDelta.position", p);
+
+        ConfigProperties.save(ConfigFile, _localPrefix + ".final.creepytracker.remote.position", _gameObjectPositionToString(remoteCreepyTrackerOrigin.position));
+        ConfigProperties.save(ConfigFile, _localPrefix + ".final.creepytracker.remote.rotation", _gameObjectRotationToString(remoteCreepyTrackerOrigin.rotation));
+        ConfigProperties.save(ConfigFile, _localPrefix + ".final.creepytracker.local.position", _gameObjectPositionToString(localCreepyTrackerOrigin.position));
+        ConfigProperties.save(ConfigFile, _localPrefix + ".final.creepytracker.local.rotation", _gameObjectRotationToString(localCreepyTrackerOrigin.rotation));
+    }
+
+    private void _loadFinalCalibration()
+    {
+        remoteCreepyTrackerOrigin.position = _getPositionFromConfig(ConfigProperties.load(ConfigFile, _localPrefix + ".final.creepytracker.remote.position"));
+        remoteCreepyTrackerOrigin.rotation = _getRotationFromConfig(ConfigProperties.load(ConfigFile, _localPrefix + ".final.creepytracker.remote.rotation"));
+        localCreepyTrackerOrigin.position = _getPositionFromConfig(ConfigProperties.load(ConfigFile, _localPrefix + ".final.creepytracker.local.position"));
+        localCreepyTrackerOrigin.rotation = _getRotationFromConfig(ConfigProperties.load(ConfigFile, _localPrefix + ".final.creepytracker.local.rotation"));
+    }
 
     private string _gameObjectRotationToString(Quaternion rotation)
     {

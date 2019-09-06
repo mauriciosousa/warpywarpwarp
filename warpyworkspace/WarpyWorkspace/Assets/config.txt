@@ -1,15 +1,15 @@
 last.run=2019-06-19-17:05:53
 setup.type=LEFT
-//start.formation=SIDE_TO_SIDE
+start.formation=SIDE_TO_SIDE
 //start.formation=FACE_TO_FACE
-start.formation=REAL_LIFE
+//start.formation=REAL_LIFE
 left.id=1
 right.id=2
 test=A
 
 
 rpc.port=5000
-optitrack.server.address=192.168.0.105
+optitrack.server.address=192.168.0.102
 eyes.localPosition=-0.04087834:-0.1511804:-0.07863502
 eyes.localRotation=0:0:0:1
 
@@ -31,6 +31,13 @@ left.remoteCreepyTrackerDelta.position=0:0:0
 left.eyes.localPosition=0:0:0
 left.eyes.localRotation=0:0:0:0
 
+
+left.final.creepytracker.remote.position=-0.4:0.05:0.19
+left.final.creepytracker.remote.rotation=0.005254337:0.9981186:0.02519648:0.05565023
+left.final.creepytracker.local.position=-0.291:0.055:-3.463
+left.final.creepytracker.local.rotation=-0.01905451:0.01076798:-0.005481839:0.9997455
+
+
 __SETUP ON THE RIGHT__
 right.setup.address=192.168.0.106
 right.tracker.listen.port=5101
@@ -49,3 +56,9 @@ right.remoteCreepyTrackerDelta.rotation=0:0:0:0
 right.remoteCreepyTrackerDelta.position=0:0:0
 right.eyes.localPosition=0:0:0
 right.eyes.localRotation=0:0:0:0
+
+
+right.final.creepytracker.remote.position=0:0:0:0
+right.final.creepytracker.remote.rotation=0:0:0:0:0
+right.final.creepytracker.local.position=0:0:0:0
+right.final.creepytracker.local.rotation=0:0:0:0:0

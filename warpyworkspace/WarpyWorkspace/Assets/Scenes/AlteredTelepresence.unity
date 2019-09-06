@@ -448,8 +448,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showGUI: 0
-  leftRigidBody: {fileID: 1329983193}
-  rightRigidBody: {fileID: 1034722258}
+  leftRigidBody: {fileID: 1857275778}
+  rightRigidBody: {fileID: 1590903708}
   setupLocation: 0
   formation: 0
   localBodiesManager: {fileID: 1429241492}
@@ -463,8 +463,8 @@ MonoBehaviour:
   localCreepyTrackerOrigin: {fileID: 1634680194}
   remoteCreepyTrackerOrigin: {fileID: 1287507101}
   remoteCreepyTrackerOriginPivot: {fileID: 0}
-  leftVRCameraRig_RigidBody: {fileID: 1857275780}
-  rightVRCameraRig_RigidBody: {fileID: 1590903710}
+  leftVRCameraRig_RigidBody: {fileID: 0}
+  rightVRCameraRig_RigidBody: {fileID: 0}
   startLocalRavatar: 1
   startRemoteRavatar: 1
   evaluationProceadure: {fileID: 540901944}
@@ -523,15 +523,15 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 44025213}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a331805347588fe4a8161c8875d24396, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ConfigFile: config.txt
   ConnectionType: 0
-  LocalAddress: 192.168.0.102
-  ServerAddress: 192.168.0.101
+  LocalAddress: 192.168.0.108
+  ServerAddress: 192.168.0.102
   ServerCommandPort: 1510
   ServerDataPort: 1511
   DrawMarkers: 0

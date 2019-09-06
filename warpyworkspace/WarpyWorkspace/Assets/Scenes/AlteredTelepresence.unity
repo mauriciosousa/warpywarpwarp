@@ -462,7 +462,6 @@ MonoBehaviour:
   remoteWorkspaceOrigin: {fileID: 1946220525}
   localCreepyTrackerOrigin: {fileID: 1634680194}
   remoteCreepyTrackerOrigin: {fileID: 1287507101}
-  remoteCreepyTrackerOriginPivot: {fileID: 0}
   leftVRCameraRig_RigidBody: {fileID: 0}
   rightVRCameraRig_RigidBody: {fileID: 0}
   startLocalRavatar: 1
@@ -470,6 +469,7 @@ MonoBehaviour:
   evaluationProceadure: {fileID: 540901944}
   alteredTelepresenceNetwork: {fileID: 540901945}
   WALLS: {fileID: 1956984160}
+  calibrationMode: 1
   WorkspaceModel: {fileID: 975028555}
 --- !u!114 &44025216
 MonoBehaviour:
@@ -523,7 +523,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 44025213}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a331805347588fe4a8161c8875d24396, type: 3}
   m_Name: 

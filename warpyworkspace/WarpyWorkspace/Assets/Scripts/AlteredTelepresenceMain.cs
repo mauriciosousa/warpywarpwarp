@@ -77,6 +77,8 @@ public class AlteredTelepresenceMain : MonoBehaviour
 
     public Transform WALLS;
 
+    public bool calibrationMode = false;
+
     void Start()
     {
         Application.runInBackground = true;
@@ -398,6 +400,8 @@ public class AlteredTelepresenceMain : MonoBehaviour
     public Transform WorkspaceModel;
     private void _configureWorkspace()
     {
+        if (calibrationMode) return;
+
         
         Debug.Log("DOING A WORKSPACE");
         remoteWorkspaceOrigin.position = localWorkspaceOrigin.position;
@@ -488,6 +492,7 @@ public class AlteredTelepresenceMain : MonoBehaviour
 
     private void _loadFinalCalibration()
     {
+        Debug.Log("LOAD FINAL");
         remoteCreepyTrackerOrigin.position = _getPositionFromConfig(ConfigProperties.load(ConfigFile, _localPrefix + ".final.creepytracker.remote.position"));
         remoteCreepyTrackerOrigin.rotation = _getRotationFromConfig(ConfigProperties.load(ConfigFile, _localPrefix + ".final.creepytracker.remote.rotation"));
         localCreepyTrackerOrigin.position = _getPositionFromConfig(ConfigProperties.load(ConfigFile, _localPrefix + ".final.creepytracker.local.position"));

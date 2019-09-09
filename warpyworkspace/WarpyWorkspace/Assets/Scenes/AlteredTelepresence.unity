@@ -469,7 +469,7 @@ MonoBehaviour:
   evaluationProceadure: {fileID: 540901944}
   alteredTelepresenceNetwork: {fileID: 540901945}
   WALLS: {fileID: 1956984160}
-  calibrationMode: 1
+  calibrationMode: 0
   WorkspaceModel: {fileID: 975028555}
 --- !u!114 &44025216
 MonoBehaviour:
@@ -4283,7 +4283,6 @@ MonoBehaviour:
   BBalls: []
   CBalls: []
   proxemics: {fileID: 44025218}
-  vrhead: {fileID: 1298211105}
   localHuman_leftHandTip: {fileID: 1101516056}
   localHuman_rightHandTip: {fileID: 1548722380}
   localHuman_spineBase: {fileID: 1587185458}
@@ -4291,6 +4290,7 @@ MonoBehaviour:
   remoteHuman_rightHandTip: {fileID: 351543501}
   remoteHuman_spineBase: {fileID: 1018802412}
   angle: 0
+  angleForward: 0
   InstructorBall: {fileID: 0}
   ACABOU: 0
 --- !u!114 &540901945

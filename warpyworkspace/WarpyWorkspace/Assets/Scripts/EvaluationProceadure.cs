@@ -217,9 +217,9 @@ public class EvaluationProceadure : MonoBehaviour {
                 headRotation = _ipisiloneAZeroENormaliz(headRotation);
 
 
-                Debug.DrawLine(Camera.main.transform.position, Camera.main.transform.position + headToWorkspace, Color.green);
-                Debug.DrawLine(Camera.main.transform.position, Camera.main.transform.position + headRotation, Color.red);
-                Debug.DrawLine(Camera.main.transform.position, Camera.main.transform.position + headToWorkspaceForward, Color.blue);
+                //Debug.DrawLine(Camera.main.transform.position, Camera.main.transform.position + headToWorkspace, Color.green);
+                //Debug.DrawLine(Camera.main.transform.position, Camera.main.transform.position + headRotation, Color.red);
+                //Debug.DrawLine(Camera.main.transform.position, Camera.main.transform.position + headToWorkspaceForward, Color.blue);
 
                 angle = Vector3.Angle(headToWorkspace, headRotation);
                 angleForward = Vector3.Angle(headToWorkspaceForward, headRotation);

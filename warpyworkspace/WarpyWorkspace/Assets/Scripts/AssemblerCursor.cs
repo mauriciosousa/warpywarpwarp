@@ -49,7 +49,7 @@ public class AssemblerCursor : MonoBehaviour {
             {
                 Vector3 dir = (tip.position - hand.position).normalized;
 
-                cursor.position = tip.position + delta*dir;
+                this.transform.position = tip.position + delta*dir;
             }
         }
 	}

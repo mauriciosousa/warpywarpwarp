@@ -6087,6 +6087,7 @@ MonoBehaviour:
       zMax: 0
   IsDamping: 1
   DampingMax: 0.5
+  isDebug: 0
 --- !u!1 &784962123
 GameObject:
   m_ObjectHideFlags: 0
@@ -9489,6 +9490,7 @@ MonoBehaviour:
       zMax: 0
   IsDamping: 1
   DampingMax: 0.5
+  isDebug: 0
 --- !u!1 &1256272998
 GameObject:
   m_ObjectHideFlags: 0

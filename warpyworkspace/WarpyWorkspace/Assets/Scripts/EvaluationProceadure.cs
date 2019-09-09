@@ -258,7 +258,14 @@ public class EvaluationProceadure : MonoBehaviour {
     {
         if (role == Role.INSTRUCTOR)
         {
-            cursor.transform.localPosition = p;
+            if (_formation == Formation.REAL_LIFE)
+            {
+                cursor.transform.localPosition = new Vector3(-p.x, p.y, -p.z);
+            }
+            else
+            {
+                cursor.transform.localPosition = p;
+            }
         }
     }
 

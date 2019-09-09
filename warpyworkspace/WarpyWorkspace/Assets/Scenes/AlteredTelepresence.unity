@@ -4283,6 +4283,7 @@ MonoBehaviour:
   BBalls: []
   CBalls: []
   proxemics: {fileID: 44025218}
+  vrhead: {fileID: 1298211105}
   localHuman_leftHandTip: {fileID: 1101516056}
   localHuman_rightHandTip: {fileID: 1548722380}
   localHuman_spineBase: {fileID: 1587185458}

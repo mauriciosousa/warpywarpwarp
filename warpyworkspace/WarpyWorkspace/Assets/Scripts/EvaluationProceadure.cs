@@ -187,6 +187,7 @@ public class EvaluationProceadure : MonoBehaviour {
     public Transform remoteHuman_rightHandTip;
     public Transform remoteHuman_spineBase;
     public float angle = 0f;
+    public float angleForward = 0f;
     void FixedUpdate()
     {
         //TimeSpan span = DateTime.Now - _lastTimestamp;
@@ -207,18 +208,23 @@ public class EvaluationProceadure : MonoBehaviour {
 
             if (evalState == EvalState.SESSION && _angleData != null)
             {
+                Vector3 headToWorkspaceForward = (_ipisiloneAZeroENormaliz(workspaceModel.transform.parent.forward));
+
                 Vector3 headToWorkspace = (workspaceModel.transform.position - Camera.main.transform.position);
                 headToWorkspace = _ipisiloneAZeroENormaliz(headToWorkspace);
 
-                Vector3 headRotation = (Camera.main.transform.rotation.eulerAngles);
+                Vector3 headRotation = (Camera.main.transform.forward);
                 headRotation = _ipisiloneAZeroENormaliz(headRotation);
 
-                //Debug.DrawLine(workspace.transform.position, Camera.main.transform.position, Color.green);
-                //Debug.DrawLine(Camera.main.transform.position, Camera.main.transform.position + Camera.main.transform.forward);
+
+                Debug.DrawLine(Camera.main.transform.position, Camera.main.transform.position + headToWorkspace, Color.green);
+                Debug.DrawLine(Camera.main.transform.position, Camera.main.transform.position + headRotation, Color.red);
+                Debug.DrawLine(Camera.main.transform.position, Camera.main.transform.position + headToWorkspaceForward, Color.blue);
 
                 angle = Vector3.Angle(headToWorkspace, headRotation);
+                angleForward = Vector3.Angle(headToWorkspaceForward, headRotation);
 
-                _angleData.writeLine(angle);
+               _angleData.writeLine(angle, angleForward);
             }
         }
     }
@@ -449,6 +455,9 @@ public class EvaluationProceadure : MonoBehaviour {
                 {
                     GUI.Label(new Rect(left, top, 100, 35), "Next T = " + T, style);
                 }
+
+                top += 40;
+                GUI.Label(new Rect(left, top, 100, 35), "Angle: " + angle, style);
             }
         }
         else
@@ -643,7 +652,8 @@ public class WorkspaceAngleData
         string header = "";
 
         header += "Timestamp" + _sep;
-        header += "Angle" + _sep;
+        header += "DeltaCenter" + _sep;
+        header += "DelterForward" + _sep;
 
         _lines = new List<string>();
         _lines.Add(header);
@@ -656,12 +666,13 @@ public class WorkspaceAngleData
         File.AppendAllText(_file, line + Environment.NewLine);
     }
 
-    public void writeLine(float angle)
+    public void writeLine(float angle, float angleForward)
     {
         string line = "";
 
         line += DateTime.Now.ToString("yyyy/MM/dd-HH:mm:ss") + _sep;
         line += angle + _sep;
+        line += angleForward + _sep;
 
         _lines.Add(line);
         //_writeLine(line);

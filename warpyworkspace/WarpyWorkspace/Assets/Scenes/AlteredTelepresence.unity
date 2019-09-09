@@ -469,7 +469,7 @@ MonoBehaviour:
   evaluationProceadure: {fileID: 540901944}
   alteredTelepresenceNetwork: {fileID: 540901945}
   WALLS: {fileID: 1956984160}
-  calibrationMode: 1
+  calibrationMode: 0
   WorkspaceModel: {fileID: 975028555}
 --- !u!114 &44025216
 MonoBehaviour:

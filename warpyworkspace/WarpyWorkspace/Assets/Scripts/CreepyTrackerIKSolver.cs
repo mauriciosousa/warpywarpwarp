@@ -43,7 +43,9 @@ public class CreepyTrackerIKSolver : MonoBehaviour
 	
 	public bool IsDamping = false;
 	public float DampingMax = 0.5f;
-	
+
+    public bool isDebug = false;
+
 	void Start ()
 	{
 		//if (Target == null)
@@ -62,7 +64,7 @@ public class CreepyTrackerIKSolver : MonoBehaviour
 
     void LateUpdate()
     {
-        if (JointEntities.Length >= 3 && IsActive)
+        if (isDebug && JointEntities.Length >= 3 && IsActive)
         {
             Debug.DrawLine(JointEntities[0].Joint.position, JointEntities[1].Joint.position, Color.red);
             Debug.DrawLine(JointEntities[1].Joint.position, JointEntities[2].Joint.position, Color.red);

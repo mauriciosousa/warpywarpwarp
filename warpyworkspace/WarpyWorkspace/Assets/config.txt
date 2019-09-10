@@ -1,5 +1,5 @@
 last.run=2019-06-19-17:05:53
-setup.type=LEFT
+setup.type=RIGHT
 //start.formation=SIDE_TO_SIDE
 start.formation=FACE_TO_FACE
 //start.formation=REAL_LIFE

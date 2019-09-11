@@ -1,8 +1,8 @@
 last.run=2019-06-19-17:05:53
 setup.type=LEFT
 //start.formation=SIDE_TO_SIDE
-//start.formation=FACE_TO_FACE
-start.formation=REAL_LIFE
+start.formation=FACE_TO_FACE
+//start.formation=REAL_LIFE
 left.id=7
 right.id=8
 test=A
@@ -34,8 +34,8 @@ left.eyes.localRotation=0:0:0:0
 
 left.final.creepytracker.remote.position=-0.51:0.567:-0.108
 left.final.creepytracker.remote.rotation=0.004983731:0.9944823:-0.07638942:0.07172745
-left.final.creepytracker.local.position=-0.528:0.5012:-3.096
-left.final.creepytracker.local.rotation=0.0591548:0.0479237:0.005944595:0.9970801
+left.final.creepytracker.local.position=-0.504:0.5012:-3.168
+left.final.creepytracker.local.rotation=0.05912761:0.04346113:0.006209263:0.9972846
 
 
 __SETUP ON THE RIGHT__

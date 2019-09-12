@@ -51,6 +51,7 @@ public class EvaluationProceadure : MonoBehaviour {
 
 
     private DateTime _startTime;
+    private DateTime _JoyUpTime;
 
     private string _resultsFolder;
 
@@ -165,6 +166,12 @@ public class EvaluationProceadure : MonoBehaviour {
             if (role == Role.MANIPULATOR)
             {
                 _network.syncCursor(cursor.transform.localPosition);
+
+                if (Input.GetKeyUp(KeyCode.Joystick1Button0) || Input.GetKeyUp(KeyCode.Joystick1Button1))
+                {
+                    _JoyUpTime = DateTime.Now;
+                }
+
             }
             else
             {
@@ -329,6 +336,13 @@ public class EvaluationProceadure : MonoBehaviour {
         if (role == Role.MANIPULATOR)
         {
             cursor.canDo = true;
+
+            if (Input.GetKeyUp(KeyCode.Joystick1Button0) || Input.GetKeyUp(KeyCode.Joystick1Button1))
+            {
+                _JoyUpTime = DateTime.Now;
+            }
+
+
         }
         else
         {
@@ -364,7 +378,8 @@ public class EvaluationProceadure : MonoBehaviour {
 
         if (_location == SetupLocation.LEFT)
         {
-            TimeSpan timeSpan = DateTime.Now - _startTime;
+            TimeSpan timeSpanButton = DateTime.Now - _startTime;
+            TimeSpan timeSpan = _JoyUpTime - _startTime;
             print("  TASK " + (T-1) + " ended.... with " + timeSpan.TotalMilliseconds.ToString() + "ms");
 
             float errorDistance = Vector3.Distance(InstructorBall.position, cursor.transform.position);
@@ -376,7 +391,7 @@ public class EvaluationProceadure : MonoBehaviour {
 
             //_resultsFile.writeLine(_leftID, _rightID, _getRole(_location), (T-1), _test, _getQuadrant(_instructorBall.localPosition), errorDistance, insidePercentage, _formation, workspace.transform.position);
 
-            _resultsFile.writeLine(_leftID, _rightID, _getRole(_location), (T - 1), _test, _getQuadrant(InstructorBall.localPosition), timeSpan, errorDistance, insidePercentage, _formation, workspaceModel.transform.position);
+            _resultsFile.writeLine(_leftID, _rightID, _getRole(_location), (T - 1), _test, _getQuadrant(InstructorBall.localPosition), timeSpan, timeSpanButton, errorDistance, insidePercentage, _formation, workspaceModel.transform.position);
 
             _evalDataFile.flush();
             _evalDataFile = null;
@@ -499,6 +514,7 @@ public class MainResultsFile
         header += "test" + _sep;//)
         header += "ballQuadrant" + _sep;
         header += "timespan" + _sep;
+        header += "timespanButton" + _sep;
         header += "errorDistance" + _sep;
         header += "%inside" + _sep;
         header += "condition" + _sep;
@@ -519,7 +535,7 @@ public class MainResultsFile
         File.AppendAllText(_file, line + Environment.NewLine);
     }
 
-    public void writeLine(int leftID, int rightID, Role leftRole, int task, Test test, BallQuadrant quadrant, TimeSpan timespan, float errorDistance, float percentage, Formation condition, Vector3 workspacePosition)
+    public void writeLine(int leftID, int rightID, Role leftRole, int task, Test test, BallQuadrant quadrant, TimeSpan timespan, TimeSpan timespanButton, float errorDistance, float percentage, Formation condition, Vector3 workspacePosition)
     {
         string line = "";
 
@@ -531,6 +547,7 @@ public class MainResultsFile
         line += test + _sep;
         line += quadrant.ToString() + _sep;
         line += timespan.TotalMilliseconds.ToString() + _sep;
+        line += timespanButton.TotalMilliseconds.ToString() + _sep;
         line += errorDistance + _sep;
         line += percentage + _sep;
         line += condition.ToString() + _sep;

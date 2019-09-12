@@ -469,7 +469,7 @@ MonoBehaviour:
   evaluationProceadure: {fileID: 540901944}
   alteredTelepresenceNetwork: {fileID: 540901945}
   WALLS: {fileID: 1956984160}
-  calibrationMode: 1
+  calibrationMode: 0
   WorkspaceModel: {fileID: 975028555}
 --- !u!114 &44025216
 MonoBehaviour:
@@ -1018,6 +1018,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CenterObject: {fileID: 1655163467}
+  table: {fileID: 1655163467}
   ikLeftArm: {fileID: 1240235995}
   ikRightArm: {fileID: 776718358}
   DISABLEWARP: 0
@@ -2107,7 +2108,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 240773348}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -4138,7 +4139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &467390803
 Transform:
   m_ObjectHideFlags: 0
@@ -11216,6 +11217,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CenterObject: {fileID: 1655163467}
+  table: {fileID: 0}
   ikLeftArm: {fileID: 0}
   ikRightArm: {fileID: 0}
   DISABLEWARP: 0

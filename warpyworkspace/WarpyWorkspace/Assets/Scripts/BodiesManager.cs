@@ -12,6 +12,8 @@ public class BodiesManager : MonoBehaviour
 
     public Transform CenterObject;
 
+    public Transform table;
+
     public Vector3 getHeadPosition(out bool canApplyHeadPosition)
     {
         canApplyHeadPosition = false;

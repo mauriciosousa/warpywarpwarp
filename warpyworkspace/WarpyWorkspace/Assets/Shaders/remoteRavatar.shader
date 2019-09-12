@@ -68,6 +68,8 @@ Shader "Custom/remoteRavatar"
 
 				// VARS PARA DISTORCER OS BRACITOS
 
+				float _tabley;
+
 				int _LeftWarping;
 				int _RightWarping;
 				//float _UpperArmDistance;
@@ -323,6 +325,12 @@ Shader "Custom/remoteRavatar"
 						}
 					}
 
+
+					if (worldPos.y < _tabley)
+					{
+						c.a = 0;
+						//c.r = 1; c.g = 0; c.b = 0;
+					}
 
 
 					// WARPS
@@ -800,6 +808,8 @@ Shader "Custom/remoteRavatar"
 					}
 				
 
+					
+
 
 					// END NEAREST BONE
 
@@ -818,6 +828,8 @@ Shader "Custom/remoteRavatar"
 					}
 					//output.color = output.n;
 					
+
+
 					return output;
 				}
 

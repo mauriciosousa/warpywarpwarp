@@ -300,6 +300,8 @@ public class PointCloudMesh : MonoBehaviour
 
                     mr.material.SetInt("_Debug", wi.debug ? 1 : 0);
 
+                    mr.material.SetFloat("_tabley", b.table.position.y);
+
                     mr.material.SetVector("_LEFT_OriginalShoulder", wi.LEFT_OriginalShoulder);
                     mr.material.SetVector("_LEFT_OriginalElbow", wi.LEFT_OriginalElbow);
                     mr.material.SetVector("_LEFT_OriginalWrist", wi.LEFT_OriginalWrist);

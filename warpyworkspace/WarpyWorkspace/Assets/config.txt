@@ -32,10 +32,10 @@ left.eyes.localPosition=0:0:0
 left.eyes.localRotation=0:0:0:0
 
 
-left.final.creepytracker.remote.position=-0.314:-0.071:-0.539
-left.final.creepytracker.remote.rotation=0.00307009:0.9984626:0.04151915:0.03659593
-left.final.creepytracker.local.position=-0.595:-0.107:-2.824
-left.final.creepytracker.local.rotation=-0.0395623:0.05585841:-0.001363333:0.9976537
+left.final.creepytracker.remote.position=-0.314:-0.071:-0.531
+left.final.creepytracker.remote.rotation=0.002989495:0.9985516:0.03932033:0.03660261
+left.final.creepytracker.local.position=-0.595:-0.107:-2.831
+left.final.creepytracker.local.rotation=-0.03956026:0.0543969:-0.001421286:0.9977344
 
 
 __SETUP ON THE RIGHT__

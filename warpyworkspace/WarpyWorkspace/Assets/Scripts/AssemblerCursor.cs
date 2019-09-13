@@ -45,6 +45,8 @@ public class AssemblerCursor : MonoBehaviour {
             bool isLeftHand = interactionZone.bounds.Contains(leftHandTip.position);
             bool isRightHand = interactionZone.bounds.Contains(rightHandTip.position);
 
+            Debug.Log("joy cursor");
+
             Transform hand = null;
             Transform tip = null;
             if (isLeftHand && !isRightHand)

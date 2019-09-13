@@ -169,6 +169,7 @@ public class EvaluationProceadure : MonoBehaviour {
 
                 if (Input.GetKeyUp(KeyCode.Joystick1Button0) || Input.GetKeyUp(KeyCode.Joystick1Button1))
                 {
+                    Debug.Log("Joytime");
                     _JoyUpTime = DateTime.Now;
                 }
 
@@ -337,8 +338,9 @@ public class EvaluationProceadure : MonoBehaviour {
         {
             cursor.canDo = true;
 
-            if (Input.GetKeyUp(KeyCode.Joystick1Button0) || Input.GetKeyUp(KeyCode.Joystick1Button1))
+            //if (Input.GetKeyUp(KeyCode.Joystick1Button0) || Input.GetKeyUp(KeyCode.Joystick1Button1))
             {
+                Debug.Log("joy time");
                 _JoyUpTime = DateTime.Now;
             }
 
